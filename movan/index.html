@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Movement Analayzer</title>
+          <style>
+        	div.bar {
+   			 display: inline-block;
+   			 width: 20px;
+   			 height: 75px;   /* We'll override this later */
+    		 background-color: teal;
+    		 margin-right:2px;
+		}
+        	
+        div.over {
+   			 position: absolute;
+   			 width: 20px;
+   			 height: 75px;   /* We'll override this later */
+    		 background-color: teal;
+    		 margin-right:2px;
+    		 opacity:0.6;
+			 filter:alpha(opacity=60);
+			 }
+			 
+		.featBox {
+			 pointer-events: all;
+		}
+		
+		.canvasContainer {
+			width: 80%;
+			overflow-x: scroll;
+			overflow-y: hidden;
+			border: 1px solid;
+			padding-bottom: 20px;
+			float: left;
+			height: 520px;
+			
+		}
+		
+		#sidebar {
+			width: 18%;
+			border: 1px solid;
+			float: right;
+			position: absoloute;
+			padding: 5px;
+		}
+		
+		.sidetab {
+			border: 1px solid;
+			margin-top: 5px;
+			padding:7px;
+		}
+		
+		.sidetabtitle {
+			margin-bottom: 10px;
+			font-style: oblique;
+		}
+        </style>
+        
+        <script type="text/javascript" src="d3/d3.v3.js"></script>
+        <script type="text/javascript" src="js/featureListVis.js"></script>
+        <script type="text/javascript" src="js/figureVis.js"></script>
+        <script type="text/javascript" src="js/featuresLib.js"></script>
+        <script type="text/javascript" src="js/fileTools.js"></script>
+        
+        
+        <script>
+			
+
+
+		
+			
+
+       </script>
+       
+       
+    </head>
+    <body>
+        <h1 style="float: left;">Movement Analayzer</h1>
+        <h4 style="float: right;">Version 0.2</h4>
+        
+        
+        
+        <div id="canCont" class="canvasContainer">
+        	<div id="figure"></div>
+      		<div id="featureList"></div>
+        </div>
+        
+        <div id="sidebar">
+        	
+        	<div id="filelist" class="sidetab">
+        		<div class="sidetabtitle">Select a file:</div>
+        		<select name="drop1" id="fileSelect" size="4" multiple="multiple" 
+        		 onchange="loadNew()" style="border:2px solid #ccc; width:200px; height: 120px; overflow-y: scroll;">
+   					<option value="Punch4.csv" selected="selected">Punch</option>
+					<option value="Float4.csv">Float</option>
+					<option value="Dab1.csv">Dab</option>
+					<option value="Flick1.csv">Flick</option>
+					<option value="Slash4.csv">Slash</option>
+					<option value="Glide3.csv">Glide</option>
+					<option value="Wring2.csv">Wring</option>
+					
+					</select>
+        		
+        	</div>
+        	
+        	<div id="features" class="sidetab">
+        		<div class="sidetabtitle">Select features: </div>
+        		
+        		<div style="border:2px solid #ccc; width:200px; height: 120px; overflow-y: scroll;">
+  				    <input type="checkbox" id="ch_space" checked="checked" onchange="reDoFeats()"/> Effort Space <br />
+    				<input type="checkbox" id="ch_weight" checked="checked" onchange="reDoFeats()"/> Effort Weight <br />
+    				<input type="checkbox" id="ch_time" checked="checked" onchange="reDoFeats()"/> Effort Time <br />
+    				<input type="checkbox" id="ch_flow" checked="checked" onchange="reDoFeats()"/> Effort Flow <br />
+				    <input type="checkbox" id="ch_vel" checked="checked" onchange="reDoFeats()"/> Angular Velocity <br />
+				</div>
+				<button type="button">Edit Features</button>
+        	</div>
+        	<div id="controls" class="sidetab">
+        		<div class="sidetabtitle">Visual Controls:</div>
+        		Skip Frames: <br/>
+        		5<input type="range" id="sldSkips" min="5" max="50" value ="5" width = "100px" onchange="reDraw()">50<br/>
+        		Padding: <br/>
+        		 10<input type="range" id="sldPad" min="10" max="50" value ="25" ondrag="reDraw()" onchange="reDraw()">50<br/>
+        	</div>
+        </div>
+       
+        <script type="text/javascript">
+        	var gframes = [];
+			var gskel = [];
+			var grootOffset = [];
+			var gpadding = 10;
+			
+			var selectedJoint = 20;
+			var frameSkip = 5;
+
+			var selectedFeats = [f_weight, f_space];
+				
+			function loadNew() {
+							
+
+				var moveFile = "movs/"+document.getElementById("fileSelect").value;
+				var skelFile = "movs/ecuad1.skel";
+
+				loadData(moveFile, skelFile, callbackForData);
+			}
+			
+			var callbackForData = function(frames, skel) {
+				
+				gframes = frames;
+				gskel = skel;
+				makeFeats();
+				reDraw();
+				};
+
+			function reDraw() {
+				
+				frameSkip = +document.getElementById("sldSkips").value;
+				padding = +document.getElementById("sldPad").value;
+				
+				d3.select("body").select("#figure").selectAll("svg").remove();
+				
+				
+				rootOffset = drawFigure(d3.select("body").select("#figure"), gframes, gskel, selectedJoint, frameSkip, padding);
+				
+				grootOffset = rootOffset;
+				gpadding = padding;
+				
+				reDrawFeat();
+			} 
+			
+			function makeFeats() {
+				selectedFeats = [];
+				f=0;
+				
+				if (document.getElementById("ch_space").checked)
+					selectedFeats[f++]= f_space;
+				if (document.getElementById("ch_weight").checked)
+					selectedFeats[f++]= f_weight;
+				if (document.getElementById("ch_time").checked)
+					selectedFeats[f++]= f_time;	
+				if (document.getElementById("ch_flow").checked)
+					selectedFeats[f++]= f_flow;
+				if (document.getElementById("ch_vel").checked)
+					selectedFeats[f++]= f_angvel;
+					
+				frameSkip = +document.getElementById("sldSkips").value;
+				
+				for ( i = 0; i < selectedFeats.length; i++)
+					selectedFeats[i].data = makeRandomFeature(gframes, frameSkip);
+			}
+			
+			function reDoFeats() {
+				selectedFeats = [];
+				f=0;
+				
+				if (document.getElementById("ch_space").checked)
+					selectedFeats[f++]= f_space;
+				if (document.getElementById("ch_weight").checked)
+					selectedFeats[f++]= f_weight;
+				if (document.getElementById("ch_time").checked)
+					selectedFeats[f++]= f_time;	
+				if (document.getElementById("ch_flow").checked)
+					selectedFeats[f++]= f_flow;
+				if (document.getElementById("ch_vel").checked)
+					selectedFeats[f++]= f_angvel;
+					
+				reDrawFeat();
+			}
+			
+			function reDrawFeat() {
+				d3.select("#featureList").selectAll("svg").remove();
+				
+			
+				//console.log(selectedFeats[0]);
+				drawFeatureList(d3.select("#featureList"), grootOffset, selectedFeats, gpadding);
+			}
+			
+			
+			loadNew();
+        </script>
+       
+       
+       <div style="clear:both;text-align:center;padding-top:20px;"><small>(C) Omid Alemi - Fall 2013</small></div>
+    </body>
+</html>
