@@ -170,24 +170,25 @@
 			} 
 			
 			function makeFeats() {
+				frameSkip = +document.getElementById("sldSkips").value;
+
 				selectedFeats = [];
 				f=0;
 				
 				if (document.getElementById("ch_space").checked)
-					selectedFeats[f++]= f_space;
+					{selectedFeats[f]= f_space;selectedFeats[f++].data = makeRandomFeature(gframes, frameSkip);}
 				if (document.getElementById("ch_weight").checked)
-					selectedFeats[f++]= f_weight;
+					{selectedFeats[f]= f_weight;selectedFeats[f++].data = makeRandomFeature(gframes, frameSkip);}
 				if (document.getElementById("ch_time").checked)
-					selectedFeats[f++]= f_time;	
+					{selectedFeats[f]= f_time;	selectedFeats[f++].data = makeRandomFeature(gframes, frameSkip);}
 				if (document.getElementById("ch_flow").checked)
-					selectedFeats[f++]= f_flow;
+					{selectedFeats[f]= f_flow;selectedFeats[f++].data = makeRandomFeature(gframes, frameSkip);}
 				if (document.getElementById("ch_vel").checked)
-					selectedFeats[f++]= f_angvel;
+					{selectedFeats[f]= f_angvel;;selectedFeats[f++].data = calcVelocities(gframes, frameSkip,selectedJoint);}
 					
-				frameSkip = +document.getElementById("sldSkips").value;
 				
-				for ( i = 0; i < selectedFeats.length; i++)
-					selectedFeats[i].data = makeRandomFeature(gframes, frameSkip);
+				//for ( i = 0; i < selectedFeats.length; i++)
+					//selectedFeats[i].data = makeRandomFeature(gframes, frameSkip);
 			}
 			
 			function reDoFeats() {
