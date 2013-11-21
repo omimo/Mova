@@ -29,8 +29,7 @@ function drawFigure(parent,frames, skel, highlightJ, frameSkip, pad) {
 
 				var index = 0;
 				for ( index = 0; index < frames.length; index += skips) {
-					console.log(frames.length);
-					console.log(index);
+					
 
 					var eye = {
 						x : w / 2 - 900 + index * 15,
