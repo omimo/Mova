@@ -45,8 +45,11 @@ function mouseOverGroup2(feature,rootOffset,timeline) {
 	.insert("rect",":first-child")
 	.attr("class", "over")
 	.attr("stroke","none")
-	.attr("x", function(d,j) {   
-		return rootOffset[d[0]-1];
+	.attr("x", function(d,j) {  
+			if (feature.label!="Acceleration")
+				return rootOffset[d[0]-1];//-padding;
+			else
+				return rootOffset[d[0]-1]+padding/2;
 	})
 	.attr("y",10)
 	.attr("width", function(d,j) {
@@ -113,15 +116,31 @@ function timeline(parent,rootOffset, feature)
 		.attr("class", "featBox")
 		.attr("id", function(d,i) {return "featbox"+i;})
 		.attr("stroke","none")
-		.attr("x", function(d,j) {   
+		.attr("x", function(d,j) {  
+			if (feature.label!="Acceleration")
+				return rootOffset[d[0]-1];//-padding;
+			else
+				return rootOffset[d[0]-1]+padding/2;
 			//console.log(rootOffset[d[0]-1]-padding);
-			return rootOffset[d[0]-1];//-padding;
+
 		})
-		.attr("y",10)
+		.attr("y", function(d) {
+			if (feature.label!="Acceleration")
+				return 10;
+			if (d[2]>0)
+				return 10;
+			else 
+				return 20;
+		})
 		.attr("width", function(d,j) {
 			return rootOffset[d[1]-1] - rootOffset[d[0]-1];
 		})
-		.attr("height",20)
+		.attr("height", function (d) {
+			if (feature.label!="Acceleration")
+				return 20;
+			else
+				return 10;
+		})
 		.attr("fill", function(d) {
 			return feature.colormap(d[2]);
 		})

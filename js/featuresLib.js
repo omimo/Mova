@@ -48,7 +48,29 @@ var f_aveangvel = {
 var f_accel = {
 		label: "Acceleration",
 		type: "windows",
-		colormap : function(v){return d3.hsl(0,1,1-(v/255));},
+		colormap2 : function(v){
+			if (v>0)
+				return d3.hsl(15,1,1-(v/500));
+			else
+				return d3.hsl(208,1,1-(-v/500));
+			},
+		colormap : function(v){
+//				if (v>165) v = 165;
+//				if (v<-165) v = -165;
+//				v +=165;
+//				return d3.hsl(v,1,0.5);
+			v = v/50;
+			if (v>100) v = 100;
+			if (v<-100) v = -100;
+			v +=100;
+			if (v> 100) 
+				return d3.hsl(2,1,1-v/200);
+			else  
+				return d3.hsl(227,1,1-v/200);
+		//	return d3.hsl(v,1,0.5);
+			
+				//return d3.hsl((Math.abs(v)+180)/360,1,0.5);
+				},		
 		data: [ ]
 };
 
@@ -101,6 +123,7 @@ function calcVelocities(frames, skips, joint) {
 		
 	    a = Math.pow((frames[index][joint].x-frames[index-skips][joint].x),2);
 	    a = a + Math.pow((frames[index][joint].y-frames[index-skips][joint].y),2);
+	    a = a + Math.pow((frames[index][joint].z-frames[index-skips][joint].z),2);
 	    v = Math.sqrt(a)/(skips*inputFPS);
 	    start = Math.floor(index/skips) -1;
 	    end = index/skips;
@@ -136,6 +159,7 @@ function calcAveVelocities(frames, skips, joint) {
 		for (j=index+1;j<index+skips;j++) {
 			 a = Math.pow((frames[j][joint].x-frames[j-1][joint].x),2);
 			 a = a + Math.pow((frames[j][joint].y-frames[j-1][joint].y),2);
+			 a = a + Math.pow((frames[index][joint].z-frames[index-skips][joint].z),2);
 			 sum+= Math.sqrt(a)/(skips*inputFPS);
 		}
 	   
@@ -175,6 +199,7 @@ function calcAccel(frames, skips, joint) {
 	
 	for (i=1;i<vel.length;i++) {
 		dv = Math.pow((vel[i]-vel[i-1]),2);
+		dv = (vel[i]-vel[i-1]);
 	    dt = (skips*inputFPS);
 		a = dv/dt;
 		

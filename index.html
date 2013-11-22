@@ -57,7 +57,7 @@
 		}
         </style>
         
-        <script type="text/javascript" src="d3/d3.v3.js"></script>
+        <script type="text/javascript" src="d3/d3.v3.min.js"></script>
         <script type="text/javascript" src="js/featureListVis.js"></script>
         <script type="text/javascript" src="js/figureVis.js"></script>
         <script type="text/javascript" src="js/featuresLib.js"></script>
@@ -229,7 +229,8 @@
 					selectedFeats[f++]= f_flow;
 				if (document.getElementById("ch_vel").checked)
 					selectedFeats[f++]= f_angvel;
-					
+				
+				makeFeats();
 				reDrawFeat();
 			}
 			
@@ -243,8 +244,28 @@
 			
 			
 			loadNew();
+			
+			
         </script>
        
+       <script>
+       	var mouseWheelEvt = function (e)
+			{
+    var event = e || window.event;
+    if (document.getElementById("canCont").doScroll)
+        document.getElementById("canCont").doScroll(event.wheelDelta>0?"left":"right");
+    else if ((event.wheelDelta || event.detail) > 0)
+        document.getElementById("canCont").scrollLeft -= 20;
+    else
+        document.getElementById("canCont").scrollLeft += 20;
+
+    return false;
+};
+if ("onmousewheel" in document.body)
+    document.getElementById("canCont").onmousewheel = mouseWheelEvt;
+else
+    document.getElementById("canCont").addEventListener("DOMMouseScroll", mouseWheelEvt);
+       </script>
        
        <div style="clear:both;text-align:center;padding-top:20px;"><small>(C) Omid Alemi - Fall 2013</small></div>
     </body>
