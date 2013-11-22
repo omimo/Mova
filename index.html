@@ -26,7 +26,7 @@
 			 pointer-events: all;
 		}
 		
-		.canvasContainer {
+		#canCont {
 			width: 80%;
 			overflow-x: scroll;
 			overflow-y: hidden;
@@ -38,7 +38,7 @@
 		}
 		
 		#sidebar {
-			width: 18%;
+			width: 250px;
 			border: 1px solid;
 			float: right;
 			position: absoloute;
@@ -62,6 +62,7 @@
         <script type="text/javascript" src="js/figureVis.js"></script>
         <script type="text/javascript" src="js/featuresLib.js"></script>
         <script type="text/javascript" src="js/fileTools.js"></script>
+        <script type="text/javascript" src="js/figureAnim.js"></script>
         
         
         <script>
@@ -81,7 +82,8 @@
         
         
         
-        <div id="canCont" class="canvasContainer">
+        <div id="canCont">
+        	<div id="anim"></div>
         	<div id="figure"></div>
       		<div id="featureList"></div>
         </div>
@@ -108,20 +110,22 @@
         		<div class="sidetabtitle">Select features: </div>
         		
         		<div style="border:2px solid #ccc; width:200px; height: 120px; overflow-y: scroll;">
-  				    <input type="checkbox" id="ch_space" checked="checked" onchange="reDoFeats()"/> Effort Space <br />
-    				<input type="checkbox" id="ch_weight" checked="checked" onchange="reDoFeats()"/> Effort Weight <br />
-    				<input type="checkbox" id="ch_time" checked="checked" onchange="reDoFeats()"/> Effort Time <br />
-    				<input type="checkbox" id="ch_flow" checked="checked" onchange="reDoFeats()"/> Effort Flow <br />
 				    <input type="checkbox" id="ch_vel" checked="checked" onchange="reDoFeats()"/> Angular Velocity <br />
+				    <input type="checkbox" id="ch_avevel" checked="checked" onchange="reDoFeats()"/> AveAngular Velocity <br />
+				    <input type="checkbox" id="ch_accel" checked="checked" onchange="reDoFeats()"/> Acacceleration<br />
+  				    <input type="checkbox" id="ch_space"  onchange="reDoFeats()"/> Effort Space <br />
+    				<input type="checkbox" id="ch_weight"  onchange="reDoFeats()"/> Effort Weight <br />
+    				<input type="checkbox" id="ch_time"  onchange="reDoFeats()"/> Effort Time <br />
+    				<input type="checkbox" id="ch_flow"  onchange="reDoFeats()"/> Effort Flow <br />
 				</div>
 				<button type="button">Edit Features</button>
         	</div>
         	<div id="controls" class="sidetab">
         		<div class="sidetabtitle">Visual Controls:</div>
         		Skip Frames: <br/>
-        		5<input type="range" id="sldSkips" min="5" max="50" value ="5" width = "100px" onchange="reDraw()">50<br/>
+        		5<input type="range" id="sldSkips" min="5" max="50" value ="5" width = "100" onchange="reDraw()">50<br/>
         		Padding: <br/>
-        		 10<input type="range" id="sldPad" min="10" max="50" value ="25" ondrag="reDraw()" onchange="reDraw()">50<br/>
+        		 10<input type="range" id="sldPad" min="10" max="70" value ="25" ondrag="reDraw()" onchange="reDraw()">70<br/>
         	</div>
         </div>
        
@@ -130,6 +134,8 @@
 			var gskel = [];
 			var grootOffset = [];
 			var gpadding = 10;
+			
+			var inputFPS = 0.0083; //120	
 			
 			var selectedJoint = 20;
 			var frameSkip = 5;
@@ -140,7 +146,7 @@
 							
 
 				var moveFile = "movs/"+document.getElementById("fileSelect").value;
-				var skelFile = "movs/ecuad1.skel";
+				var skelFile = "movs/ecuad1.skel2";
 
 				loadData(moveFile, skelFile, callbackForData);
 			}
@@ -153,19 +159,32 @@
 				reDraw();
 				};
 
+			var animIndex=0;
+			var playAnim = false;
+			var animSVG = [];
+			
+			d3.timer(drawFigure, 15);
+			
 			function reDraw() {
 				
 				frameSkip = +document.getElementById("sldSkips").value;
 				padding = +document.getElementById("sldPad").value;
 				
 				d3.select("body").select("#figure").selectAll("svg").remove();
+				d3.select("body").select("#anim").selectAll("svg").remove();
+				
+				rootOffset = drawFiguresCanvas(d3.select("body").select("#figure"), gframes, gskel, selectedJoint, frameSkip, padding);
 				
 				
-				rootOffset = drawFigure(d3.select("body").select("#figure"), gframes, gskel, selectedJoint, frameSkip, padding);
+				//animSVG = makeAnim(d3.select("body").select("#anim"), gframes, gskel, selectedJoint, frameSkip, padding);
+				
+				//playAnim = true;
+				
 				
 				grootOffset = rootOffset;
 				gpadding = padding;
 				
+				makeFeats();
 				reDrawFeat();
 			} 
 			
@@ -175,6 +194,12 @@
 				selectedFeats = [];
 				f=0;
 				
+				if (document.getElementById("ch_vel").checked)
+					{selectedFeats[f]= f_angvel;selectedFeats[f++].data = calcVelocities(gframes, frameSkip,selectedJoint);}
+				if (document.getElementById("ch_avevel").checked)
+					{selectedFeats[f]= f_aveangvel;selectedFeats[f++].data = calcAveVelocities(gframes, frameSkip,selectedJoint);}
+				if (document.getElementById("ch_accel").checked)
+					{selectedFeats[f]= f_accel;selectedFeats[f++].data = calcAccel(gframes, frameSkip,selectedJoint);}
 				if (document.getElementById("ch_space").checked)
 					{selectedFeats[f]= f_space;selectedFeats[f++].data = makeRandomFeature(gframes, frameSkip);}
 				if (document.getElementById("ch_weight").checked)
@@ -183,8 +208,7 @@
 					{selectedFeats[f]= f_time;	selectedFeats[f++].data = makeRandomFeature(gframes, frameSkip);}
 				if (document.getElementById("ch_flow").checked)
 					{selectedFeats[f]= f_flow;selectedFeats[f++].data = makeRandomFeature(gframes, frameSkip);}
-				if (document.getElementById("ch_vel").checked)
-					{selectedFeats[f]= f_angvel;;selectedFeats[f++].data = calcVelocities(gframes, frameSkip,selectedJoint);}
+				
 					
 				
 				//for ( i = 0; i < selectedFeats.length; i++)

@@ -28,19 +28,26 @@ function loadData(moveFile, skelFile, callback) {
 					var data = d3.csv.parseRows(unparsedData);
 					var cons = [];
 					var count = 0;
-
-					for ( i = 0; i < data.length; i++)
-						for ( j = 0; j < data.length; j++) {
+					var JointNames = [];
+					var skel = [];
+					
+					for ( j = 0; j < data[0].length; j++) {
+						JointNames[j]=data[0][j];
+					}
+					
+					for ( i = 1; i < data.length; i++)
+						for ( j = 0; j < data[0].length; j++) {
 							if (data[i][j] == 1) {
 								cons[count++] = {
-									a : i,
+									a : i-1,
 									b : j
 								};
 							}
 
 						}
-
-					skel = cons;
+					
+					skel.connections = cons;
+					skel.jointNames = JointNames;
 					
 					
 					//console.log(frames);

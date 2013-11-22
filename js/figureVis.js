@@ -1,11 +1,11 @@
-function drawFigure(parent,frames, skel, highlightJ, frameSkip, pad) {
+function drawFiguresCanvas(parent,frames, skel, highlightJ, frameSkip, pad) {
 	
 				var rootOffset = [];
 
 				padding = pad;
 				skips = frameSkip;
 				
-				w = (padding+10)*frames.length/skips+50;
+				w = (padding)*frames.length/skips+300;
 				h = 200;
 				
 
@@ -88,17 +88,22 @@ function drawFigure(parent,frames, skel, highlightJ, frameSkip, pad) {
 
 					//bones
 					svg.selectAll("line.f" + index)
-					.data(skel)
+					.data(skel.connections)
 					.enter()
 					.append("line")
 					.attr("stroke", "black")
+					.attr("x1",0).attr("x2",0)
+					//.transition().duration(1000).ease("elastic")
 					.attr("x1", function(d, j) {
 						return currentFrame[d.a].x;
-					}).attr("y1", function(d, j) {
-						return currentFrame[d.a].y;
-					}).attr("x2", function(d, j) {
+					})
+					.attr("x2", function(d, j) {
 						return currentFrame[d.b].x;
-					}).attr("y2", function(d, j) {
+					})
+					.attr("y1", function(d, j) {
+						return currentFrame[d.a].y;
+					})
+					.attr("y2", function(d, j) {
 						return currentFrame[d.b].y;
 					});
 

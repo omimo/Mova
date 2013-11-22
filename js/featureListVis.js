@@ -37,7 +37,6 @@ function mouseOverGroup(feature,rootOffset) {
 function mouseOverGroup2(feature,rootOffset,timeline) {
 	d3.select("#figure").select("svg").selectAll("rect").remove();
 	
-	console.log("hello");
 	parent=d3.select("body").select("#figure").select("svg");
 	
 	parent.selectAll("rect.o")
@@ -47,11 +46,11 @@ function mouseOverGroup2(feature,rootOffset,timeline) {
 	.attr("class", "over")
 	.attr("stroke","none")
 	.attr("x", function(d,j) {   
-		return rootOffset[d[0]-1]-padding;
+		return rootOffset[d[0]-1];
 	})
 	.attr("y",10)
 	.attr("width", function(d,j) {
-		return rootOffset[d[1]-1] - rootOffset[d[0]-1]+padding;
+		return rootOffset[d[1]-1] - rootOffset[d[0]-1];
 	})
 	.attr("height",parent.attr("height")-10)
 	.attr("fill", function(d) {
@@ -112,18 +111,25 @@ function timeline(parent,rootOffset, feature)
 		.enter()
 		.append("rect")
 		.attr("class", "featBox")
+		.attr("id", function(d,i) {return "featbox"+i;})
 		.attr("stroke","none")
 		.attr("x", function(d,j) {   
 			//console.log(rootOffset[d[0]-1]-padding);
-			return rootOffset[d[0]-1]-padding;
+			return rootOffset[d[0]-1];//-padding;
 		})
 		.attr("y",10)
 		.attr("width", function(d,j) {
-			return rootOffset[d[1]-1] - rootOffset[d[0]-1]+padding;
+			return rootOffset[d[1]-1] - rootOffset[d[0]-1];
 		})
 		.attr("height",20)
 		.attr("fill", function(d) {
 			return feature.colormap(d[2]);
+		})
+		.attr("orgfill", function(d) {
+			return feature.colormap(d[2]);
+		})
+		.attr("val",  function(d) {
+			return (d[2]);
 		})
 		;
 			
@@ -134,7 +140,7 @@ function timeline(parent,rootOffset, feature)
 
 function drawFeatureList (parent,rootOffset, feats, padding)
 {
- 	w =  (padding+10)*rootOffset.length+50;
+ 	w = (padding)*frames.length/skips+300;
    	h = 200;
    	
    	feat_h = 40;
