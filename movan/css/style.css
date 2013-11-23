@@ -1,3 +1,7 @@
+	body {
+		font-size: 10pt;
+	}
+	
 	div.bar {
    			 display: inline-block;
    			 width: 20px;
@@ -24,7 +28,7 @@
 			width: 99%;
 			overflow-x: scroll;
 			overflow-y: hidden;
-			border: 1px solid;
+			border: 0px solid;
 			padding-left:10px;
 			padding-right:10px;
 			padding-bottom: 20px;
@@ -39,15 +43,15 @@
 			float: right;
 			position: absolute;
 			background-color: white;
-			top: 90px;
-			right: 20px;
+			top: 110px;
+			right: 25px;
 			padding: 5px;
 		}
 		
+		
 		.sidetab {
-			border: 1px solid;
 			margin-top: 5px;
-			padding:7px;
+			padding:1px;
 		}
 		
 		.sidetabtitle {
