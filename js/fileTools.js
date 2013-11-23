@@ -1,5 +1,7 @@
 function loadData(moveFile, skelFile, callback) {
-				// Read the movement
+				
+				//var frames =[];
+	// Read the movement
 				d3.text(moveFile, function(unparsedData) {
 					var data = d3.csv.parseRows(unparsedData);
 
@@ -16,8 +18,8 @@ function loadData(moveFile, skelFile, callback) {
 
 						return joints;
 					});
-					//console.log(frames);
 					frames = f;
+					console.log(frames);
 
 					
 					//Read the skeleton
@@ -49,7 +51,7 @@ function loadData(moveFile, skelFile, callback) {
 						
 						//console.log(frames);
 					//	setTimeout(function() {callback(frames,skel);},200);
-						callback(frames,skel);
+						callback(f,skel);
 					});
 				});
 
