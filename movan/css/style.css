@@ -1,0 +1,56 @@
+	div.bar {
+   			 display: inline-block;
+   			 width: 20px;
+   			 height: 75px;   /* We'll override this later */
+    		 background-color: teal;
+    		 margin-right:2px;
+		}
+        	
+        div.over {
+   			 position: absolute;
+   			 width: 20px;
+   			 height: 75px;   /* We'll override this later */
+    		 background-color: teal;
+    		 margin-right:2px;
+    		 opacity:0.6;
+			 filter:alpha(opacity=60);
+			 }
+			 
+		.featBox {
+			 pointer-events: all;
+		}
+		
+		#canCont {
+			width: 99%;
+			overflow-x: scroll;
+			overflow-y: hidden;
+			border: 1px solid;
+			padding-left:10px;
+			padding-right:10px;
+			padding-bottom: 20px;
+			float: left;
+			height: 520px;
+			
+		}
+		
+		#sidebar {
+			width: 250px;
+			border: 1px solid;
+			float: right;
+			position: absolute;
+			background-color: white;
+			top: 90px;
+			right: 20px;
+			padding: 5px;
+		}
+		
+		.sidetab {
+			border: 1px solid;
+			margin-top: 5px;
+			padding:7px;
+		}
+		
+		.sidetabtitle {
+			margin-bottom: 10px;
+			font-style: oblique;
+		}
