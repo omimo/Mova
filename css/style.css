@@ -26,8 +26,8 @@
 		
 		#canCont {
 			width: 99%;
-			overflow-x: scroll;
-			overflow-y: hidden;
+			overflow-x: auto;
+			overflow-y: auto;
 			border: 0px solid;
 			padding-left:10px;
 			padding-right:10px;
