@@ -20,39 +20,39 @@ function loadData(moveFile, skelFile, callback) {
 					frames = f;
 
 					
-					// drawFigure();
-				});
-
-				//Read the skeleton
-				d3.text(skelFile, function(unparsedData) {
-					var data = d3.csv.parseRows(unparsedData);
-					var cons = [];
-					var count = 0;
-					var JointNames = [];
-					var skel = [];
-					
-					for ( j = 0; j < data[0].length; j++) {
-						JointNames[j]=data[0][j];
-					}
-					
-					for ( i = 1; i < data.length; i++)
+					//Read the skeleton
+					d3.text(skelFile, function(unparsedData) {
+						var data = d3.csv.parseRows(unparsedData);
+						var cons = [];
+						var count = 0;
+						var JointNames = [];
+						var skel = [];
+						
 						for ( j = 0; j < data[0].length; j++) {
-							if (data[i][j] == 1) {
-								cons[count++] = {
-									a : i-1,
-									b : j
-								};
-							}
-
+							JointNames[j]=data[0][j];
 						}
-					
-					skel.connections = cons;
-					skel.jointNames = JointNames;
-					
-					
-					//console.log(frames);
-					setTimeout(function() {callback(frames,skel);},200);
-					
+						
+						for ( i = 1; i < data.length; i++)
+							for ( j = 0; j < data[0].length; j++) {
+								if (data[i][j] == 1) {
+									cons[count++] = {
+										a : i-1,
+										b : j
+									};
+								}
+
+							}
+						
+						skel.connections = cons;
+						skel.jointNames = JointNames;
+						
+						
+						//console.log(frames);
+					//	setTimeout(function() {callback(frames,skel);},200);
+						callback(frames,skel);
+					});
 				});
+
+				
 
 			}

@@ -73,6 +73,8 @@ function makeAnim(parent,frames, skel, highlightJ, frameSkip, pad) {
 					return currentFrame[d.b].y;
 				});
 				
+				$("#featureList").scrollLeft(0);
+				
 				animIndex++;
 				if (animIndex >=frames.length)
 					animIndex = 0;
@@ -136,6 +138,7 @@ function drawFigure() {
 	});
 
 	
+	
 	// highlight the feature box
 	feat = d3.select("#featureList");//.selectAll("rect#featbox"+Math.floor((animIndex-1)/frameSkip));
 //	if (old != null) {
@@ -151,19 +154,28 @@ function drawFigure() {
 	feat.insert("div",":first-child")
 	.attr("id","pointline")
 	.style("position", "absolute")
-	.style("left", grootOffset[Math.floor((animIndex)/frameSkip)]-15+"px")
+	.style("left", function(d) {
+//		if (grootOffset[Math.floor((animIndex)/frameSkip)]-15 > currentFrame[0].x+200)	
+//			return currentFrame[0].x+200+"px";
+//		else
+			return 	grootOffset[Math.floor((animIndex)/frameSkip)]-15+"px";
+	})
 	.style("top", 200)
 	.style("height", 200+"px")
 	.style("width", 40+"px")
 	.style("border","1px solid steelblue")
 	//.style("background-color", "steelblue")
 	;
+	console.log(screen.width);
+
 	
+	//if (grootOffset[Math.floor((animIndex)/frameSkip)]-15 > currentFrame[0].x)		
+		$("#featureList").scrollLeft(grootOffset[Math.floor((animIndex)/frameSkip)]);
 
 	
 	animIndex+=4;
 	if (animIndex >=gframes.length)
-		{animIndex =0;playAnim = false;$( "#btnPlay" ).button('option', 'label', 'Play');feat.select("#pointline").remove();}
+		{animIndex =0;playAnim = false;$( "#btnPlay" ).button('option', 'label', 'Play');feat.select("#pointline").remove();$("#featureList").scrollLeft(0);}
 	
 	//d3.timer(drawFigure(animSVG,gframes,gskel, selectedJoint,frameSkip,padding), 300);
 	

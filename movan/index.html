@@ -51,6 +51,20 @@
 				margin: 0em 0.2em 0.2em 0.2em;
 			}
 			
+			#maintabs {
+				padding-bottom: 10px;
+
+			}
+			
+			#figure {
+				overflow-x: hidden;
+			}
+			
+			#featureList {
+				overflow-x:auto;
+				padding-bottom: 20px;
+
+			}
 			.ui-tabs .ui-tabs-nav li a img { float: left; margin-right: 5px;margin-top:5px;}
 
         </style>
@@ -70,7 +84,7 @@
 		<script>
 			$(document).ready(function() {
 
-				$("#tabs").tabs();
+				$("#maintabs").tabs();
 				
 				// $("#tabs").click(function(event, ui){
 						// console.log(event);
@@ -96,6 +110,13 @@
 			$("#sidebar").draggable().tabs({
       collapsible: true
     });;
+    
+    
+    
+    		$("#featureList").scroll(function(){ 
+                    $("#figure").scrollLeft($("#featureList").scrollLeft());
+               });
+                
 			});
 		</script>
           
@@ -107,7 +128,7 @@
         
         
         <div id="canCont">
-        	<div id="tabs">
+        	<div id="maintabs">
 				<ul>
 					<li><a href="#figure">Figure Sketch</a></li>
 					<li><a href="#anim">Animation</a></li>
