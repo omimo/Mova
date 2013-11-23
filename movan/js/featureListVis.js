@@ -47,13 +47,13 @@ function mouseOverGroup2(feature,rootOffset,timeline) {
 	.attr("stroke","none")
 	.attr("x", function(d,j) {  
 			if (feature.label!="Acceleration")
-				return rootOffset[d[0]-1];//-padding;
+				return rootOffset[d[0]];//-padding;
 			else
-				return rootOffset[d[0]-1]+padding/2;
+				return rootOffset[d[0]]+padding/2;
 	})
 	.attr("y",10)
 	.attr("width", function(d,j) {
-		return rootOffset[d[1]-1] - rootOffset[d[0]-1];
+		return rootOffset[d[1]] - rootOffset[d[0]];
 	})
 	.attr("height",parent.attr("height")-10)
 	.attr("fill", function(d) {
@@ -102,10 +102,10 @@ function timeline(parent,rootOffset, feature)
 	
 	svg.append("text")
 	.text(feature.label+":")
-	.attr("x",10)
+	.attr("x",20)
 	.attr("y",25)
 	.attr("font-family", "sans-serif")
-	.attr("font-size", "20px");
+	.attr("font-size", "11pt");
 		
 	
 	
@@ -118,9 +118,9 @@ function timeline(parent,rootOffset, feature)
 		.attr("stroke","none")
 		.attr("x", function(d,j) {  
 			if (feature.label!="Acceleration")
-				return rootOffset[d[0]-1];//-padding;
+				return rootOffset[d[0]]+padding-2;//-padding;
 			else
-				return rootOffset[d[0]-1]+padding/2;
+				return rootOffset[d[0]]+padding*3/2;
 			//console.log(rootOffset[d[0]-1]-padding);
 
 		})
@@ -133,7 +133,7 @@ function timeline(parent,rootOffset, feature)
 				return 20;
 		})
 		.attr("width", function(d,j) {
-			return rootOffset[d[1]-1] - rootOffset[d[0]-1];
+			return rootOffset[d[1]] - rootOffset[d[0]];
 		})
 		.attr("height", function (d) {
 			if (feature.label!="Acceleration")
@@ -159,7 +159,8 @@ function timeline(parent,rootOffset, feature)
 
 function drawFeatureList (parent,rootOffset, feats, padding)
 {
- 	w = (padding)*frames.length/skips+300;
+ //	w = (padding)*frames.length/skips+300;
+ 	w = (padding)*rootOffset.length+300;
    	h = 200;
    	
    	feat_h = 40;

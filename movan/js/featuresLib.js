@@ -79,7 +79,7 @@ var f_accel = {
 function makeRandomFeature(frames, skips) {
 	var data = [];
 	var dCount = 0;
-	var start = 1;
+	var start = 0;
 	var end;
 	var value;
 	
@@ -112,7 +112,7 @@ function makeRandomFeature(frames, skips) {
 function calcVelocities(frames, skips, joint) {
 	var data = [];
 	var dCount = 0;
-	var start = 1;
+	var start = 0;
 	var end;
 	var value;
 	var min = 100000;
@@ -140,10 +140,14 @@ function calcVelocities(frames, skips, joint) {
 	for (i=0;i<data.length;i++)
 		data[i][2]=data[i][2];
 	
+	console.log(data);
+	
 	return data;
 }
 
 function calcAveVelocities(frames, skips, joint) {
+	
+	
 	var data = [];
 	var dCount = 0;
 	var start = 1;
@@ -156,7 +160,8 @@ function calcAveVelocities(frames, skips, joint) {
 		ind2 = index/skips;
 		
 		sum = 0;
-		for (j=index+1;j<index+skips;j++) {
+		for (j=index-skips+1;j<=index;j++) {
+			
 			 a = Math.pow((frames[j][joint].x-frames[j-1][joint].x),2);
 			 a = a + Math.pow((frames[j][joint].y-frames[j-1][joint].y),2);
 			 a = a + Math.pow((frames[index][joint].z-frames[index-skips][joint].z),2);
