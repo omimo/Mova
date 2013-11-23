@@ -3,61 +3,13 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Movement Analayzer</title>
-          <style>
-        	div.bar {
-   			 display: inline-block;
-   			 width: 20px;
-   			 height: 75px;   /* We'll override this later */
-    		 background-color: teal;
-    		 margin-right:2px;
-		}
-        	
-        div.over {
-   			 position: absolute;
-   			 width: 20px;
-   			 height: 75px;   /* We'll override this later */
-    		 background-color: teal;
-    		 margin-right:2px;
-    		 opacity:0.6;
-			 filter:alpha(opacity=60);
-			 }
-			 
-		.featBox {
-			 pointer-events: all;
-		}
-		
-		#canCont {
-			width: 80%;
-			overflow-x: scroll;
-			overflow-y: hidden;
-			border: 1px solid;
-			padding-bottom: 20px;
-			float: left;
-			height: 520px;
-			
-		}
-		
-		#sidebar {
-			width: 250px;
-			border: 1px solid;
-			float: right;
-			position: absoloute;
-			padding: 5px;
-		}
-		
-		.sidetab {
-			border: 1px solid;
-			margin-top: 5px;
-			padding:7px;
-		}
-		
-		.sidetabtitle {
-			margin-bottom: 10px;
-			font-style: oblique;
-		}
-        </style>
         
-        <script type="text/javascript" src="d3/d3.v3.min.js"></script>
+        <link href="css/style.css" rel="stylesheet"/>
+        <link href="jq/css/smoothness/jquery-ui-1.10.3.custom.css" rel="stylesheet"/>
+        
+        
+        <script type="text/javascript" src="d3/d3.v3.js"></script>
+        
         <script type="text/javascript" src="js/featureListVis.js"></script>
         <script type="text/javascript" src="js/figureVis.js"></script>
         <script type="text/javascript" src="js/featuresLib.js"></script>
@@ -65,6 +17,10 @@
         <script type="text/javascript" src="js/figureAnim.js"></script>
         
         
+		<script src="2jq/jquery-1.9.1.js"></script>
+		<script src="2jq/jquery-ui-1.10.3.custom.js"></script>
+		
+		
         <script>
 			
 
