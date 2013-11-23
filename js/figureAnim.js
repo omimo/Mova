@@ -163,7 +163,7 @@ function drawFigure() {
 	
 	animIndex+=4;
 	if (animIndex >=gframes.length)
-		{animIndex =0;playAnim = false;$( "#btnPlay" ).button('option', 'label', 'Play');}
+		{animIndex =0;playAnim = false;$( "#btnPlay" ).button('option', 'label', 'Play');feat.select("#pointline").remove();}
 	
 	//d3.timer(drawFigure(animSVG,gframes,gskel, selectedJoint,frameSkip,padding), 300);
 	
