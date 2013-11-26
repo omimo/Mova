@@ -51,22 +51,9 @@
 				margin: 0em 0.2em 0.2em 0.2em;
 			}
 			
-			#maintabs {
-				padding-bottom: 10px;
-
-			}
+		
 			
-			#figure {
-				overflow-x: hidden;
-			}
 			
-			#featureList {
-				overflow-x:auto;
-				overflow-y:auto;
-				padding-bottom: 20px;
-				
-
-			}
 			.ui-tabs .ui-tabs-nav li a img { float: left; margin-right: 5px;margin-top:5px;}
 
         </style>
@@ -82,6 +69,8 @@
         
 		<script src="jq/jquery-1.9.1.js"></script>
 		<script src="jq/jquery-ui-1.10.3.custom.js"></script>
+		<script src="jq/jquery.fileupload.js"></script>
+		<script src="jq/jquery.iframe-transport.js"></script>
 		
 		<script>
 			$(document).ready(function() {
@@ -107,16 +96,22 @@
 				});
 					
 			
+				
 			$( "#sideAcaccordion" ).accordion();
 			
 			$("#sidebar").draggable().tabs({
-      collapsible: true
-    });
-    		
+      		collapsible: true,
+  	            active: false 
+   			 });
+ 	 	
     		
     		var setSizes = function () {
+    		
     		$("#canCont").height($(document).height()-150-$("#footer").height());
    			$("#featureList").height($("#canCont").height()-290);
+   			
+   			$("#maintabs").width($(document).width()-$("#legends").width()-60);
+   			$("#legends").height($("#canCont").height());
    			};
    			
    			setSizes();
@@ -127,9 +122,18 @@
                     $("#figure").scrollLeft($("#featureList").scrollLeft());
                });
                 
-			});
 			
-			 
+			$( "#btnSave" ).button();
+			$( "#btnSave" ).click(function(event) {
+						console.log("clicked");
+						playAnim = true;
+						$( "#btnPlay" ).button('option', 'label', 'Pause');
+				});
+			
+			
+			
+			
+			}); 
 		</script>
           
     </head>
@@ -152,7 +156,9 @@
         	<div id="figure"></div>
       		<div id="featureList"></div>
       		</div>
+      		<div id="legends"><div style="font-family: Verdana, Arial, sans-serif;font-weight: bold;font-size: 11.5pt;padding-bottom: 5px;"> Legends:</div></div>
         </div>
+       
         
         <div id="sidebar">	
         	<ul class="tooboxTitle">
@@ -161,15 +167,14 @@
         	<div id="sideAcaccordion">
         			<h2>Files</h2>
 					<div id="filelist" class="sidetab">
-						<input type="file" multiple="multiple" id="upload_field" />
-     				   <div id="progress_report">
-       				     <div id="progress_report_name"></div>
-        				 <div id="progress_report_status" style="font-style: italic;"></div>
-       					 <div id="progress_report_bar_container" style="width: 90%; height: 5px;">
-      	 	     			    <div id="progress_report_bar" style="background-color: blue; width: 0; height: 100%;"></div>
-      		 	   		 </div>
-      					</div>
-						<div class="sidetabtitle">
+					   
+					   <div class="sidetabtitle">
+							Upload a file:
+						</div>
+						
+					  <input id="fileupload" type="file" name="files[]" data-url="http://cgi.sfu.ca/~oalemi/movan/srv/upload.php" multiple/>
+      					
+						<div style="margin-top:5px" class="sidetabtitle">
 							Select a file:
 						</div>
 						<select name="drop1" id="fileSelect" size="4" multiple="multiple"
@@ -237,6 +242,7 @@
 						<input type="range" id="sldPad" min="10" max="70" value ="25" ondrag="reDraw()" onchange="reDraw()">
 						70
 						<br/>
+						<button id="btnSave">Save as SVG</button>
 					</div>
 				</div>
         </div>
@@ -268,7 +274,7 @@
 				
 				gframes = frames;
 				gskel = skel;
-				makeFeats();
+				//makeFeats();
 				reDraw();
 				};
 
@@ -382,35 +388,19 @@ else
     document.getElementById("canCont").addEventListener("DOMMouseScroll", mouseWheelEvt);
        </script>
        
-        <script type="text/javascript">
-            $(function() {
-                $("#upload_field").html5_upload({
-                    url: "upload",
-                    sendBoundary: window.FormData || $.browser.mozilla,
-                    onStart: function(event, total) {
-                        return true;
-                        return confirm("You are trying to upload " + total + " files. Are you sure?");
-                    },
-                    onProgress: function(event, progress, name, number, total) {
-                        console.log(progress, number);
-                    },
-                    setName: function(text) {
-                        $("#progress_report_name").text(text);
-                    },
-                    setStatus: function(text) {
-                        $("#progress_report_status").text(text);
-                    },
-                    setProgress: function(val) {
-                        $("#progress_report_bar").css('width', Math.ceil(val*100)+"%");
-                    },
-                    onFinishOne: function(event, response, name, number, total) {
-                        //alert(response);
-                    },
-                    onError: function(event, name, error) {
-                        alert('error while uploading file ' + name);
-                    }
-                });
+        <script type="text/javascript"> 
+        //url: "http://cgi.sfu.ca/~oalemi/movan/srv/upload.php",
+           $(function () {
+    $('#fileupload').fileupload({
+        dataType: 'csv',
+        done: function (e, data) {
+        	console.log(data);
+            $.each(data.result.files, function (index, file) {
+                $('<p/>').text(file.name).appendTo(document.body);
             });
+        }
+    });
+});
         </script>
        <div id="footer" style="clear:both;text-align:center;padding-top:20px;"><small>(C) Omid Alemi - Fall 2013</small></div>
     </body>

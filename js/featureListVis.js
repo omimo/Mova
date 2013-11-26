@@ -134,10 +134,26 @@ function timeline(parent,rootOffset, feature)
 			else 
 				return 10;
 		})
+		.attr("orgtop", function(d) {
+			if (feature.type=="bipolar") {
+				if (d[2]>0)
+					return 10;
+				else
+					return 20;
+			}
+			else 
+				return 10;
+		})
 		.attr("width", function(d,j) {
 			return rootOffset[d[1]] - rootOffset[d[0]];
 		})
 		.attr("height", function (d) {
+			if (feature.type=="bipolar")
+				return 10;
+			else
+				return 20;
+		})
+		.attr("orgheight", function (d) {
 			if (feature.type=="bipolar")
 				return 10;
 			else
@@ -155,8 +171,52 @@ function timeline(parent,rootOffset, feature)
 		;
 			
 	
+	// Draw Legends
+
+	var legitemW = ($("#legends").width()-20)/feature.range.length;
+	
+	legsvg = d3.select("#legends").append("svg").attr("height","80px");
+	
+	legsvg.append("text")
+	.text(feature.label+" ("+feature.unit+")")
+	.attr("y",15)
+	.attr("x", 10)
+	.attr("font-family", "sans-serif")
+	.attr("font-size", "11pt");
 	
 	
+	legsvg.selectAll("rect.legitem")
+	.data(feature.range)
+	.enter()
+	.append("rect")
+	.attr("class", "legitem")
+	.attr("y",20)
+	.attr("x", function (d,i) {
+		return legitemW*i;
+	})
+	.attr("width",legitemW)
+	.attr("height",15)
+	.attr("fill", function (d,i) {
+		return feature.colormap(d,i);
+	})
+	;
+	legsvg.selectAll("text.legitem")
+	.data(feature.range)
+	.enter()
+	.append("text")
+	.attr("transform", function(d,i) {
+		return "translate("+(legitemW*i+legitemW/2)+",65)rotate(-90)";
+	})
+	.attr("y2",50)
+	.attr("x2", function (d,i) {
+		return legitemW*i+legitemW/2;
+	})
+	.text(function(d,i) {
+		return d;
+	})
+	.attr("font-family", "sans-serif")
+	.attr("font-size", "8pt");
+	;
 }
 
 function drawFeatureList (parent,rootOffset, feats, padding)
@@ -169,7 +229,7 @@ function drawFeatureList (parent,rootOffset, feats, padding)
    	
    //console.log(rootOffset);
    	
-   	//var list = parent.append("div").attr("width", w).attr("height", h);
+   	var leg = d3.select("#legends").selectAll("svg").remove();
    	list = parent;
    
    	 
