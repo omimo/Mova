@@ -77,6 +77,8 @@ function drawFiguresCanvas(parent,frames, skel, highlightJ, frameSkip, pad) {
 					}).attr("r", function(d, i) {
 						if (i == highlightJ - 1)
 							return 4;
+						else if (i == skelHeadJoint -1)
+							return 4;
 						else
 							return 2;
 					}).attr("fill", function(d, i) {

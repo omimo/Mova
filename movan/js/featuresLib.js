@@ -4,28 +4,33 @@ var cmap2 = [ d3.rgb(194, 230, 153), d3.rgb(120, 198, 121), d3.rgb(49, 163, 84),
 
 var f_weight = {
 		label: "Weight",
-		type: "windows",
+		type: "segments",
 		colormap : function(v){return cmap1[v];},
 		data: [ ]
 };
 
 var f_space = {
-		label: "Space",
-		type: "windows",
-		colormap : function(v){return cmap1[v];},
+		label: "Space (Pathway)",
+		type: "segments",
+		colormap : function(v,i){
+			if (i%2==0)
+				return d3.hsl(250,1,0.5);
+			else
+				return d3.hsl(50,1,0.5);
+		},
 		data: [ ]
 };
 
 var f_time = {
 		label: "Time",
-		type: "windows",
+		type: "segments",
 		colormap :function(v){return cmap2[v];},
 		data: [ ]
 };
 
 var f_flow = {
 		label: "Flow",
-		type: "windows",
+		type: "segments",
 //		colormap : [d3.rgb(255, 255, 204), d3.rgb(194, 230, 153), d3.rgb(120, 198, 121), d3.rgb(49, 163, 84), d3.rgb(0, 104, 55)],
 		colormap : function(v){return cmap1[v];},
 		data: [ ]
@@ -33,21 +38,21 @@ var f_flow = {
 
 var f_angvel = {
 		label: "Velocity",
-		type: "windows",
+		type: "cont",
 		colormap : function(v){return d3.hsl(0,1,1-(v/255));},
 		data: [ ]
 };
 
 var f_aveangvel = {
 		label: "AveVelocity",
-		type: "windows",
+		type: "cont",
 		colormap : function(v){return d3.hsl(0,1,1-(v/255));},
 		data: [ ]
 };
 
 var f_accel = {
 		label: "Acceleration",
-		type: "windows",
+		type: "bipolar",
 		colormap2 : function(v){
 			if (v>0)
 				return d3.hsl(15,1,1-(v/500));
@@ -109,6 +114,15 @@ function makeRandomFeature(frames, skips) {
 	return data;
 }
 
+
+function eculDist (pos1,pos2) {
+	var a = 0;
+	 a = Math.pow((pos1.x-pos2.x),2);
+	 a = a + Math.pow((pos1.y-pos2.y),2);
+	 a = a + Math.pow((pos1.z-pos2.z),2);
+	 return  Math.sqrt(a);
+}
+
 function calcVelocities(frames, skips, joint) {
 	var data = [];
 	var dCount = 0;
@@ -121,10 +135,13 @@ function calcVelocities(frames, skips, joint) {
 	for ( index = skips; index < frames.length; index += skips) {
 		ind2 = index/skips;
 		
-	    a = Math.pow((frames[index][joint].x-frames[index-skips][joint].x),2);
-	    a = a + Math.pow((frames[index][joint].y-frames[index-skips][joint].y),2);
-	    a = a + Math.pow((frames[index][joint].z-frames[index-skips][joint].z),2);
-	    v = Math.sqrt(a)/(skips*inputFPS);
+//	    a = Math.pow((frames[index][joint].x-frames[index-skips][joint].x),2);
+//	    a = a + Math.pow((frames[index][joint].y-frames[index-skips][joint].y),2);
+//	    a = a + Math.pow((frames[index][joint].z-frames[index-skips][joint].z),2);
+//	    v = Math.sqrt(a)/(skips*inputFPS);
+		
+		v = eculDist(frames[index][joint],frames[index-skips][joint])/(skips*inputFPS);
+		
 	    start = Math.floor(index/skips) -1;
 	    end = index/skips;
 		data[dCount++] = [start,end,v];
@@ -140,7 +157,7 @@ function calcVelocities(frames, skips, joint) {
 	for (i=0;i<data.length;i++)
 		data[i][2]=data[i][2];
 	
-	console.log(data);
+
 	
 	return data;
 }
@@ -162,10 +179,13 @@ function calcAveVelocities(frames, skips, joint) {
 		sum = 0;
 		for (j=index-skips+1;j<=index;j++) {
 			
-			 a = Math.pow((frames[j][joint].x-frames[j-1][joint].x),2);
-			 a = a + Math.pow((frames[j][joint].y-frames[j-1][joint].y),2);
-			 a = a + Math.pow((frames[index][joint].z-frames[index-skips][joint].z),2);
-			 sum+= Math.sqrt(a)/(skips*inputFPS);
+//			 a = Math.pow((frames[j][joint].x-frames[j-1][joint].x),2);
+//			 a = a + Math.pow((frames[j][joint].y-frames[j-1][joint].y),2);
+//			 a = a + Math.pow((frames[index][joint].z-frames[index-skips][joint].z),2);
+//			 sum+= Math.sqrt(a)/(skips*inputFPS);
+			
+			sum+= eculDist(frames[j][joint],frames[j-1][joint])/(skips*inputFPS);
+
 		}
 	   
 		v = sum/skips;
@@ -262,4 +282,79 @@ function calcAveAccel(frames, skips, joint) {
 		data[i][2]=data[i][2];
 	
 	return data;
+}
+
+
+function calcSpace_Pathway (frames, skips, joint) {
+	var data = [];
+	var dCount = 0;
+	var start = 1;
+	var end;
+	var value;
+	var min = 100000;
+	var minIndex = -1;
+	var max = -1;
+	var fracs = [];
+	
+	var temp = new Array(Math.floor(frames.length/skips));
+	
+	
+	for ( index = 0; index <frames.length; index += skips) {
+		
+		temp[index/skips] = new Array(Math.floor(frames.length/skips));
+		
+		
+		for (i = skips;i<=index;i+=skips) {
+		//
+		var sum = 0;
+		for (j = i;j<=index;j+=skips) {
+			sum += eculDist(frames[j-skips][joint],frames[j][joint]);
+		}
+		
+		totalDist = eculDist(frames[index][joint],frames[i][joint]);
+		
+	
+		var frac = sum/totalDist;
+		temp[index/skips][i] = frac;
+		//console.log(index+","+i+","+frac);
+		if (frac < min) {
+			min = frac;
+			minIndex = i;
+		}
+		//	
+	}
+		
+	
+		data[dCount++] = minIndex;
+	}
+    
+
+
+	console.log(temp);
+	console.log(data);
+	console.log(cluster(data));
+	return cluster(data);
+
+}
+
+function cluster (data) {
+	var data2 = [];
+	var start = 0;
+	var lastSeen = data[0];
+	dCount = 0;
+	for (i=1;i<data.length;i++) {
+		if (data[i]!=lastSeen) {
+			end = i;
+			data2[dCount++] = [start,end,lastSeen];
+			start = end;
+		}
+		lastSeen = data[i];
+	}
+	
+	if (end!=i-1) {
+		end = i-1;
+		data2[dCount++] = [start,end,lastSeen];
+	}
+		
+	return data2;
 }

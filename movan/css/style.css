@@ -26,14 +26,15 @@
 		
 		#canCont {
 			width: 99%;
-			overflow-x: auto;
-			overflow-y: auto;
+			overflow-x: hidden;
+			overflow-y: hidden;
 			border: 0px solid;
 			padding-left:10px;
 			padding-right:10px;
 			padding-bottom: 20px;
 			float: left;
 			height: 520px;
+			
 			
 		}
 		

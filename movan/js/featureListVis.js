@@ -46,7 +46,7 @@ function mouseOverGroup2(feature,rootOffset,timeline) {
 	.attr("class", "over")
 	.attr("stroke","none")
 	.attr("x", function(d,j) {  
-			if (feature.label!="Acceleration")
+			if (feature.type!="bipolar")
 				return rootOffset[d[0]];//-padding;
 			else
 				return rootOffset[d[0]]+padding/2;
@@ -56,8 +56,8 @@ function mouseOverGroup2(feature,rootOffset,timeline) {
 		return rootOffset[d[1]] - rootOffset[d[0]];
 	})
 	.attr("height",parent.attr("height")-10)
-	.attr("fill", function(d) {
-		return feature.colormap(d[2]);
+	.attr("fill", function(d,i) {
+		return feature.colormap(d[2],i);
 	}).transition()
 	.duration(500)
 	.attr("fill-opacity",0.6)
@@ -117,32 +117,34 @@ function timeline(parent,rootOffset, feature)
 		.attr("id", function(d,i) {return "featbox"+i;})
 		.attr("stroke","none")
 		.attr("x", function(d,j) {  
-			if (feature.label!="Acceleration")
-				return rootOffset[d[0]]+padding-2;//-padding;
+			if (feature.type=="bipolar")
+				return rootOffset[d[0]]+padding*3/2;//-padding;
 			else
-				return rootOffset[d[0]]+padding*3/2;
+				return rootOffset[d[0]]+padding-2;
 			//console.log(rootOffset[d[0]-1]-padding);
 
 		})
 		.attr("y", function(d) {
-			if (feature.label!="Acceleration")
-				return 10;
-			if (d[2]>0)
-				return 10;
+			if (feature.type=="bipolar") {
+				if (d[2]>0)
+					return 10;
+				else
+					return 20;
+			}
 			else 
-				return 20;
+				return 10;
 		})
 		.attr("width", function(d,j) {
 			return rootOffset[d[1]] - rootOffset[d[0]];
 		})
 		.attr("height", function (d) {
-			if (feature.label!="Acceleration")
-				return 20;
-			else
+			if (feature.type=="bipolar")
 				return 10;
+			else
+				return 20;
 		})
-		.attr("fill", function(d) {
-			return feature.colormap(d[2]);
+		.attr("fill", function(d,i) {
+			return feature.colormap(d[2],i);
 		})
 		.attr("orgfill", function(d) {
 			return feature.colormap(d[2]);
@@ -167,8 +169,8 @@ function drawFeatureList (parent,rootOffset, feats, padding)
    	
    //console.log(rootOffset);
    	
-   	var list = parent.append("div").attr("width", w).attr("height", h);
-   	
+   	//var list = parent.append("div").attr("width", w).attr("height", h);
+   	list = parent;
    
    	 
    	 for (f=0;f<feats.length;f++)
