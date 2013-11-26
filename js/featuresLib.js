@@ -5,7 +5,7 @@ var cmap2 = [ d3.rgb(194, 230, 153), d3.rgb(120, 198, 121), d3.rgb(49, 163, 84),
 var f_weight = {
 		label: "Weight",
 		type: "segments",
-		unit: "",
+		unit: "segments",
 		range: [-1,+1],
 		colormap : function(v){return cmap1[v];},
 		data: [ ]
@@ -14,7 +14,7 @@ var f_weight = {
 var f_space = {
 		label: "Space (Pathway)",
 		type: "segments",
-		unit: "",
+		unit: "segments",
 		range: [-1,+1],
 		colormap : function(v,i){
 			if (i%2==0)
@@ -28,7 +28,7 @@ var f_space = {
 var f_time = {
 		label: "Time",
 		type: "segments",
-		unit: "",
+		unit: "segments",
 		range: [-1,+1],
 		colormap :function(v){return cmap2[v];},
 		data: [ ]
@@ -37,7 +37,7 @@ var f_time = {
 var f_flow = {
 		label: "Flow",
 		type: "segments",
-		unit: "",
+		unit: "segments",
 		range: [-1,+1],
 //		colormap : [d3.rgb(255, 255, 204), d3.rgb(194, 230, 153), d3.rgb(120, 198, 121), d3.rgb(49, 163, 84), d3.rgb(0, 104, 55)],
 		colormap : function(v){return cmap1[v];},

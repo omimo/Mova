@@ -200,6 +200,10 @@ function timeline(parent,rootOffset, feature)
 		return feature.colormap(d,i);
 	})
 	;
+	
+	if (feature.type == "segments")
+		return;
+	
 	legsvg.selectAll("text.legitem")
 	.data(feature.range)
 	.enter()
