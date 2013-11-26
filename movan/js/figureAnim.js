@@ -154,27 +154,42 @@ function drawFigure() {
 //	d3.select("body").selectAll("rect#featbox"+Math.floor(animIndex/frameSkip))
 //	.attr("fill", "blue");	
 	
-	feat.select("#pointline").remove();
-	feat.insert("div",":first-child")
-	.attr("id","pointline")
-	.style("position", "absolute")
-	.style("left", function(d) {
-//		if (grootOffset[Math.floor((animIndex)/frameSkip)]-15 > currentFrame[0].x+200)	
-//			return currentFrame[0].x+200+"px";
-//		else
-			return 	grootOffset[Math.floor((animIndex)/frameSkip)]-15+"px";
-	})
-	.style("top", 200)
-	.style("height", 200+"px")
-	.style("width", 40+"px")
-	.style("border","1px solid steelblue")
-	//.style("background-color", "steelblue")
-	;
-	console.log(screen.width);
+//	feat.select("#pointline").remove();
+//	feat.insert("div",":first-child")
+//	.attr("id","pointline")
+//	.style("position", "absolute")
+//	.style("left", function(d) {
+////		if (grootOffset[Math.floor((animIndex)/frameSkip)]-15 > currentFrame[0].x+200)	
+////			return currentFrame[0].x+200+"px";
+////		else
+//			return 	grootOffset[Math.floor((animIndex)/frameSkip)]-15+"px";
+//	})
+//	.style("top", 200)
+//	.style("height", 200+"px")
+//	.style("width", 40+"px")
+//	.style("border","1px solid steelblue")
+//	//.style("background-color", "steelblue")
+//	;
+	
+	
+	if (animIndex>0)
+		d3.selectAll("#featbox"+Math.floor((animIndex)/frameSkip-1))
+		.transition().ease("bounce")
+		.attr("height",function(d){
+			return d3.select(this).attr("orgheight");
+		})
+		.attr("y",function(d){
+			return d3.select(this).attr("orgtop");
+		});
+	
+	d3.selectAll("#featbox"+Math.floor((animIndex)/frameSkip)).attr("height",40);
+	d3.selectAll("#featbox"+Math.floor((animIndex)/frameSkip)).attr("y",function(d) {
+		return d3.select(this).attr("orgtop")-20;
+	});
 
 	
 	//if (grootOffset[Math.floor((animIndex)/frameSkip)]-15 > currentFrame[0].x)		
-		$("#featureList").scrollLeft(grootOffset[Math.floor((animIndex)/frameSkip)]);
+		$("#featureList").scrollLeft(grootOffset[Math.floor((animIndex)/frameSkip)]-400);
 
 	
 	animIndex+=4;

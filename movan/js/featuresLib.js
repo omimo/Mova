@@ -5,6 +5,8 @@ var cmap2 = [ d3.rgb(194, 230, 153), d3.rgb(120, 198, 121), d3.rgb(49, 163, 84),
 var f_weight = {
 		label: "Weight",
 		type: "segments",
+		unit: "",
+		range: [-1,+1],
 		colormap : function(v){return cmap1[v];},
 		data: [ ]
 };
@@ -12,6 +14,8 @@ var f_weight = {
 var f_space = {
 		label: "Space (Pathway)",
 		type: "segments",
+		unit: "",
+		range: [-1,+1],
 		colormap : function(v,i){
 			if (i%2==0)
 				return d3.hsl(250,1,0.5);
@@ -24,6 +28,8 @@ var f_space = {
 var f_time = {
 		label: "Time",
 		type: "segments",
+		unit: "",
+		range: [-1,+1],
 		colormap :function(v){return cmap2[v];},
 		data: [ ]
 };
@@ -31,6 +37,8 @@ var f_time = {
 var f_flow = {
 		label: "Flow",
 		type: "segments",
+		unit: "",
+		range: [-1,+1],
 //		colormap : [d3.rgb(255, 255, 204), d3.rgb(194, 230, 153), d3.rgb(120, 198, 121), d3.rgb(49, 163, 84), d3.rgb(0, 104, 55)],
 		colormap : function(v){return cmap1[v];},
 		data: [ ]
@@ -39,27 +47,36 @@ var f_flow = {
 var f_angvel = {
 		label: "Velocity",
 		type: "cont",
-		colormap : function(v){return d3.hsl(0,1,1-(v/255));},
+		unit: "pixels/s",
+		range: [0,100,200,300,400,500,600,700,800,900,1000],
+		colormap : function(v){return d3.hsl(0,1,0.9-(v/1100));},
 		data: [ ]
 };
 
 var f_aveangvel = {
 		label: "AveVelocity",
 		type: "cont",
-		colormap : function(v){return d3.hsl(0,1,1-(v/255));},
+		unit: "pixels/s",
+		range: [0,100,200,300,400,500,600,700,800,900,1000],
+		colormap : function(v){if (v>1000) v = 1000;return d3.hsl(0,1,0.9-(v/1100));},
 		data: [ ]
 };
 
 var f_accel = {
 		label: "Acceleration",
 		type: "bipolar",
-		colormap2 : function(v){
-			if (v>0)
-				return d3.hsl(15,1,1-(v/500));
-			else
-				return d3.hsl(208,1,1-(-v/500));
-			},
+		unit: "pixels/s^2",
+		range: [-200,-180,-160,-140,-120,-100,-80,-60,-40,-20,-1,1,20,40,60,80,100,120,140,160,180,200],
 		colormap : function(v){
+			if (v>200) v = 200;
+			if (v<-200) v = -200;
+		
+			if (v>0)
+				return d3.hsl(15,1,0.9-(v/200));
+			else
+				return d3.hsl(208,1,0.9-(-v/200));
+			},
+		colormap2 : function(v){
 //				if (v>165) v = 165;
 //				if (v<-165) v = -165;
 //				v +=165;
@@ -153,6 +170,7 @@ function calcVelocities(frames, skips, joint) {
 		//console.log(v);
 	}
 	
+
 	d = max-min;
 	for (i=0;i<data.length;i++)
 		data[i][2]=data[i][2];
@@ -237,7 +255,8 @@ function calcAccel(frames, skips, joint) {
 		if (a <min)
 			min = a;
 	}
-		
+	console.log(min);
+	console.log(max);
 	
 	d = max-min;
 	for (i=0;i<data.length;i++)
@@ -301,20 +320,22 @@ function calcSpace_Pathway (frames, skips, joint) {
 	
 	for ( index = 0; index <frames.length; index += skips) {
 		
+		var min = 100000;
 		temp[index/skips] = new Array(Math.floor(frames.length/skips));
 		
 		
-		for (i = skips;i<=index;i+=skips) {
+		for (i = 0;i<index;i+=skips) {
+			
 		//
 		var sum = 0;
-		for (j = i;j<=index;j+=skips) {
+		for (j = i+skips;j<=index;j+=skips) {
 			sum += eculDist(frames[j-skips][joint],frames[j][joint]);
 		}
 		
 		totalDist = eculDist(frames[index][joint],frames[i][joint]);
 		
 	
-		var frac = sum/totalDist;
+		var frac = totalDist/sum;
 		temp[index/skips][i] = frac;
 		//console.log(index+","+i+","+frac);
 		if (frac < min) {
@@ -329,10 +350,64 @@ function calcSpace_Pathway (frames, skips, joint) {
 	}
     
 
+//
+//	console.log(temp);
+//	console.log(data);
+//	console.log(cluster(data));
+	return cluster(data);
 
-	console.log(temp);
-	console.log(data);
-	console.log(cluster(data));
+}
+
+function calcSpace_Pathway_Cont	 (frames, skips, joint) {
+	var data = [];
+	var dCount = 0;
+	var start = 1;
+	var end;
+	var value;
+	var min = 100000;
+	var minIndex = -1;
+	var max = -1;
+	var fracs = [];
+	
+	var temp = new Array(Math.floor(frames.length/skips));
+	
+	
+	for ( index = 0; index <frames.length; index += skips) {
+		
+		var min = 100000;
+		temp[index/skips] = new Array(Math.floor(frames.length/skips));
+		
+		
+		for (i = 0;i<index;i+=skips) {
+			
+		//
+		var sum = 0;
+		for (j = i+skips;j<=index;j+=skips) {
+			sum += eculDist(frames[j-skips][joint],frames[j][joint]);
+		}
+		
+		totalDist = eculDist(frames[index][joint],frames[i][joint]);
+		
+	
+		var frac = totalDist/sum;
+		temp[index/skips][i] = frac;
+		//console.log(index+","+i+","+frac);
+		if (frac < min) {
+			min = frac;
+			minIndex = i;
+		}
+		//	
+	}
+		
+	
+		data[dCount++] = minIndex;
+	}
+    
+
+//
+//	console.log(temp);
+//	console.log(data);
+//	console.log(cluster(data));
 	return cluster(data);
 
 }
