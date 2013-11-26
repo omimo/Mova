@@ -96,7 +96,7 @@ function timeline(parent,rootOffset, feature)
 		.on("mouseleave", function(d) {
 			mouseOutGroup(parent);
 		});
-
+console.log(rootOffset);
 	//svg=parent.append("svg").attr("width", w).attr("height", feat_h);;
 	svg = parent;
 	
@@ -117,10 +117,10 @@ function timeline(parent,rootOffset, feature)
 		.attr("id", function(d,i) {return "featbox"+i;})
 		.attr("stroke","none")
 		.attr("x", function(d,j) {  
-			if (feature.type=="bipolar")
-				return rootOffset[d[0]]+padding*3/2;//-padding;
+			if (feature.type!="bipolar")
+				return rootOffset[d[0]];//-padding;
 			else
-				return rootOffset[d[0]]+padding-2;
+				return rootOffset[d[0]]+padding/2;
 			//console.log(rootOffset[d[0]-1]-padding);
 
 		})

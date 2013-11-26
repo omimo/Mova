@@ -99,6 +99,7 @@ div.over2 {
 
 #figure {
 	overflow-x: hidden;
+	padding-left: 0px;
 }
 
 #featureList {
