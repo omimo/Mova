@@ -62,7 +62,9 @@
 			
 			#featureList {
 				overflow-x:auto;
+				overflow-y:auto;
 				padding-bottom: 20px;
+				
 
 			}
 			.ui-tabs .ui-tabs-nav li a img { float: left; margin-right: 5px;margin-top:5px;}
@@ -109,22 +111,34 @@
 			
 			$("#sidebar").draggable().tabs({
       collapsible: true
-    });;
-    
-    
+    });
+    		
+    		
+    		var setSizes = function () {
+    		$("#canCont").height($(document).height()-150-$("#footer").height());
+   			$("#featureList").height($("#canCont").height()-290);
+   			};
+   			
+   			setSizes();
+   			
+   			$(window).resize( setSizes);
     
     		$("#featureList").scroll(function(){ 
                     $("#figure").scrollLeft($("#featureList").scrollLeft());
                });
                 
 			});
+			
+			 
 		</script>
           
     </head>
     <body>
+       
+       <div id="header" style="clear:both;">
         <h1 style="float: left;">Movement Analayzer</h1>
         <h4 style="float: right;">Version 0.3</h4>
-        
+        </div>
         
         
         <div id="canCont">
@@ -147,18 +161,26 @@
         	<div id="sideAcaccordion">
         			<h2>Files</h2>
 					<div id="filelist" class="sidetab">
+						<input type="file" multiple="multiple" id="upload_field" />
+     				   <div id="progress_report">
+       				     <div id="progress_report_name"></div>
+        				 <div id="progress_report_status" style="font-style: italic;"></div>
+       					 <div id="progress_report_bar_container" style="width: 90%; height: 5px;">
+      	 	     			    <div id="progress_report_bar" style="background-color: blue; width: 0; height: 100%;"></div>
+      		 	   		 </div>
+      					</div>
 						<div class="sidetabtitle">
 							Select a file:
 						</div>
 						<select name="drop1" id="fileSelect" size="4" multiple="multiple"
 						onchange="loadNew()" style="border:2px solid #ccc; width:200px; height: 120px; overflow-y: scroll;">
-							<option value="Punch4.csv" selected="selected">Punch</option>
-							<option value="Float4.csv">Float</option>
-							<option value="Dab1.csv">Dab</option>
-							<option value="Flick1.csv">Flick</option>
-							<option value="Slash4.csv">Slash</option>
-							<option value="Glide3.csv">Glide</option>
-							<option value="Wring2.csv">Wring</option>
+							<option value="Punch4.csv" selected="selected">Punch4.csv</option>
+							<option value="Float4.csv">Float3.csv</option>
+							<option value="Dab1.csv">Dab1.csv</option>
+							<option value="Flick1.csv">Flick1.csv</option>
+							<option value="Slash4.csv">Slash4.csv</option>
+							<option value="Glide3.csv">Glide3.csv</option>
+							<option value="Wring2.csv">Wring2.csv</option>
 
 						</select>
 
@@ -180,17 +202,17 @@
 							<input type="checkbox" id="ch_accel" checked="checked" onchange="reDoFeats()"/>
 							Acacceleration
 							<br />
-							<input type="checkbox" id="ch_space"  onchange="reDoFeats()"/>
-							Effort Space
+							<input type="checkbox" id="ch_space" checked="checked" onchange="reDoFeats()"/>
+							Space (Pathway)
 							<br />
 							<input type="checkbox" id="ch_weight"  onchange="reDoFeats()"/>
-							Effort Weight
+							Effort Weight (fake)
 							<br />
 							<input type="checkbox" id="ch_time"  onchange="reDoFeats()"/>
-							Effort Time
+							Effort Time (fake)
 							<br />
 							<input type="checkbox" id="ch_flow"  onchange="reDoFeats()"/>
-							Effort Flow
+							Effort Flow (fake)
 							<br />
 						</div>
 						<button type="button">
@@ -201,7 +223,7 @@
 					<h2>Visual Controls</h2>
 					<div id="controls" class="sidetab">
 						<div class="sidetabtitle">
-							Visual Controls:
+							
 						</div>
 						Skip Frames:
 						<br/>
@@ -228,6 +250,7 @@
 			var inputFPS = 0.0083; //120	
 			
 			var selectedJoint = 20;
+			var skelHeadJoint = 24;
 			var frameSkip = 5;
 
 			var selectedFeats = [f_weight, f_space];
@@ -258,6 +281,7 @@
 			function reDraw() {
 				
 				frameSkip = +document.getElementById("sldSkips").value;
+				console.log(frameSkip);
 				padding = +document.getElementById("sldPad").value;
 				
 				d3.select("body").select("#figure").selectAll("svg").remove();
@@ -292,7 +316,7 @@
 				if (document.getElementById("ch_accel").checked)
 					{selectedFeats[f]= f_accel;selectedFeats[f++].data = calcAccel(gframes, frameSkip,selectedJoint);}
 				if (document.getElementById("ch_space").checked)
-					{selectedFeats[f]= f_space;selectedFeats[f++].data = makeRandomFeature(gframes, frameSkip);}
+					{selectedFeats[f]= f_space;selectedFeats[f++].data = calcSpace_Pathway(gframes, frameSkip,selectedJoint);}
 				if (document.getElementById("ch_weight").checked)
 					{selectedFeats[f]= f_weight;selectedFeats[f++].data = makeRandomFeature(gframes, frameSkip);}
 				if (document.getElementById("ch_time").checked)
@@ -358,6 +382,36 @@ else
     document.getElementById("canCont").addEventListener("DOMMouseScroll", mouseWheelEvt);
        </script>
        
-       <div style="clear:both;text-align:center;padding-top:20px;"><small>(C) Omid Alemi - Fall 2013</small></div>
+        <script type="text/javascript">
+            $(function() {
+                $("#upload_field").html5_upload({
+                    url: "upload",
+                    sendBoundary: window.FormData || $.browser.mozilla,
+                    onStart: function(event, total) {
+                        return true;
+                        return confirm("You are trying to upload " + total + " files. Are you sure?");
+                    },
+                    onProgress: function(event, progress, name, number, total) {
+                        console.log(progress, number);
+                    },
+                    setName: function(text) {
+                        $("#progress_report_name").text(text);
+                    },
+                    setStatus: function(text) {
+                        $("#progress_report_status").text(text);
+                    },
+                    setProgress: function(val) {
+                        $("#progress_report_bar").css('width', Math.ceil(val*100)+"%");
+                    },
+                    onFinishOne: function(event, response, name, number, total) {
+                        //alert(response);
+                    },
+                    onError: function(event, name, error) {
+                        alert('error while uploading file ' + name);
+                    }
+                });
+            });
+        </script>
+       <div id="footer" style="clear:both;text-align:center;padding-top:20px;"><small>(C) Omid Alemi - Fall 2013</small></div>
     </body>
 </html>
