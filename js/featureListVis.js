@@ -96,7 +96,7 @@ function timeline(parent,rootOffset, feature)
 		.on("mouseleave", function(d) {
 			mouseOutGroup(parent);
 		});
-console.log(rootOffset);
+
 	//svg=parent.append("svg").attr("width", w).attr("height", feat_h);;
 	svg = parent;
 	

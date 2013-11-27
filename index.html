@@ -97,7 +97,9 @@
 					
 			
 				
-			$( "#sideAcaccordion" ).accordion();
+			$( "#sideAcaccordion" ).accordion({
+				heightStyle: "content"
+			});
 			
 			$("#sidebar").draggable().tabs({
       		collapsible: true,
@@ -191,6 +193,12 @@
 					
 					<h2>Features</h2>
 					<div id="features" class="sidetab">
+						
+						<div class="sidetabtitle">
+							Select a joint:
+							<div id="jointChooser"></div>
+						</div>
+						
 						<div class="sidetabtitle">
 							Select features:
 						</div>

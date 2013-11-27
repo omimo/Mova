@@ -255,8 +255,7 @@ function calcAccel(frames, skips, joint) {
 		if (a <min)
 			min = a;
 	}
-	console.log(min);
-	console.log(max);
+
 	
 	d = max-min;
 	for (i=0;i<data.length;i++)

@@ -19,7 +19,7 @@ function loadData(moveFile, skelFile, callback) {
 						return joints;
 					});
 					frames = f;
-					console.log(frames);
+					
 
 					
 					//Read the skeleton
