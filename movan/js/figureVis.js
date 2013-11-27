@@ -27,11 +27,12 @@ function drawFiguresCanvas(parent,frames, skel, highlightJ, frameSkip, pad) {
 				.style("fill", "none")
 				.style("stroke-width", 0);
 
+				
+				
+				/////////////////////
+				
 				var index = 0;
-				for ( index = 0; index < frames.length; index += skips) {
-					
-
-					var eye = {
+				var eye = {
 						x : w / 2 - 900 + index * 15,
 						y : h / 2,
 						z : 800
@@ -47,6 +48,42 @@ function drawFiguresCanvas(parent,frames, skel, highlightJ, frameSkip, pad) {
 
 					currentFrame = frames[index].map(function(d) {
 						return {
+							x : d.x / 2 + 100  + index/skips * padding,
+							y : -1 * d.y / 2 + 90 + h / 2,
+							z : d.z / 2
+						};
+					});
+					
+					
+					//Create SVG element
+					d3.select("#jointChooser").selectAll("svg").remove();
+					var jointChooser = d3.select("#jointChooser").append("svg").attr("height",200);
+					drawSkel(jointChooser,currentFrame,index, highlightJ,skel);
+					
+					
+					////////////
+				
+				
+				for ( index = 0; index < frames.length; index += skips) {
+					
+
+					var eye = {
+						x : w / 2 +100 + index/skips * padding,
+						y : h/2,
+						z : 800
+					};
+
+					
+//					 currentFrame = frames[index].map(function(d) {
+//					 return {x:(eye.z * (d.x-eye.x)) / (eye.z + d.z) + eye.x,
+//					 y: (eye.z * (d.y-eye.y)) / (eye.z + d.z) + eye.y,
+//					 z:d.z/2
+//					 };
+//					 });
+					 
+		
+					currentFrame = frames[index].map(function(d) {
+						return {
 							x : d.x / 2 + 200  + index/skips * padding,
 							y : -1 * d.y / 2 + 90 + h / 2,
 							z : d.z / 2
@@ -55,59 +92,9 @@ function drawFiguresCanvas(parent,frames, skel, highlightJ, frameSkip, pad) {
 					
 					rootOffset[index/skips] = currentFrame[0].x;
 					//Create SVG element
-
-					/*
-					 svg.append("circle")
-					 .attr("cx", function(d) {
-					 return eye.x;
-					 }).attr("cy", function(d) {
-					 return eye.y;
-					 }).attr("r", 2);
-					 */
-
-					//draw joints
-					svg.selectAll("circle.f" + index)
-					.data(currentFrame)
-					.enter()
-					.append("circle")
-					.attr("cx", function(d) {
-						return d.x;
-					}).attr("cy", function(d) {
-						return d.y;
-					}).attr("r", function(d, i) {
-						if (i == highlightJ - 1)
-							return 4;
-						else if (i == skelHeadJoint -1)
-							return 4;
-						else
-							return 2;
-					}).attr("fill", function(d, i) {
-						if (i == highlightJ - 1)
-							return 'red';
-						else
-							return 'black';
-					});
-
-					//bones
-					svg.selectAll("line.f" + index)
-					.data(skel.connections)
-					.enter()
-					.append("line")
-					.attr("stroke", "black")
-					.attr("x1",0).attr("x2",0)
-					//.transition().duration(1000).ease("elastic")
-					.attr("x1", function(d, j) {
-						return currentFrame[d.a].x;
-					})
-					.attr("x2", function(d, j) {
-						return currentFrame[d.b].x;
-					})
-					.attr("y1", function(d, j) {
-						return currentFrame[d.a].y;
-					})
-					.attr("y2", function(d, j) {
-						return currentFrame[d.b].y;
-					});
+					drawSkel(svg,currentFrame,index, highlightJ,skel);
+			
+					
 
 				}
 
@@ -116,3 +103,50 @@ function drawFiguresCanvas(parent,frames, skel, highlightJ, frameSkip, pad) {
 				return rootOffset;
 
 			}
+
+
+function drawSkel(svg, currentFrame, index, highlightJ,skel) {
+	//draw joints
+	svg.selectAll("circle.f" + index)
+	.data(currentFrame)
+	.enter()
+	.append("circle")
+	.attr("cx", function(d) {
+		return d.x;
+	}).attr("cy", function(d) {
+		return d.y;
+	}).attr("r", function(d, i) {
+		if (i == highlightJ - 1)
+			return 4;
+		else if (i == skelHeadJoint -1)
+			return 4;
+		else
+			return 2;
+	}).attr("fill", function(d, i) {
+		if (i == highlightJ - 1)
+			return 'red';
+		else
+			return 'black';
+	});
+
+	//bones
+	svg.selectAll("line.f" + index)
+	.data(skel.connections)
+	.enter()
+	.append("line")
+	.attr("stroke", "black")
+	.attr("x1",0).attr("x2",0)
+	//.transition().duration(1000).ease("elastic")
+	.attr("x1", function(d, j) {
+		return currentFrame[d.a].x;
+	})
+	.attr("x2", function(d, j) {
+		return currentFrame[d.b].x;
+	})
+	.attr("y1", function(d, j) {
+		return currentFrame[d.a].y;
+	})
+	.attr("y2", function(d, j) {
+		return currentFrame[d.b].y;
+	});
+}
