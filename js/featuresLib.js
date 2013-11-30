@@ -562,12 +562,12 @@ function calcSpace_Pathway_Omid	 (frames, skips, joint) {
 		
 	
 		var frac = totalDist/sum;
-		console.log("111");
+
 		temp[index/skips][i] = frac;
 		//if ( Math.abs(frac - temp[index/skips][i+skips]) >  dx)
 		if ( Math.abs(frac - 1) >  dx)
 		{
-			console.log("sdfsafsdf");
+			
 			minIndex = i;
 //			index = i - skips;
 //			next = 1;
@@ -581,7 +581,7 @@ function calcSpace_Pathway_Omid	 (frames, skips, joint) {
 //			next = 0;
 //			continue;
 //		}
-		console.log("333333");
+	
 		index = i - skips;
 		data[dCount++] = minIndex;
 	}

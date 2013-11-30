@@ -1,5 +1,6 @@
 body {
-	font-size: 10pt;
+	font-size: 80%;
+	overflow: hidden;
 }
 
 div.bar {
@@ -42,14 +43,16 @@ div.over2 {
 	float: right;
 	position: absolute;
 	background-color: white;
-	top: 130px;
+	top: 120px;
 	right: 300px;
-	padding: 5px;
+	padding: 0.05em;
 }
 
 .sidetab {
 	margin-top: 5px;
 	padding: 1px;
+	padding-left: 15px !important;
+	overflow-x:hidden  !important;
 }
 
 .sidetabtitle {
@@ -114,4 +117,53 @@ div.over2 {
 
 #features {
 	overflow-x: hidden;
+	padding-bottom:0.5em;
 }
+
+.ui-accordion .ui-accordion-content {
+				padding: 1em 0.5em;
+				border-top: 0;
+				overflow: auto;
+			}
+
+			#sideAcaccordion {
+				padding: 0px;
+				background: none;
+			}
+
+			.tooboxTitle {
+				padding-left2: 1.2em !important;
+				cursor: pointer;
+				display2: inline-block;
+				float: none;
+				top: 0px;
+				margin: 0em;
+				
+				background: transparent;
+				border-width: 0px 0px 1px 0px;
+				-moz-border-radius: 0px;
+				-webkit-border-radius: 0px;
+				border-radius: 0px;
+			}
+			.toolboxTitleText {
+				width: 100%;
+				height: 2.35em;
+				text-align: center;
+				background-color: blue;
+			}
+
+			#sidebar .ui-tabs-nav {
+				background: transparent;
+				border-width: 0px 0px 1px 0px;
+				-moz-border-radius: 0px;
+				-webkit-border-radius: 0px;
+				border-radius: 0px;
+			}
+			#sidebar .ui-tabs-panel {
+				margin: 0em 0.2em 0.2em 0.2em;
+			}
+			
+		
+			
+			
+			.ui-tabs .ui-tabs-nav li a img { float: left; margin-right: 5px;margin-top:5px;}

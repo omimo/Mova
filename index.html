@@ -6,58 +6,8 @@
         
         <link href="css/style.css" rel="stylesheet"/>
         <link href="jq/css/smoothness/jquery-ui-1.10.3.custom.css" rel="stylesheet"/>
-        
-        <style>
-			.ui-accordion .ui-accordion-content {
-				padding: 1em 0.5em;
-				border-top: 0;
-				overflow: auto;
-			}
-
-			#sideAcaccordion {
-				padding: 0px;
-				background: none;
-			}
-
-			.tooboxTitle {
-				padding-left2: 1.2em !important;
-				cursor: pointer;
-				display2: inline-block;
-				float: none;
-				top: 0px;
-				margin: 0em;
-				
-				background: transparent;
-				border-width: 0px 0px 1px 0px;
-				-moz-border-radius: 0px;
-				-webkit-border-radius: 0px;
-				border-radius: 0px;
-			}
-			.toolboxTitleText {
-				width: 100%;
-				height: 2.35em;
-				text-align: center;
-				background-color: blue;
-			}
-
-			#sidebar .ui-tabs-nav {
-				background: transparent;
-				border-width: 0px 0px 1px 0px;
-				-moz-border-radius: 0px;
-				-webkit-border-radius: 0px;
-				border-radius: 0px;
-			}
-			#sidebar .ui-tabs-panel {
-				margin: 0em 0.2em 0.2em 0.2em;
-			}
-			
-		
-			
-			
-			.ui-tabs .ui-tabs-nav li a img { float: left; margin-right: 5px;margin-top:5px;}
-
-        </style>
-        
+        <link rel="stylesheet" type="text/css" href="jq/css/jquery-ui-slider-pips.css">
+      
         <script type="text/javascript" src="d3/d3.v3.js"></script>
         
         <script type="text/javascript" src="js/featureListVis.js"></script>
@@ -71,7 +21,18 @@
 		<script src="jq/jquery-ui-1.10.3.custom.js"></script>
 		<script src="jq/jquery.fileupload.js"></script>
 		<script src="jq/jquery.iframe-transport.js"></script>
+		<script src="jq/jquery-ui-slider-pips.js"></script>
 		
+		<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-46098170-1', 'sfu.ca');
+  ga('send', 'pageview');
+
+		</script>
 		<script>
 			$(document).ready(function() {
 
@@ -130,8 +91,41 @@
 						
 				});
 			
-			
-			
+			$("#sldPad2").slider({
+				min: 10,
+				max: 70,
+				step: 1,
+				value: 25,
+				slide: function(event, ui) {
+					reDraw();
+						
+				}
+					
+			}).slider('pips',{
+				
+				first: "label", 	
+  				last: "label",
+  				rest: false,
+  				suffix: "px",
+  				 //labels: false,
+			});
+		
+			$("#sldSkip2").slider({
+				min: 5,
+				max: 50,
+				step: 1,
+				value: 5,
+				slide: function(event, ui) {
+					reDraw();	
+				}
+			}).slider('pips',{
+				
+				first: "label", 	
+  				last: "label",
+  				rest: false,
+  				suffix: "",
+  				 //labels: false,
+			});
 			
 			}); 
 		</script>
@@ -182,7 +176,7 @@
 							Select a file:
 						</div>
 						<select name="drop1" id="fileSelect" size="4" multiple="multiple"
-						onchange="loadNew()" style="border:2px solid #ccc; width:200px; height: 120px; overflow-y: scroll;">
+						onchange="loadNew()" style="border:2px solid #ccc; width:200px; height: 120px; overflow-y: auto;">
 							<option value="Punch4.csv" selected="selected">Punch4.csv</option>
 							<option value="Float4.csv">Float3.csv</option>
 							<option value="Dab1.csv">Dab1.csv</option>
@@ -203,45 +197,19 @@
 							Select features:
 						</div>
 
-						<div style="border:2px solid #ccc; width:200px; height: 120px; overflow-y: scroll;">
-							<input type="checkbox" id="ch_vel" checked="checked" onchange="reDoFeats()"/>
-							Angular Velocity
-							<br />
-							<input type="checkbox" id="ch_accel" checked="checked" onchange="reDoFeats()"/>
-							Acacceleration
-							<br />
-							<input type="checkbox" id="ch_jerk" checked="checked" onchange="reDoFeats()"/>
-							Jerk
-							<br />
-							<input type="checkbox" id="ch_johips" checked="checked" onchange="reDoFeats()"/>
-							Joint over Hips
-							<br />
-							<input type="checkbox" id="ch_space" checked="checked" onchange="reDoFeats()"/>
-							Space (Pathway)
-							<br />
-							<input type="checkbox" id="ch_directseg" onchange="reDoFeats()"/>
-							Direct Segments
-							<br />
-							<input type="checkbox" id="ch_weight"  onchange="reDoFeats()"/>
-							Effort Weight (fake)
-							<br />
-							<input type="checkbox" id="ch_time"  onchange="reDoFeats()"/>
-							Effort Time (fake)
-							<br />
-							<input type="checkbox" id="ch_flow"  onchange="reDoFeats()"/>
-							Effort Flow (fake)
-							<br />
+						<div id="featCheckboxes" style="border:2px solid #ccc; width:200px; height: 100px; overflow-y: scroll;">
+							
 						</div>
 						<!-- <button type="button">
 							Edit Features
 						</button> -->
 						
-						<div class="sidetabtitle">
+						<div class="sidetabtitle" style="margin-top:0.5em">
 							Select a joint:
 						</div>
 						
 						<div id="jointChooser">
-							<div id = "jointLabel" style="margin-top:5px">-</div>
+							<div id = "jointLabel" style="padding-left:2em;margin-top:-0.5em;font-size: 0.8em;">-</div>
 						</div>
 						
 					</div>
@@ -253,15 +221,14 @@
 						</div>
 						Skip Frames:
 						<br/>
-						5
-						<input type="range" id="sldSkips" min="5" max="50" value ="5" width = "100" onchange="reDraw()">
-						50
+						<div id="sldSkip2"></div>
 						<br/>
 						Padding:
 						<br/>
-						10
-						<input type="range" id="sldPad" min="10" max="70" value ="25" ondrag="reDraw()" onchange="reDraw()">
-						70
+						<div id="sldPad2"></div>
+						<br/>
+						
+						
 						<br/>
 						<button id="btnSave">Save as SVG</button>
 					</div>
@@ -280,8 +247,47 @@
 			var skelHeadJoint = 23;
 			var frameSkip = 5;
 
-			var selectedFeats = [f_weight, f_space];
+			var animIndex=0;
+			var playAnim = false;
+			var animSVG = [];
+			
+			
+			var availableFeatures =  [
+							[f_angvel,'Velocity',calcVelocities,1],
+							[f_accel,'Acceleration',calcAccel,1],
+							[f_jerk,'Jerk',calcJerk,1],
+							[f_overhips,'Joint over Hips',calcJoHips,1],
+							[f_directseg,'Direct Moves',calcSpace_Pathway_Omid,0],
+							[f_space,'Space (Pathways)',calcSpace_Pathway,1],
+							];
+							
+			var selectedFeats = [];
 				
+			function loadFeatures() {
+				
+				var sp = d3.select("#featCheckboxes").selectAll("span")
+				.data(availableFeatures)
+				.enter()
+				.append("span");
+				
+				sp.append("input")
+				.attr("type","checkbox")
+				.attr("id", function(d,i) {
+					return "chkFeat"+i;
+				})
+				.each(function(d) {
+					if (d[3] ==1)
+						d3.select(this).attr("checked","checked");
+				})
+				.on("change",function(d){reDoFeats();});
+				
+				sp.append("span").text(function(d,i){
+					return d[1];
+				});
+				
+				sp.append("br");
+			}
+			
 			function loadNew() {
 							
 
@@ -297,18 +303,16 @@
 				gskel = skel;
 				//makeFeats();
 				reDraw();
-				};
+			};
 
-			var animIndex=0;
-			var playAnim = false;
-			var animSVG = [];
 			
-			d3.timer(drawFigure, 15);
 			
 			function reDraw() {
 				
-				frameSkip = +document.getElementById("sldSkips").value;
-				padding = +document.getElementById("sldPad").value;
+				//frameSkip = +document.getElementById("sldSkips").value;
+				//padding = +document.getElementById("sldPad").value;
+				frameSkip = $("#sldSkip2").slider( "option", "value" );
+				padding = $("#sldPad2").slider( "option", "value" );
 				
 				d3.select("body").select("#figure").selectAll("svg").remove();
 				d3.select("body").select("#anim").selectAll("svg").remove();
@@ -325,7 +329,7 @@
 				firstFrame = gframes[0].map(function(d) {
 					return {
 						x : d.x / 2 + 150,
-						y : -1 * d.y / 2 + 90 + 85,
+						y : -1 * d.y / 2 + 90 + 75,
 						z : d.z / 2
 					};
 				});
@@ -333,9 +337,10 @@
 					
 				//Create SVG element
 				d3.select("#jointChooser").selectAll("svg").remove();
-				var jointChooser = d3.select("#jointChooser").append("svg").attr("height",180);
+				var jointChooser = d3.select("#jointChooser").append("svg").attr("height",170);
 				drawJointChooser(jointChooser,firstFrame,0, selectedJoint,gskel,reDraw);
-					
+				
+				d3.select("#jointLabel").text(gskel.jointNames[selectedJoint]);
 				
 				///
 			
@@ -347,51 +352,23 @@
 			} 
 			
 			function makeFeats() {
-				frameSkip = +document.getElementById("sldSkips").value;
+				//= +document.getElementById("sldSkips").value;
 
 				selectedFeats = [];
 				f=0;
 				
 				
-				if (document.getElementById("ch_vel").checked)
-					{selectedFeats[f]= f_angvel;selectedFeats[f++].data = calcVelocities(gframes, frameSkip,selectedJoint);}
-				if (document.getElementById("ch_accel").checked)
-					{selectedFeats[f]= f_accel;selectedFeats[f++].data = calcAccel(gframes, frameSkip,selectedJoint);}
-				if (document.getElementById("ch_jerk").checked)
-					{selectedFeats[f]= f_jerk;selectedFeats[f++].data = calcJerk(gframes, frameSkip,selectedJoint);}
-				if (document.getElementById("ch_johips").checked)
-					{selectedFeats[f]= f_overhips;selectedFeats[f++].data = calcJoHips(gframes, frameSkip,selectedJoint, 0);}
-				if (document.getElementById("ch_space").checked)
-					{selectedFeats[f]= f_space;selectedFeats[f++].data = calcSpace_Pathway(gframes, frameSkip,selectedJoint);}
-				if (document.getElementById("ch_directseg").checked)
-					{selectedFeats[f]= f_directseg;selectedFeats[f++].data = calcSpace_Pathway_Omid(gframes, frameSkip,selectedJoint);}
-				if (document.getElementById("ch_weight").checked)
-					{selectedFeats[f]= f_weight;selectedFeats[f++].data = makeRandomFeature(gframes, frameSkip);}
-				if (document.getElementById("ch_time").checked)
-					{selectedFeats[f]= f_time;	selectedFeats[f++].data = makeRandomFeature(gframes, frameSkip);}
-				if (document.getElementById("ch_flow").checked)
-					{selectedFeats[f]= f_flow;selectedFeats[f++].data = makeRandomFeature(gframes, frameSkip);}
-				
-					
-				
-				//for ( i = 0; i < selectedFeats.length; i++)
-					//selectedFeats[i].data = makeRandomFeature(gframes, frameSkip);
+				for (var feat in availableFeatures) {
+					console.log(availableFeatures[feat]);
+					if (document.getElementById("chkFeat"+feat).checked) {
+						selectedFeats[f]= availableFeatures[feat][0];
+						selectedFeats[f++].data = availableFeatures[feat][2](gframes, frameSkip,selectedJoint,0);
+					}
+				}
+			
 			}
 			
 			function reDoFeats() {
-				// selectedFeats = [];
-				// f=0;
-// 				
-				// if (document.getElementById("ch_space").checked)
-					// selectedFeats[f++]= f_space;
-				// if (document.getElementById("ch_weight").checked)
-					// selectedFeats[f++]= f_weight;
-				// if (document.getElementById("ch_time").checked)
-					// selectedFeats[f++]= f_time;	
-				// if (document.getElementById("ch_flow").checked)
-					// selectedFeats[f++]= f_flow;
-				// if (document.getElementById("ch_vel").checked)
-					// selectedFeats[f++]= f_angvel;
 				
 				makeFeats();
 				reDrawFeat();
@@ -399,50 +376,32 @@
 			
 			function reDrawFeat() {
 				d3.select("#featureList").selectAll("svg").remove();
-				
-			
-				//console.log(selectedFeats[0]);
+
 				drawFeatureList(d3.select("#featureList"), grootOffset, selectedFeats, gpadding);
 			}
 			
-			
+			d3.timer(drawFigure, 15);
+			loadFeatures();
 			loadNew();
 			
 			
         </script>
        
-       <script>
-       	var mouseWheelEvt = function (e)
-			{
-    var event = e || window.event;
-    if (document.getElementById("canCont").doScroll)
-        document.getElementById("canCont").doScroll(event.wheelDelta>0?"left":"right");
-    else if ((event.wheelDelta || event.detail) > 0)
-        document.getElementById("canCont").scrollLeft -= 20;
-    else
-        document.getElementById("canCont").scrollLeft += 20;
 
-    return false;
-};
-if ("onmousewheel" in document.body)
-    document.getElementById("canCont").onmousewheel = mouseWheelEvt;
-else
-    document.getElementById("canCont").addEventListener("DOMMouseScroll", mouseWheelEvt);
-       </script>
        
         <script type="text/javascript"> 
-        //url: "http://cgi.sfu.ca/~oalemi/movan/srv/upload.php",
-           $(function () {
-    $('#fileupload').fileupload({
-        dataType: 'csv',
-        done: function (e, data) {
-        	console.log(data);
-            $.each(data.result.files, function (index, file) {
-                $('<p/>').text(file.name).appendTo(document.body);
-            });
-        }
-    });
-});
+			//url: "http://cgi.sfu.ca/~oalemi/movan/srv/upload.php",
+		$(function () {
+		$('#fileupload').fileupload({
+		dataType: 'csv',
+		done: function (e, data) {
+		console.log(data);
+		$.each(data.result.files, function (index, file) {
+		$('<p/>').text(file.name).appendTo(document.body);
+		});
+		}
+		});
+		});
         </script>
        <div id="footer" style="clear:both;text-align:center;padding-top:20px;"><small>(C) Omid Alemi - Fall 2013</small></div>
     </body>
