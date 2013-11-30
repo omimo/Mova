@@ -17,11 +17,11 @@
         <script type="text/javascript" src="js/figureAnim.js"></script>
         
         
-		<script src="jq/jquery-1.9.1.js"></script>
-		<script src="jq/jquery-ui-1.10.3.custom.js"></script>
+		<script src="jq/jquery-2.0.3.min.js"></script>
+		<script src="jq/jquery-ui-1.10.3.custom.min.js"></script>
 		<script src="jq/jquery.fileupload.js"></script>
 		<script src="jq/jquery.iframe-transport.js"></script>
-		<script src="jq/jquery-ui-slider-pips.js"></script>
+		<script src="jq/jquery-ui-slider-pips.min.js"></script>
 		
 		<script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -96,7 +96,7 @@
 				max: 70,
 				step: 1,
 				value: 25,
-				slide: function(event, ui) {
+				change: function(event, ui) {
 					reDraw();
 						
 				}
@@ -109,13 +109,15 @@
   				suffix: "px",
   				 //labels: false,
 			});
-		
+			
+			
+				
 			$("#sldSkip2").slider({
 				min: 5,
 				max: 50,
 				step: 1,
 				value: 5,
-				slide: function(event, ui) {
+				change: function(event, ui) {
 					reDraw();	
 				}
 			}).slider('pips',{
@@ -217,18 +219,21 @@
 					<h2>Visual Controls</h2>
 					<div id="controls" class="sidetab">
 						<div class="sidetabtitle">
-							
+							Skip Frames:
 						</div>
-						Skip Frames:
-						<br/>
-						<div id="sldSkip2"></div>
-						<br/>
-						Padding:
-						<br/>
-						<div id="sldPad2"></div>
-						<br/>
 						
 						
+						<div id="sldSkip2" class="slider"></div>
+						
+						<div class="sidetabtitle">
+							Padding:
+						</div>
+						
+						
+						<div id="sldPad2" class="slider"></div>
+						<br/>
+						
+						<div id="sldTest" class="slider"></div>
 						<br/>
 						<button id="btnSave">Save as SVG</button>
 					</div>
