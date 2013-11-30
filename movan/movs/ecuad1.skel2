@@ -1,4 +1,4 @@
-Hips,LeftHip,LeftKnee,LeftAnkle,Site,RightHip,RightKnee,RightAnkle,Site,Chest,Chest2,LeftCollar,LeftShoulder,LeftElbow,LeftWrist,Site,RightCollar,RightShoulder,RightElbow,RightWrist,Site,Neck,Head,Site
+Root,LeftHip,LeftKnee,LeftAnkle,Toes,RightHip,RightKnee,RightAnkle,Toes,Chest,Chest2,LeftCollar,LeftShoulder,LeftElbow,LeftWrist,Fingers,RightCollar,RightShoulder,RightElbow,RightWrist,Fingers,Neck,Head,Head
 0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

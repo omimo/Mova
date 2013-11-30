@@ -93,6 +93,28 @@ function drawFiguresCanvas(parent,frames, skel, highlightJ, frameSkip, pad) {
 
 
 function drawSkel(svg, currentFrame, index, highlightJ,skel) {
+	//bones
+	svg.selectAll("line.f" + index)
+	.data(skel.connections)
+	.enter()
+	.append("line")
+	.attr("stroke", "black")
+	.attr("x1",0).attr("x2",0)
+	//.transition().duration(1000).ease("elastic")
+	.attr("x1", function(d, j) {
+		return currentFrame[d.a].x;
+	})
+	.attr("x2", function(d, j) {
+		return currentFrame[d.b].x;
+	})
+	.attr("y1", function(d, j) {
+		return currentFrame[d.a].y;
+	})
+	.attr("y2", function(d, j) {
+		return currentFrame[d.b].y;
+	});
+	
+	
 	//draw joints
 	svg.selectAll("circle.f" + index)
 	.data(currentFrame)
@@ -116,6 +138,11 @@ function drawSkel(svg, currentFrame, index, highlightJ,skel) {
 			return 'black';
 	});
 
+	
+}
+
+
+function drawJointChooser(svg, currentFrame, index, highlightJ,skel,clickCallBack) {
 	//bones
 	svg.selectAll("line.f" + index)
 	.data(skel.connections)
@@ -136,15 +163,14 @@ function drawSkel(svg, currentFrame, index, highlightJ,skel) {
 	.attr("y2", function(d, j) {
 		return currentFrame[d.b].y;
 	});
-}
-
-
-function drawJointChooser(svg, currentFrame, index, highlightJ,skel,clickCallBack) {
+	
+	
 	//draw joints
 	svg.selectAll("circle.f" + index)
 	.data(currentFrame)
 	.enter()
 	.append("circle")
+	.style("cursor","pointer")
 	.attr("cx", function(d) {
 		return d.x;
 	}).attr("cy", function(d) {
@@ -171,7 +197,7 @@ function drawJointChooser(svg, currentFrame, index, highlightJ,skel,clickCallBac
 		d3.select("#jointLabel").text(skel.jointNames[d3.select(this).attr("jointID")]);
 	})
 	.on("mouseout", function (d) {
-		d3.select("#jointLabel").text("-");
+		d3.select("#jointLabel").text(skel.jointNames[highlightJ]);
 		r = 2;
 		if (i == highlightJ)
 			r= 6;
@@ -192,24 +218,5 @@ function drawJointChooser(svg, currentFrame, index, highlightJ,skel,clickCallBac
 	})
 	;
 
-	//bones
-	svg.selectAll("line.f" + index)
-	.data(skel.connections)
-	.enter()
-	.append("line")
-	.attr("stroke", "black")
-	.attr("x1",0).attr("x2",0)
-	//.transition().duration(1000).ease("elastic")
-	.attr("x1", function(d, j) {
-		return currentFrame[d.a].x;
-	})
-	.attr("x2", function(d, j) {
-		return currentFrame[d.b].x;
-	})
-	.attr("y1", function(d, j) {
-		return currentFrame[d.a].y;
-	})
-	.attr("y2", function(d, j) {
-		return currentFrame[d.b].y;
-	});
+	
 }
