@@ -207,9 +207,6 @@
 							<input type="checkbox" id="ch_vel" checked="checked" onchange="reDoFeats()"/>
 							Angular Velocity
 							<br />
-							<input type="checkbox" id="ch_avevel" checked="checked" onchange="reDoFeats()"/>
-							AveAngular Velocity
-							<br />
 							<input type="checkbox" id="ch_accel" checked="checked" onchange="reDoFeats()"/>
 							Acacceleration
 							<br />
@@ -358,8 +355,6 @@
 				
 				if (document.getElementById("ch_vel").checked)
 					{selectedFeats[f]= f_angvel;selectedFeats[f++].data = calcVelocities(gframes, frameSkip,selectedJoint);}
-				if (document.getElementById("ch_avevel").checked)
-					{selectedFeats[f]= f_aveangvel;selectedFeats[f++].data = calcAveVelocities(gframes, frameSkip,selectedJoint);}
 				if (document.getElementById("ch_accel").checked)
 					{selectedFeats[f]= f_accel;selectedFeats[f++].data = calcAccel(gframes, frameSkip,selectedJoint);}
 				if (document.getElementById("ch_jerk").checked)

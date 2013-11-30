@@ -72,13 +72,13 @@ var f_accel = {
 		range: [-200,-180,-160,-140,-120,-100,-80,-60,-40,-20,-1,1,20,40,60,80,100,120,140,160,180,200],
 		rangelabels: [-200,-180,-160,-140,-120,-100,-80,-60,-40,-20,-1,1,20,40,60,80,100,120,140,160,180,200],
 		colormap : function(v){
-			if (v>200) v = 200;
-			if (v<-200) v = -200;
+			if (v>400) v = 400;
+			if (v<-400) v = -400;
 		
 			if (v>0)
 				return d3.hsl(15,1,0.9-(v/200));
 			else
-				return d3.hsl(208,1,0.9-(-v/200));
+				return d3.hsl(208,1,0.9-(-v/400));
 			},
 		colormap2 : function(v){
 //				if (v>165) v = 165;
@@ -225,6 +225,7 @@ function calcVelocities(frames, skips, joint) {
 	}
 	
 
+	
 	d = max-min;
 	for (i=0;i<data.length;i++)
 		data[i][2]=data[i][2];
@@ -256,7 +257,7 @@ function calcAveVelocities(frames, skips, joint) {
 //			 a = a + Math.pow((frames[index][joint].z-frames[index-skips][joint].z),2);
 //			 sum+= Math.sqrt(a)/(skips*inputFPS);
 			
-			sum+= eculDist(frames[j][joint],frames[j-1][joint])/(skips*inputFPS);
+			sum+= eculDist(frames[j][joint],frames[j-1][joint])/(inputFPS);
 
 		}
 	   
@@ -289,7 +290,7 @@ function calcAccel(frames, skips, joint) {
 	var max = -1;
 	var vel = [];
 	
-	veldata = calcAveVelocities(frames, skips, joint);
+	veldata = calcVelocities(frames, skips, joint);
 	
 	for (i=0;i<veldata.length;i++)
 		vel[i] = veldata[i][2];
@@ -317,6 +318,8 @@ function calcAccel(frames, skips, joint) {
 			min = a;
 	}
 
+	console.log(min);
+	console.log(max);
 	
 	d = max-min;
 	for (i=0;i<data.length;i++)
