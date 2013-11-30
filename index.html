@@ -153,8 +153,12 @@
 		
 				</ul>
         	<div id="anim"><button id="btnPlay">Play</button></div>
-        	<div id="figure"></div>
-      		<div id="featureList"></div>
+        	<div id="figure">
+        		
+			</div>
+      		<div id="featureList">
+      		
+      		</div>
       		</div>
       		<div id="legends"><div style="font-family: Verdana, Arial, sans-serif;font-weight: bold;font-size: 11.5pt;padding-bottom: 5px;"> Legends:</div></div>
         </div>
@@ -186,7 +190,7 @@
 							<option value="Slash4.csv">Slash4.csv</option>
 							<option value="Glide3.csv">Glide3.csv</option>
 							<option value="Wring2.csv">Wring2.csv</option>
-
+							<option value="FloatAll.csv">FloatAll.csv</option>
 						</select>
 
 					</div>
@@ -194,11 +198,7 @@
 					<h2>Features</h2>
 					<div id="features" class="sidetab">
 						
-						<div class="sidetabtitle">
-							Select a joint:
-							<div id="jointChooser"></div>
-						</div>
-						
+				
 						<div class="sidetabtitle">
 							Select features:
 						</div>
@@ -213,8 +213,17 @@
 							<input type="checkbox" id="ch_accel" checked="checked" onchange="reDoFeats()"/>
 							Acacceleration
 							<br />
+							<input type="checkbox" id="ch_jerk" checked="checked" onchange="reDoFeats()"/>
+							Jerk
+							<br />
+							<input type="checkbox" id="ch_johips" checked="checked" onchange="reDoFeats()"/>
+							Joint over Hips
+							<br />
 							<input type="checkbox" id="ch_space" checked="checked" onchange="reDoFeats()"/>
 							Space (Pathway)
+							<br />
+							<input type="checkbox" id="ch_directseg" onchange="reDoFeats()"/>
+							Direct Segments
 							<br />
 							<input type="checkbox" id="ch_weight"  onchange="reDoFeats()"/>
 							Effort Weight (fake)
@@ -226,9 +235,18 @@
 							Effort Flow (fake)
 							<br />
 						</div>
-						<button type="button">
+						<!-- <button type="button">
 							Edit Features
-						</button>
+						</button> -->
+						
+						<div class="sidetabtitle">
+							Select a joint:
+						</div>
+						
+						<div id="jointChooser">
+							<div id = "jointLabel" style="margin-top:5px">-</div>
+						</div>
+						
 					</div>
 					
 					<h2>Visual Controls</h2>
@@ -261,8 +279,8 @@
 			
 			var inputFPS = 0.0083; //120	
 			
-			var selectedJoint = 20;
-			var skelHeadJoint = 24;
+			var selectedJoint = 19;
+			var skelHeadJoint = 23;
 			var frameSkip = 5;
 
 			var selectedFeats = [f_weight, f_space];
@@ -293,20 +311,37 @@
 			function reDraw() {
 				
 				frameSkip = +document.getElementById("sldSkips").value;
-				console.log(frameSkip);
 				padding = +document.getElementById("sldPad").value;
 				
 				d3.select("body").select("#figure").selectAll("svg").remove();
 				d3.select("body").select("#anim").selectAll("svg").remove();
 				
+				// Draw the figure sketch
 				rootOffset = drawFiguresCanvas(d3.select("body").select("#figure"), gframes, gskel, selectedJoint, frameSkip, padding);
 				
-				
+				// Prep the animation
 				animSVG = makeAnim(d3.select("body").select("#anim"), gframes, gskel, selectedJoint, frameSkip, padding);
 				
 				//playAnim = true;
 				
+				//Draw the joint chooser
+				firstFrame = gframes[0].map(function(d) {
+					return {
+						x : d.x / 2 + 150,
+						y : -1 * d.y / 2 + 90 + 85,
+						z : d.z / 2
+					};
+				});
+					
+					
+				//Create SVG element
+				d3.select("#jointChooser").selectAll("svg").remove();
+				var jointChooser = d3.select("#jointChooser").append("svg").attr("height",180);
+				drawJointChooser(jointChooser,firstFrame,0, selectedJoint,gskel,reDraw);
+					
 				
+				///
+			
 				grootOffset = rootOffset;
 				gpadding = padding;
 				
@@ -327,8 +362,14 @@
 					{selectedFeats[f]= f_aveangvel;selectedFeats[f++].data = calcAveVelocities(gframes, frameSkip,selectedJoint);}
 				if (document.getElementById("ch_accel").checked)
 					{selectedFeats[f]= f_accel;selectedFeats[f++].data = calcAccel(gframes, frameSkip,selectedJoint);}
+				if (document.getElementById("ch_jerk").checked)
+					{selectedFeats[f]= f_jerk;selectedFeats[f++].data = calcJerk(gframes, frameSkip,selectedJoint);}
+				if (document.getElementById("ch_johips").checked)
+					{selectedFeats[f]= f_overhips;selectedFeats[f++].data = calcJoHips(gframes, frameSkip,selectedJoint, 0);}
 				if (document.getElementById("ch_space").checked)
 					{selectedFeats[f]= f_space;selectedFeats[f++].data = calcSpace_Pathway(gframes, frameSkip,selectedJoint);}
+				if (document.getElementById("ch_directseg").checked)
+					{selectedFeats[f]= f_directseg;selectedFeats[f++].data = calcSpace_Pathway_Omid(gframes, frameSkip,selectedJoint);}
 				if (document.getElementById("ch_weight").checked)
 					{selectedFeats[f]= f_weight;selectedFeats[f++].data = makeRandomFeature(gframes, frameSkip);}
 				if (document.getElementById("ch_time").checked)
@@ -343,19 +384,19 @@
 			}
 			
 			function reDoFeats() {
-				selectedFeats = [];
-				f=0;
-				
-				if (document.getElementById("ch_space").checked)
-					selectedFeats[f++]= f_space;
-				if (document.getElementById("ch_weight").checked)
-					selectedFeats[f++]= f_weight;
-				if (document.getElementById("ch_time").checked)
-					selectedFeats[f++]= f_time;	
-				if (document.getElementById("ch_flow").checked)
-					selectedFeats[f++]= f_flow;
-				if (document.getElementById("ch_vel").checked)
-					selectedFeats[f++]= f_angvel;
+				// selectedFeats = [];
+				// f=0;
+// 				
+				// if (document.getElementById("ch_space").checked)
+					// selectedFeats[f++]= f_space;
+				// if (document.getElementById("ch_weight").checked)
+					// selectedFeats[f++]= f_weight;
+				// if (document.getElementById("ch_time").checked)
+					// selectedFeats[f++]= f_time;	
+				// if (document.getElementById("ch_flow").checked)
+					// selectedFeats[f++]= f_flow;
+				// if (document.getElementById("ch_vel").checked)
+					// selectedFeats[f++]= f_angvel;
 				
 				makeFeats();
 				reDrawFeat();

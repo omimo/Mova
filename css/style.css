@@ -111,3 +111,7 @@ div.over2 {
 	padding-bottom: 10px;
 	float: left;
 }
+
+#features {
+	overflow-x: hidden;
+}

@@ -39,6 +39,62 @@ function mouseOverGroup2(feature,rootOffset,timeline) {
 	
 	parent=d3.select("body").select("#figure").select("svg");
 	
+	var defs = parent.append('defs');
+	var g = defs.append("pattern")
+	    .attr('id', 'hash1')
+	    .attr('patternUnits', 'userSpaceOnUse')
+	    .attr('width', '15')
+	    .attr('height', '15')
+	    .append("g").style("fill", "red")
+	    .style("stroke", "red")
+	    .style("stroke-width", .4)
+		.append("path").attr("d", "M0,0 l15,15");
+	
+	var g = defs.append("pattern")
+	    .attr('id', 'hash2')
+	    .attr('patternUnits', 'userSpaceOnUse')
+	    .attr('width', '15')
+	    .attr('height', '15')
+	    .append("g").style("fill", "red")
+	    .style("stroke", "blue")
+	    .style("stroke-width", .4)
+	    .append("path").attr("d", "M15,0 l-15,15");
+	
+	timeline.select("#featLabel")
+	.attr("font-weight", "bold");
+	
+	if (feature.type == "segments") {
+		parent.selectAll("rect.o")
+		.data(feature.data)
+		.enter()
+		.insert("rect",":first-child")
+		.attr("class", "over")
+		.attr("stroke","none")
+		.attr("x", function(d,j) {  
+				return rootOffset[d[0]]+3;//-padding;
+		})
+		.attr("y",parent.attr("y")+10)
+		.attr("width", function(d,j) {
+			return rootOffset[d[1]] - rootOffset[d[0]]-3;
+		})
+		.attr("height",200)
+		.attr("fill", function(d,i) {
+			return feature.colormap(d[2],i);
+		})
+		.attr("fill", function(d,i) {
+			if (i%2 ==0)
+				return "url(#hash1)";
+			else
+				return "url(#hash2)";
+		})
+		.attr("stroke-width",0.2)
+		.attr("stroke", d3.rgb(0,0,0))
+		.transition()
+		.duration(500)
+		.attr("fill-opacity",0.6)
+		;
+	}
+	else {
 	parent.selectAll("rect.o")
 	.data(feature.data)
 	.enter()
@@ -62,11 +118,9 @@ function mouseOverGroup2(feature,rootOffset,timeline) {
 	.duration(500)
 	.attr("fill-opacity",0.6)
 	;
+	}
 	
-	timeline.transition()
-	.duration(200)
-	.style("stroke", "black")
-	  .style("stroke-width", "1");
+
 //	.transition()
 //        .duration(2500)
 //        .style("opacity", 0)
@@ -80,6 +134,10 @@ var mouseOutGroup = function (timeline) {
 	.duration(500)
 	.style("opacity", 0)
    .remove();
+	
+	timeline.select("#featLabel")
+	.transition().duration(200)
+	.attr("font-weight", "normal");
 	
 	timeline.transition()
 	.duration(200)
@@ -100,7 +158,10 @@ function timeline(parent,rootOffset, feature)
 	//svg=parent.append("svg").attr("width", w).attr("height", feat_h);;
 	svg = parent;
 	
+
+	
 	svg.append("text")
+	.attr("id","featLabel")
 	.text(feature.label+":")
 	.attr("x",20)
 	.attr("y",25)
@@ -108,7 +169,38 @@ function timeline(parent,rootOffset, feature)
 	.attr("font-size", "11pt");
 		
 	
-	
+	if (feature.type == "segments") {
+
+		svg.selectAll("rect.f_"+feature.title)
+			.data(feature.data)
+			.enter()
+			.append("rect")
+			.attr("class", "featBox")
+			.attr("id", function(d,i) {return "featbox"+i;})
+			.attr("stroke","none")
+			.attr("x", function(d) {
+				return rootOffset[d[0]];
+			})
+			.attr("y", 20)
+			.attr("orgtop", 20)
+			.attr("width", function(d,j) {
+				return rootOffset[d[1]] - rootOffset[d[0]] - 6;
+			})
+			.attr("height", 6)
+			.attr("orgheight", 6)
+			.attr("fill", function(d,i) {
+				return feature.colormap(d[2],i);
+			})
+			.attr("fill2","url(#hash)")
+			.attr("orgfill", function(d) {
+				return feature.colormap(d[2]);
+			})
+			.attr("val",  function(d) {
+				return (d[2]);
+			})
+			;
+	}
+	else {
 	svg.selectAll("rect.f_"+feature.title)
 		.data(feature.data)
 		.enter()
@@ -169,7 +261,7 @@ function timeline(parent,rootOffset, feature)
 			return (d[2]);
 		})
 		;
-			
+}
 	
 	// Draw Legends
 
@@ -205,11 +297,12 @@ function timeline(parent,rootOffset, feature)
 		return;
 	
 	legsvg.selectAll("text.legitem")
-	.data(feature.range)
+	.data(feature.rangelabels)
 	.enter()
 	.append("text")
+	.attr("text-anchor","end")
 	.attr("transform", function(d,i) {
-		return "translate("+(legitemW*i+legitemW/2)+",65)rotate(-90)";
+		return "translate("+(legitemW*i+legitemW/2+5)+",40)rotate(-90)";
 	})
 	.attr("y2",50)
 	.attr("x2", function (d,i) {

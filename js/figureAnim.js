@@ -41,14 +41,14 @@ function makeAnim(parent,frames, skel, highlightJ, frameSkip, pad) {
 				}).attr("cy", function(d) {
 					return d.y;
 				}).attr("r", function(d, i) {
-					if (i == highlightJ - 1)
+					if (i == highlightJ)
 						return 4;
-					else if (i == skelHeadJoint -1)
+					else if (i == skelHeadJoint)
 						return 4;
 					else
 						return 2;
 				}).attr("fill", function(d, i) {
-					if (i == highlightJ - 1)
+					if (i == highlightJ)
 						return 'red';
 					else
 						return 'black';
@@ -110,14 +110,14 @@ function drawFigure() {
 	}).attr("cy", function(d) {
 		return d.y;
 	}).attr("r", function(d, i) {
-		if (i == selectedJoint - 1)
+		if (i == selectedJoint)
 			return 4;
-		else if (i == skelHeadJoint -1)
+		else if (i == skelHeadJoint)
 			return 4;
 		else
 			return 2;
 	}).attr("fill", function(d, i) {
-		if (i == selectedJoint - 1)
+		if (i == selectedJoint)
 			return 'red';
 		else
 			return 'black';
