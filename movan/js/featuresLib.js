@@ -17,6 +17,7 @@ var f_space = {
 		unit: "segments",
 		range: [-1,+1],
 		colormap : function(v,i){
+//			return d3.hsl(50,0.9,0.5);
 			if (i%2==0)
 				return d3.hsl(250,1,0.5);
 			else
@@ -49,6 +50,7 @@ var f_angvel = {
 		type: "cont",
 		unit: "pixels/s",
 		range: [0,100,200,300,400,500,600,700,800,900,1000],
+		rangelabels: [0,100,200,300,400,500,600,700,800,900,1000],
 		colormap : function(v){return d3.hsl(0,1,0.9-(v/1100));},
 		data: [ ]
 };
@@ -58,6 +60,7 @@ var f_aveangvel = {
 		type: "cont",
 		unit: "pixels/s",
 		range: [0,100,200,300,400,500,600,700,800,900,1000],
+		rangelabels: [0,100,200,300,400,500,600,700,800,900,1000],
 		colormap : function(v){if (v>1000) v = 1000;return d3.hsl(0,1,0.9-(v/1100));},
 		data: [ ]
 };
@@ -67,6 +70,7 @@ var f_accel = {
 		type: "bipolar",
 		unit: "pixels/s^2",
 		range: [-200,-180,-160,-140,-120,-100,-80,-60,-40,-20,-1,1,20,40,60,80,100,120,140,160,180,200],
+		rangelabels: [-200,-180,-160,-140,-120,-100,-80,-60,-40,-20,-1,1,20,40,60,80,100,120,140,160,180,200],
 		colormap : function(v){
 			if (v>200) v = 200;
 			if (v<-200) v = -200;
@@ -97,6 +101,54 @@ var f_accel = {
 };
 
 
+var f_jerk = {
+		label: "Jerk",
+		type: "bipolar",
+		unit: "pixels/s^3",
+		range: [-1000,-900,-800,-700,-600,-500,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,1000],
+		rangelabels: ['<-1000',-900,-800,-700,-600,-500,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,'>1000'],
+		colormap : function(v){
+			if (v>1000) v = 1000;
+			if (v<-1000) v = -1000;
+		
+			if (v>0)
+				return d3.hsl(45,1,0.9-(v/1000));
+			else
+				return d3.hsl(145,1,0.9-(-v/1000));
+			},
+		data: [ ]
+};
+
+
+var f_directseg = {
+		label: "Direct Segments",
+		type: "segments",
+		unit: "segments",
+		range: [-1,+1],
+		rangelabels: [-1,+1],
+		colormap : function(v,i){
+			if (i%2==0)
+				return d3.hsl(250,1,0.5);
+			else
+				return d3.hsl(50,1,0.5);
+		},
+		data: [ ]
+};
+
+var f_overhips = {
+		label: "Joint Over Hips",
+		type: "annot",
+		unit: "Annotation",
+		range: [-1,+1],
+		rangelabels: ['below','over'],
+		colormap : function(v,i){
+			if (v>=0)
+				return d3.hsl(250,1,0.5);
+			else
+				return d3.hsl(50,1,0.5);
+		},
+		data: [ ]
+};
 
 function makeRandomFeature(frames, skips) {
 	var data = [];
@@ -156,6 +208,8 @@ function calcVelocities(frames, skips, joint) {
 //	    a = a + Math.pow((frames[index][joint].y-frames[index-skips][joint].y),2);
 //	    a = a + Math.pow((frames[index][joint].z-frames[index-skips][joint].z),2);
 //	    v = Math.sqrt(a)/(skips*inputFPS);
+		
+		
 		
 		v = eculDist(frames[index][joint],frames[index-skips][joint])/(skips*inputFPS);
 		
@@ -239,6 +293,13 @@ function calcAccel(frames, skips, joint) {
 	
 	for (i=0;i<veldata.length;i++)
 		vel[i] = veldata[i][2];
+
+	nums = [];
+	vel = vel.map(function(d) {
+		return simple_moving_averager(d, 5);
+	});
+	nums = [];
+
 	
 	for (i=1;i<vel.length;i++) {
 		dv = Math.pow((vel[i]-vel[i-1]),2);
@@ -263,6 +324,52 @@ function calcAccel(frames, skips, joint) {
 	
 	return data;
 }
+
+function calcJerk(frames, skips, joint) {
+	var data = [];
+	var dCount = 0;
+	var start = 1;
+	var end;
+	var value;
+	var min = 100000;
+	var max = -1;
+	var ac = [];
+	
+	acdata = calcAccel(frames, skips, joint);
+	
+	
+	for (i=0;i<acdata.length;i++)
+		ac[i] =simple_moving_averager(acdata[i][2],5);
+	
+	nums = [];
+	
+	for (i=1;i<ac.length;i++) {
+		
+		da = (ac[i]-ac[i-1]);
+	    dt = (skips*inputFPS);
+	    jr = da/dt;
+		
+	    start = i -1;
+	    end = i;
+		data[dCount++] = [start,end,jr];
+		
+		if (jr > max)
+			max = jr;
+		if (jr <min)
+			min = jr;
+	}
+
+
+console.log(data);
+
+	
+	d = max-min;
+	for (i=0;i<data.length;i++)
+		data[i][2]=data[i][2];
+	
+	return data;
+}
+
 
 function calcAveAccel(frames, skips, joint) {
 	var data = [];
@@ -313,7 +420,8 @@ function calcSpace_Pathway (frames, skips, joint) {
 	var minIndex = -1;
 	var max = -1;
 	var fracs = [];
-	
+	var T = 0.6;
+		
 	var temp = new Array(Math.floor(frames.length/skips));
 	
 	
@@ -335,8 +443,10 @@ function calcSpace_Pathway (frames, skips, joint) {
 		
 	
 		var frac = totalDist/sum;
+		
 		temp[index/skips][i] = frac;
 		//console.log(index+","+i+","+frac);
+		
 		if (frac < min) {
 			min = frac;
 			minIndex = i;
@@ -350,7 +460,7 @@ function calcSpace_Pathway (frames, skips, joint) {
     
 
 //
-//	console.log(temp);
+	console.log(temp);
 //	console.log(data);
 //	console.log(cluster(data));
 	return cluster(data);
@@ -367,7 +477,8 @@ function calcSpace_Pathway_Cont	 (frames, skips, joint) {
 	var minIndex = -1;
 	var max = -1;
 	var fracs = [];
-	
+	var T = 0.6;
+		
 	var temp = new Array(Math.floor(frames.length/skips));
 	
 	
@@ -389,10 +500,12 @@ function calcSpace_Pathway_Cont	 (frames, skips, joint) {
 		
 	
 		var frac = totalDist/sum;
-		temp[index/skips][i] = frac;
+		frac2 = Math.abs(frac - T);
+		temp[index/skips][i] = frac2;
 		//console.log(index+","+i+","+frac);
-		if (frac < min) {
-			min = frac;
+		
+		if (frac2 < min) {
+			min = frac2;
 			minIndex = i;
 		}
 		//	
@@ -411,14 +524,102 @@ function calcSpace_Pathway_Cont	 (frames, skips, joint) {
 
 }
 
+function calcSpace_Pathway_Omid	 (frames, skips, joint) {
+	var data = [];
+	var dCount = 0;
+	var start = 1;
+	var end;
+	var value;
+	var min = 100000;
+	var minIndex = -1;
+	var max = -1;
+	var fracs = [];
+	var dx = 0.2;
+	
+	var temp = new Array(Math.floor(frames.length/skips));
+	
+	
+	//for ( index = Math.floor(frames.length/skips)*skips-skips; index >=0; index -= skips) {
+	index = Math.floor(frames.length/skips)*skips-skips;
+	while (index>=0) {
+		var next = 0;
+		
+		var min = 100000;
+		temp[index/skips] = new Array(Math.floor(frames.length/skips));
+		
+		
+		for (i = index-skips;i>=0;i-=skips) {
+		//
+		var sum = 0;
+		for (j = i+skips;j<=index;j+=skips) {
+			sum += eculDist(frames[j-skips][joint],frames[j][joint]);
+		}
+		
+		totalDist = eculDist(frames[index][joint],frames[i][joint]);
+		
+	
+		var frac = totalDist/sum;
+		console.log("111");
+		temp[index/skips][i] = frac;
+		//if ( Math.abs(frac - temp[index/skips][i+skips]) >  dx)
+		if ( Math.abs(frac - 1) >  dx)
+		{
+			console.log("sdfsafsdf");
+			minIndex = i;
+//			index = i - skips;
+//			next = 1;
+//			break;
+		}
+	
+		//minIndex = i;
+	}
+//		if (next==1) {
+//		
+//			next = 0;
+//			continue;
+//		}
+		console.log("333333");
+		index = i - skips;
+		data[dCount++] = minIndex;
+	}
+    
+
+//
+	console.log(data);
+	console.log(cluster2(data));
+//	console.log(data);
+//	console.log(cluster(data));
+	return cluster2(data);
+
+}
+
+function calcJoHips (frames, skips, joint, hipj) {
+	var data = [];
+	var dCount = 0;
+
+	for ( index = 0; index <frames.length; index += skips) {
+		
+		if (frames[index][joint].y > frames[index][hipj].y)
+			data[dCount++] = 1;
+		else
+			data[dCount++] = -1;
+	}
+		
+	
+	return cluster(data);
+
+}
+
+
 function cluster (data) {
 	var data2 = [];
 	var start = 0;
+	var end = start;
 	var lastSeen = data[0];
 	dCount = 0;
 	for (i=1;i<data.length;i++) {
 		if (data[i]!=lastSeen) {
-			end = i;
+			end = i-1;
 			data2[dCount++] = [start,end,lastSeen];
 			start = end;
 		}
@@ -431,4 +632,45 @@ function cluster (data) {
 	}
 		
 	return data2;
+}
+
+function cluster2 (data) {
+	var data2 = [];
+	var end = data.length-1;
+	var lastSeen = data[end];
+    var start = end;
+	dCount = 0;
+	for (i=data.length-2;i>=0;i--) {
+		if (data[i]!=lastSeen) {
+			start = i;
+			data2[dCount++] = [start,end,lastSeen];
+			end = start-1;
+		}
+		lastSeen = data[i];
+	}
+	
+	if (start!=0) {
+		start = 0;
+		data2[dCount++] = [start,end,lastSeen];
+	}
+		
+	return data2;
+}
+
+var nums = [];
+
+function simple_moving_averager(num, period) {
+   
+    
+	nums.push(num);
+        if (nums.length > period)
+            nums.splice(0,1);  // remove the first element of the array
+        var sum = 0;
+        for (var i in nums)
+            sum += nums[i];
+        var n = period;
+        if (nums.length < period)
+            n = nums.length;
+        return(sum/n);
+    
 }

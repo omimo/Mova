@@ -46,20 +46,7 @@ function drawFiguresCanvas(parent,frames, skel, highlightJ, frameSkip, pad) {
 					 };
 					 });*/
 
-					currentFrame = frames[index].map(function(d) {
-						return {
-							x : d.x / 2 + 100  + index/skips * padding,
-							y : -1 * d.y / 2 + 90 + h / 2,
-							z : d.z / 2
-						};
-					});
-					
-					
-					//Create SVG element
-					d3.select("#jointChooser").selectAll("svg").remove();
-					var jointChooser = d3.select("#jointChooser").append("svg").attr("height",200);
-					drawSkel(jointChooser,currentFrame,index, highlightJ,skel);
-					
+				
 					
 					////////////
 				
@@ -116,18 +103,94 @@ function drawSkel(svg, currentFrame, index, highlightJ,skel) {
 	}).attr("cy", function(d) {
 		return d.y;
 	}).attr("r", function(d, i) {
-		if (i == highlightJ - 1)
+		if (i == highlightJ)
 			return 4;
-		else if (i == skelHeadJoint -1)
+		else if (i == skelHeadJoint )
 			return 4;
 		else
 			return 2;
 	}).attr("fill", function(d, i) {
-		if (i == highlightJ - 1)
+		if (i == highlightJ)
 			return 'red';
 		else
 			return 'black';
 	});
+
+	//bones
+	svg.selectAll("line.f" + index)
+	.data(skel.connections)
+	.enter()
+	.append("line")
+	.attr("stroke", "black")
+	.attr("x1",0).attr("x2",0)
+	//.transition().duration(1000).ease("elastic")
+	.attr("x1", function(d, j) {
+		return currentFrame[d.a].x;
+	})
+	.attr("x2", function(d, j) {
+		return currentFrame[d.b].x;
+	})
+	.attr("y1", function(d, j) {
+		return currentFrame[d.a].y;
+	})
+	.attr("y2", function(d, j) {
+		return currentFrame[d.b].y;
+	});
+}
+
+
+function drawJointChooser(svg, currentFrame, index, highlightJ,skel,clickCallBack) {
+	//draw joints
+	svg.selectAll("circle.f" + index)
+	.data(currentFrame)
+	.enter()
+	.append("circle")
+	.attr("cx", function(d) {
+		return d.x;
+	}).attr("cy", function(d) {
+		return d.y;
+	}).attr("r", function(d, i) {
+		if (i == highlightJ)
+			return 6;
+		else if (i == skelHeadJoint)
+			return 6;
+		else
+			return 5;
+	})
+	.attr("jointID", function(d,i){return i;})
+	.attr("fill", function(d, i) {
+		if (i == highlightJ )
+			return 'red';
+		else
+			return 'black';
+	})
+	.on("mouseover", function (d) {
+		console.log(this);
+		d3.select(this).attr("r",6).attr("fill", "orange");
+		
+		d3.select("#jointLabel").text(skel.jointNames[d3.select(this).attr("jointID")]);
+	})
+	.on("mouseout", function (d) {
+		d3.select("#jointLabel").text("-");
+		r = 2;
+		if (i == highlightJ)
+			r= 6;
+		else if (i == skelHeadJoint)
+			r= 6;
+		else
+			r = 5;
+		d3.select(this).attr("r",r);
+		
+		if ( d3.select(this).attr("jointID") == highlightJ)
+			d3.select(this).attr("fill","red");
+		else
+			d3.select(this).attr("fill","black");
+	})
+	.on("click", function(d) {
+		selectedJoint = d3.select(this).attr("jointID");
+		clickCallBack();
+	})
+	;
 
 	//bones
 	svg.selectAll("line.f" + index)
