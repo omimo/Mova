@@ -1,6 +1,11 @@
+var anim = {
 
-
-function makeAnim(parent,frames, skel, highlightJ, frameSkip, pad) {
+animIndex : 0,  // Current frame duing animation
+playAnim : false,  
+animSVG : [],  // SVG DOM element for the animation
+ds : 4,  // Down-sampling rate
+			
+makeAnim: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 	
 				//var rootOffset = [];
 
@@ -19,10 +24,10 @@ function makeAnim(parent,frames, skel, highlightJ, frameSkip, pad) {
 					.style("display","inline-block");
 
 				
-				animIndex = 0;
+				anim.animIndex = 0;
 				
 
-				currentFrame = frames[animIndex].map(function(d) {
+				currentFrame = frames[anim.animIndex].map(function(d) {
 					return {
 						x : d.x / 2 + 400 ,
 						y : -1 * d.y / 2 + 90 + h / 2,
@@ -32,34 +37,13 @@ function makeAnim(parent,frames, skel, highlightJ, frameSkip, pad) {
 				
 				//rootOffset[animIndex/skips] = currentFrame[0].x;
 				
-				svg.selectAll("circle")
-				.data(currentFrame)
-				.enter()
-				.append("circle")
-				.attr("cx", function(d) {
-					return d.x;
-				}).attr("cy", function(d) {
-					return d.y;
-				}).attr("r", function(d, i) {
-					if (i == highlightJ)
-						return 4;
-					else if (i == skelHeadJoint)
-						return 4;
-					else
-						return 2;
-				}).attr("fill", function(d, i) {
-					if (i == highlightJ)
-						return 'red';
-					else
-						return 'black';
-				});
-
 				//bones
 				svg.selectAll("line")
 				.data(skel.connections)
 				.enter()
 				.append("line")
 				.attr("stroke", "black")
+				.attr("stroke-width",6)
 				//.attr("x1",0).attr("x2",0)
 				//.transition().duration(1000).ease("elastic")
 				.attr("x1", function(d, j) {
@@ -75,25 +59,50 @@ function makeAnim(parent,frames, skel, highlightJ, frameSkip, pad) {
 					return currentFrame[d.b].y;
 				});
 				
+				
+				svg.selectAll("circle")
+				.data(currentFrame)
+				.enter()
+				.append("circle")
+				.attr("cx", function(d) {
+					return d.x;
+				}).attr("cy", function(d) {
+					return d.y;
+				}).attr("r", function(d, i) {
+					if (i == highlightJ)
+						return 5;
+					else if (i == movan.skelHeadJoint)
+						return 8;
+					else
+						return 5;
+				}).attr("fill", function(d, i) {
+					if (i == highlightJ)
+						return 'red';
+					else
+						return 'black';
+				});
+
+				
+				
 				$("#featureList").scrollLeft(0);
 				
-				animIndex++;
-				if (animIndex >=frames.length)
-					animIndex = 0;
+				anim.animIndex++;
+				if (anim.animIndex >=frames.length)
+					anim.animIndex = 0;
 				
-				animSVG = svg;
+				
 				//playAnim=true;
 				return svg;
 				
-}
+},
 
 
-function drawFigure() {
-	if (playAnim==false) return false;
+drawFigure: function() {
+	if (anim.playAnim==false) return false;
 	else {
-	svg = animSVG;
+	svg = anim.animSVG;
 	//console.log(playAnim);
-	currentFrame = gframes[animIndex].map(function(d) {
+	currentFrame = movan.gframes[anim.animIndex].map(function(d) {
 		return {
 			x : d.x / 2 + 400 ,
 			y : -1 * d.y / 2 + 90 + h / 2,
@@ -109,15 +118,17 @@ function drawFigure() {
 		return d.x;
 	}).attr("cy", function(d) {
 		return d.y;
-	}).attr("r", function(d, i) {
-		if (i == selectedJoint)
-			return 4;
-		else if (i == skelHeadJoint)
-			return 4;
-		else
-			return 2;
-	}).attr("fill", function(d, i) {
-		if (i == selectedJoint)
+	})
+	// .attr("r", function(d, i) {
+		// if (i == movan.selectedJoint)
+			// return 4;
+		// else if (i == movan.skelHeadJoint)
+			// return 4;
+		// else
+			// return 2;
+	// })
+	.attr("fill", function(d, i) {
+		if (i == movan.selectedJoint)
 			return 'red';
 		else
 			return 'black';
@@ -125,10 +136,10 @@ function drawFigure() {
 
 	//bones
 	svg.selectAll("line")
-	.data(gskel.connections)
+	.data(movan.gskel.connections)
 	//.transition()
 	.attr("stroke", "black")
-		.attr("x1", function(d, j) {
+	.attr("x1", function(d, j) {
 		return currentFrame[d.a].x;
 	})
 	.attr("x2", function(d, j) {
@@ -172,8 +183,8 @@ function drawFigure() {
 //	;
 	
 	
-	if (animIndex>0)
-		d3.selectAll("#featbox"+Math.floor((animIndex)/frameSkip-1))
+	if (anim.animIndex>0)
+		d3.selectAll("#featbox"+Math.floor((anim.animIndex)/movan.frameSkip-1))
 		.transition().ease("bounce")
 		.attr("height",function(d){
 			return d3.select(this).attr("orgheight");
@@ -182,22 +193,29 @@ function drawFigure() {
 			return d3.select(this).attr("orgtop");
 		});
 	
-	d3.selectAll("#featbox"+Math.floor((animIndex)/frameSkip)).attr("height",40);
-	d3.selectAll("#featbox"+Math.floor((animIndex)/frameSkip)).attr("y",function(d) {
+	d3.selectAll("#featbox"+Math.floor((anim.animIndex)/movan.frameSkip)).attr("height",40);
+	d3.selectAll("#featbox"+Math.floor((anim.animIndex)/movan.frameSkip)).attr("y",function(d) {
 		return d3.select(this).attr("orgtop")-20;
 	});
 
 	
 	//if (grootOffset[Math.floor((animIndex)/frameSkip)]-15 > currentFrame[0].x)		
-		$("#featureList").scrollLeft(grootOffset[Math.floor((animIndex)/frameSkip)]-400);
+		$("#featureList").scrollLeft(movan.rootOffset[Math.floor((anim.animIndex)/movan.frameSkip)]-400);
 
 	
-	animIndex+=4;
-	if (animIndex >=gframes.length)
-		{animIndex =0;playAnim = false;$( "#btnPlay" ).button('option', 'label', 'Play');feat.select("#pointline").remove();$("#featureList").scrollLeft(0);}
+	anim.animIndex+=anim.ds;
+	if (anim.animIndex >=movan.gframes.length) {
+			anim.animIndex =0;
+			anim.playAnim = false;
+			$( "#btnPlay" ).button('option', 'label', '&nbsp;Play&nbsp;&nbsp;');
+			feat.select("#pointline").remove();
+			$("#featureList").scrollLeft(0);
+		}
 	
 	//d3.timer(drawFigure(animSVG,gframes,gskel, selectedJoint,frameSkip,padding), 300);
 	
 	return false;
 	}
 }
+
+};

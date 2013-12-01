@@ -15,7 +15,7 @@
         <script type="text/javascript" src="js/featuresLib.js"></script>
         <script type="text/javascript" src="js/fileTools.js"></script>
         <script type="text/javascript" src="js/figureAnim.js"></script>
-        
+        <script type="text/javascript" src="js/movan.js"></script>
         
 		<script src="jq/jquery-2.0.3.min.js"></script>
 		<script src="jq/jquery-ui-1.10.3.custom.min.js"></script>
@@ -36,7 +36,9 @@
 		<script>
 			$(document).ready(function() {
 
-				$("#maintabs").tabs();
+				$("#maintabs").tabs().click(function(event,ui){
+					$("#featureList").scrollLeft(0);
+				});
 				
 				// $("#tabs").click(function(event, ui){
 						// console.log(event);
@@ -51,8 +53,7 @@
 
 				$( "#btnPlay" ).button();
 				$( "#btnPlay" ).click(function(event) {
-						console.log("clicked");
-						playAnim = true;
+						anim.playAnim = true;
 						$( "#btnPlay" ).button('option', 'label', 'Pause');
 				});
 					
@@ -97,7 +98,7 @@
 				step: 1,
 				value: 25,
 				change: function(event, ui) {
-					reDraw();
+					movan.reDraw();
 						
 				}
 					
@@ -118,7 +119,7 @@
 				step: 1,
 				value: 5,
 				change: function(event, ui) {
-					reDraw();	
+					movan.reDraw();	
 				}
 			}).slider('pips',{
 				
@@ -148,7 +149,7 @@
 					<li><a href="#anim">Animation</a></li>
 		
 				</ul>
-        	<div id="anim"><button id="btnPlay">Play</button></div>
+        	<div id="anim"><button id="btnPlay">&nbsp;Play&nbsp;&nbsp;</button></div>
         	<div id="figure">
         		
 			</div>
@@ -178,7 +179,7 @@
 							Select a file:
 						</div>
 						<select name="drop1" id="fileSelect" size="4" multiple="multiple"
-						onchange="loadNew()" style="border:2px solid #ccc; width:200px; height: 120px; overflow-y: auto;">
+						onchange="movan.loadNew()" style="border:2px solid #ccc; width:200px; height: 120px; overflow-y: auto;">
 							<option value="Punch4.csv" selected="selected">Punch4.csv</option>
 							<option value="Float4.csv">Float3.csv</option>
 							<option value="Dab1.csv">Dab1.csv</option>
@@ -241,153 +242,11 @@
         </div>
        
         <script type="text/javascript">
-        	var gframes = [];
-			var gskel = [];
-			var grootOffset = [];
-			var gpadding = 10;
-			
-			var inputFPS = 0.0083; //120	
-			
-			var selectedJoint = 19;
-			var skelHeadJoint = 23;
-			var frameSkip = 5;
-
-			var animIndex=0;
-			var playAnim = false;
-			var animSVG = [];
-			
-			
-			var availableFeatures =  [
-							[f_angvel,'Velocity',calcVelocities,1],
-							[f_accel,'Acceleration',calcAccel,1],
-							[f_jerk,'Jerk',calcJerk,1],
-							[f_overhips,'Joint over Hips',calcJoHips,1],
-							[f_directseg,'Direct Moves',calcSpace_Pathway_Omid,0],
-							[f_space,'Space (Pathways)',calcSpace_Pathway,1],
-							];
-							
-			var selectedFeats = [];
-				
-			function loadFeatures() {
-				
-				var sp = d3.select("#featCheckboxes").selectAll("span")
-				.data(availableFeatures)
-				.enter()
-				.append("span");
-				
-				sp.append("input")
-				.attr("type","checkbox")
-				.attr("id", function(d,i) {
-					return "chkFeat"+i;
-				})
-				.each(function(d) {
-					if (d[3] ==1)
-						d3.select(this).attr("checked","checked");
-				})
-				.on("change",function(d){reDoFeats();});
-				
-				sp.append("span").text(function(d,i){
-					return d[1];
-				});
-				
-				sp.append("br");
-			}
-			
-			function loadNew() {
-							
-
-				var moveFile = "movs/"+document.getElementById("fileSelect").value;
-				var skelFile = "movs/ecuad1.skel2";
-
-				loadData(moveFile, skelFile, callbackForData);
-			}
-			
-			var callbackForData = function(frames, skel) {
-				
-				gframes = frames;
-				gskel = skel;
-				//makeFeats();
-				reDraw();
-			};
-
-			
-			
-			function reDraw() {
-				
-				//frameSkip = +document.getElementById("sldSkips").value;
-				//padding = +document.getElementById("sldPad").value;
-				frameSkip = $("#sldSkip2").slider( "option", "value" );
-				padding = $("#sldPad2").slider( "option", "value" );
-				
-				d3.select("body").select("#figure").selectAll("svg").remove();
-				d3.select("body").select("#anim").selectAll("svg").remove();
-				
-				// Draw the figure sketch
-				rootOffset = drawFiguresCanvas(d3.select("body").select("#figure"), gframes, gskel, selectedJoint, frameSkip, padding);
-				
-				// Prep the animation
-				animSVG = makeAnim(d3.select("body").select("#anim"), gframes, gskel, selectedJoint, frameSkip, padding);
-				
-				//playAnim = true;
-				
-				//Draw the joint chooser
-				firstFrame = gframes[0].map(function(d) {
-					return {
-						x : d.x / 2 + 150,
-						y : -1 * d.y / 2 + 90 + 75,
-						z : d.z / 2
-					};
-				});
-					
-					
-				//Create SVG element
-				d3.select("#jointChooser").selectAll("svg").remove();
-				var jointChooser = d3.select("#jointChooser").append("svg").attr("height",170);
-				drawJointChooser(jointChooser,firstFrame,0, selectedJoint,gskel,reDraw);
-				
-				d3.select("#jointLabel").text(gskel.jointNames[selectedJoint]);
-				
-				///
-			
-				grootOffset = rootOffset;
-				gpadding = padding;
-				
-				makeFeats();
-				reDrawFeat();
-			} 
-			
-			function makeFeats() {
-				//= +document.getElementById("sldSkips").value;
-
-				selectedFeats = [];
-				f=0;
-				
-				
-				for (var feat in availableFeatures) {
-					console.log(availableFeatures[feat]);
-					if (document.getElementById("chkFeat"+feat).checked) {
-						selectedFeats[f]= availableFeatures[feat][0];
-						selectedFeats[f++].data = availableFeatures[feat][2](gframes, frameSkip,selectedJoint,0);
-					}
-				}
-			
-			}
-			
-			function reDoFeats() {
-				
-				makeFeats();
-				reDrawFeat();
-			}
-			
-			function reDrawFeat() {
-				d3.select("#featureList").selectAll("svg").remove();
-
-				drawFeatureList(d3.select("#featureList"), grootOffset, selectedFeats, gpadding);
-			}
-			
-			d3.timer(drawFigure, 15);
-			loadFeatures();
-			loadNew();
+           
+			 
+			d3.timer(anim.drawFigure, 15);
+			movan.loadFeatures();
+			movan.loadNew();
 			
 			
         </script>

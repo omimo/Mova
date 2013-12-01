@@ -1,4 +1,6 @@
-function drawFiguresCanvas(parent,frames, skel, highlightJ, frameSkip, pad) {
+var figureSketch = {
+	
+drawFiguresCanvas: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 	
 				var rootOffset = [];
 
@@ -79,7 +81,7 @@ function drawFiguresCanvas(parent,frames, skel, highlightJ, frameSkip, pad) {
 					
 					rootOffset[index/skips] = currentFrame[0].x;
 					//Create SVG element
-					drawSkel(svg,currentFrame,index, highlightJ,skel);
+					figureSketch.drawSkel(svg,currentFrame,index, highlightJ,skel);
 			
 					
 
@@ -89,16 +91,17 @@ function drawFiguresCanvas(parent,frames, skel, highlightJ, frameSkip, pad) {
 
 				return rootOffset;
 
-			}
+	},
 
 
-function drawSkel(svg, currentFrame, index, highlightJ,skel) {
+drawSkel: function (svg, currentFrame, index, highlightJ,skel) {
 	//bones
 	svg.selectAll("line.f" + index)
 	.data(skel.connections)
 	.enter()
 	.append("line")
 	.attr("stroke", "black")
+	.attr("stroke-width",1)
 	.attr("x1",0).attr("x2",0)
 	//.transition().duration(1000).ease("elastic")
 	.attr("x1", function(d, j) {
@@ -127,7 +130,7 @@ function drawSkel(svg, currentFrame, index, highlightJ,skel) {
 	}).attr("r", function(d, i) {
 		if (i == highlightJ)
 			return 4;
-		else if (i == skelHeadJoint )
+		else if (i == movan.skelHeadJoint )
 			return 4;
 		else
 			return 2;
@@ -139,10 +142,10 @@ function drawSkel(svg, currentFrame, index, highlightJ,skel) {
 	});
 
 	
-}
+},
 
 
-function drawJointChooser(svg, currentFrame, index, highlightJ,skel,clickCallBack) {
+drawJointChooser: function (svg, currentFrame, index, highlightJ,skel,clickCallBack) {
 	//bones
 	svg.selectAll("line.f" + index)
 	.data(skel.connections)
@@ -178,7 +181,7 @@ function drawJointChooser(svg, currentFrame, index, highlightJ,skel,clickCallBac
 	}).attr("r", function(d, i) {
 		if (i == highlightJ)
 			return 6;
-		else if (i == skelHeadJoint)
+		else if (i == movan.skelHeadJoint)
 			return 6;
 		else
 			return 5;
@@ -191,7 +194,6 @@ function drawJointChooser(svg, currentFrame, index, highlightJ,skel,clickCallBac
 			return 'black';
 	})
 	.on("mouseover", function (d) {
-		console.log(this);
 		d3.select(this).attr("r",6).attr("fill", "orange");
 		
 		d3.select("#jointLabel").text(skel.jointNames[d3.select(this).attr("jointID")]);
@@ -201,7 +203,7 @@ function drawJointChooser(svg, currentFrame, index, highlightJ,skel,clickCallBac
 		r = 2;
 		if (i == highlightJ)
 			r= 6;
-		else if (i == skelHeadJoint)
+		else if (i == movan.skelHeadJoint)
 			r= 6;
 		else
 			r = 5;
@@ -213,10 +215,12 @@ function drawJointChooser(svg, currentFrame, index, highlightJ,skel,clickCallBac
 			d3.select(this).attr("fill","black");
 	})
 	.on("click", function(d) {
-		selectedJoint = d3.select(this).attr("jointID");
+		movan.selectedJoint = d3.select(this).attr("jointID");
 		clickCallBack();
 	})
 	;
 
 	
 }
+
+};

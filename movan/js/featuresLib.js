@@ -69,16 +69,16 @@ var f_accel = {
 		label: "Acceleration",
 		type: "bipolar",
 		unit: "pixels/s^2",
-		range: [-200,-180,-160,-140,-120,-100,-80,-60,-40,-20,-1,1,20,40,60,80,100,120,140,160,180,200],
-		rangelabels: [-200,-180,-160,-140,-120,-100,-80,-60,-40,-20,-1,1,20,40,60,80,100,120,140,160,180,200],
+		range: [-1000,-900,-800,-700,-600,-400,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,1000],
+		rangelabels:['<-1000',-900,-800,-700,-600,-400,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,'>1000'],
 		colormap : function(v){
-			if (v>400) v = 400;
-			if (v<-400) v = -400;
+			if (v>1000) v = 1000;
+			if (v<-1000) v = -1000;
 		
 			if (v>0)
-				return d3.hsl(15,1,0.9-(v/200));
+				return d3.hsl(15,1,0.9-(v/1200));
 			else
-				return d3.hsl(208,1,0.9-(-v/400));
+				return d3.hsl(208,1,0.9-(-v/1200));
 			},
 		colormap2 : function(v){
 //				if (v>165) v = 165;
@@ -106,15 +106,15 @@ var f_jerk = {
 		type: "bipolar",
 		unit: "pixels/s^3",
 		range: [-1000,-900,-800,-700,-600,-500,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,1000],
-		rangelabels: ['<-1000',-900,-800,-700,-600,-500,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,'>1000'],
+		rangelabels: ['<-1000','',-800,'',-600,'',-400,'',-200,'','',0,'',200,'',400,'',600,'',800,'','>1000'],
 		colormap : function(v){
 			if (v>1000) v = 1000;
 			if (v<-1000) v = -1000;
 		
 			if (v>0)
-				return d3.hsl(45,1,0.9-(v/1000));
+				return d3.hsl(45,1,0.9-(v/1200));
 			else
-				return d3.hsl(145,1,0.9-(-v/1000));
+				return d3.hsl(145,1,0.9-(-v/1200));
 			},
 		data: [ ]
 };
@@ -211,7 +211,7 @@ function calcVelocities(frames, skips, joint) {
 		
 		
 		
-		v = eculDist(frames[index][joint],frames[index-skips][joint])/(skips*inputFPS);
+		v = eculDist(frames[index][joint],frames[index-skips][joint])/(skips*movan.inputFPS);
 		
 	    start = Math.floor(index/skips) -1;
 	    end = index/skips;
@@ -257,7 +257,7 @@ function calcAveVelocities(frames, skips, joint) {
 //			 a = a + Math.pow((frames[index][joint].z-frames[index-skips][joint].z),2);
 //			 sum+= Math.sqrt(a)/(skips*inputFPS);
 			
-			sum+= eculDist(frames[j][joint],frames[j-1][joint])/(inputFPS);
+			sum+= eculDist(frames[j][joint],frames[j-1][joint])/(movan.inputFPS);
 
 		}
 	   
@@ -305,7 +305,7 @@ function calcAccel(frames, skips, joint) {
 	for (i=1;i<vel.length;i++) {
 		dv = Math.pow((vel[i]-vel[i-1]),2);
 		dv = (vel[i]-vel[i-1]);
-	    dt = (skips*inputFPS);
+	    dt = (skips*movan.inputFPS);
 		a = dv/dt;
 		
 	    start = i -1;
@@ -349,7 +349,7 @@ function calcJerk(frames, skips, joint) {
 	for (i=1;i<ac.length;i++) {
 		
 		da = (ac[i]-ac[i-1]);
-	    dt = (skips*inputFPS);
+	    dt = (skips*movan.inputFPS);
 	    jr = da/dt;
 		
 	    start = i -1;
@@ -423,7 +423,7 @@ function calcSpace_Pathway (frames, skips, joint) {
 	var minIndex = -1;
 	var max = -1;
 	var fracs = [];
-	var T = 0.6;
+	var T = 0.8;
 		
 	var temp = new Array(Math.floor(frames.length/skips));
 	
