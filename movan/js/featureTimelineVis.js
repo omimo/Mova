@@ -318,8 +318,8 @@ function timeline(parent,rootOffset, feature)
 
 function drawFeatureList (parent,rootOffset, feats, padding)
 {
- //	w = (padding)*frames.length/skips+300;
- 	w = (padding)*rootOffset.length+300;
+ 	w = (padding)*movan.gframes.length/movan.frameSkip+300;
+ //	w = (padding)*rootOffset.length+300;
    	h = 200;
    	
    	feat_h = 40;
