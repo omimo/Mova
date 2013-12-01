@@ -65,7 +65,6 @@ div.over2 {
 	text-align: center;
 	background-color: white;
 	padding: 7px;
-	cursor: move;
 	float: right;
 	overflow-x:hidden;
 	overflow-y:auto;
@@ -150,6 +149,7 @@ div.over2 {
 	height: 2.35em;
 	text-align: center;
 	background-color: blue;
+	cursor: move;
 }
 
 #sidebar .ui-tabs-nav {
