@@ -100,7 +100,7 @@ drawSkel: function (svg, currentFrame, index, highlightJ,skel) {
 	.data(skel.connections)
 	.enter()
 	.append("line")
-	.attr("stroke", "black")
+	.attr("stroke", "grey")
 	.attr("stroke-width",1)
 	.attr("x1",0).attr("x2",0)
 	//.transition().duration(1000).ease("elastic")
@@ -138,7 +138,7 @@ drawSkel: function (svg, currentFrame, index, highlightJ,skel) {
 		if (i == highlightJ)
 			return 'red';
 		else
-			return 'black';
+			return '#555555';
 	});
 
 	
