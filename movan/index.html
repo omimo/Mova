@@ -8,7 +8,7 @@
         <link href="jq/css/smoothness/jquery-ui-1.10.3.custom.css" rel="stylesheet"/>
         <link rel="stylesheet" type="text/css" href="jq/css/jquery-ui-slider-pips.css">
       
-        <script type="text/javascript" src="d3/d3.v3.js"></script>
+        <script type="text/javascript" src="d3/d3.v3.min.js"></script>
         
         <script type="text/javascript" src="js/featureTimelineVis.js"></script>
         <script type="text/javascript" src="js/figureVis.js"></script>
@@ -91,6 +91,18 @@
 			$( "#btnSave" ).click(function(event) {
 						
 				});
+			
+			$("#jointDropdown").click(function(event) {
+				if ($("#jointChooser").css("display")=="none")
+					$("#jointChooser").css("display","");
+				else
+					$("#jointChooser").css("display","none");
+					
+				var t = $("#jointDropdown").position().top+$("#jointDropdown").height()+6;
+				console.log(t);
+				$("#jointChooser").css("top",t);	
+			});
+			
 			
 			$("#sldPad2").slider({
 				min: 10,
@@ -196,24 +208,37 @@
 					<div id="features" class="sidetab">
 						
 				
-						<div class="sidetabtitle">
-							Select features:
-						</div>
-
-						<div id="featCheckboxes" style="border:2px solid #ccc; width:200px; height: 100px; overflow-y: scroll;">
-							
-						</div>
-						<!-- <button type="button">
-							Edit Features
-						</button> -->
 						
+
 						<div class="sidetabtitle" style="margin-top:0.5em">
 							Select a joint:
 						</div>
 						
-						<div id="jointChooser">
-							<div id = "jointLabel" style="padding-left:2em;margin-top:-0.5em;font-size: 0.8em;">-</div>
+						<div id="jointDropdown" style="height:30px;width: 200px;border:1px solid;padding-top:0.2em;padding-bottom:0.2em;cursor: pointer;"> 
+							<div id = "jointLabel" style="padding-left:1em;margin-top:0.5em;font-size: 0.9em;float:left">-</div>
+							<img id = "jointDropDownArrow" style="float:right;margin-top:0.5em" class="ui-icon ui-icon-circle-triangle-s"/>
+							<div id="jointChooser" style="display:none;position:absolute;width:198px;z-index:10">
+							
+							</div>
 						</div>
+						
+						
+						
+						<div class="sidetabtitle">
+							Select a feature:
+						</div>
+						
+						<div id="featCheckboxes" style="border:2px solid #ccc; width:200px; height: 100px; overflow-y: scroll;">
+							
+						</div>
+						
+						<button type="button">
+							Add
+						</button>
+						
+						
+						
+						
 						
 					</div>
 					

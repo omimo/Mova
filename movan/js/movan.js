@@ -90,7 +90,7 @@ var movan = {
 				//Draw the joint chooser
 				firstFrame = movan.gframes[0].map(function(d) {
 					return {
-						x : d.x / 2 + 150,
+						x : d.x / 2 + 140,
 						y : -1 * d.y / 2 + 90 + 75,
 						z : d.z / 2
 					};

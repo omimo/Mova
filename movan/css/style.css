@@ -189,3 +189,10 @@ div.over2 {
         top: -7px;  
         margin-left: -12px;  
     }  
+
+#jointChooser {
+	background-color: white;
+	border: 1px solid black;
+	padding-top:5px;
+	padding-bottom:5px;
+}
