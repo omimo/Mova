@@ -19,8 +19,9 @@ var movan = {
 							[f_accel,'Acceleration',calcAccel,1],
 							[f_jerk,'Jerk',calcJerk,1],
 							[f_overhips,'Joint over Hips',calcJoHips,1],
-							[f_directseg,'Direct Moves',calcSpace_Pathway_Omid,0],
+							[f_directseg,'Direct Moves',calcSpace_Pathway_Omid,1],
 							[f_space,'Space (Pathways)',calcSpace_Pathway,1],
+							[f_weight,'Weight (Pathways)',calcWeight_K,1],
 							],
 							
 			selectedFeats : [],
@@ -44,7 +45,7 @@ var movan = {
 				.on("change",function(d){movan.reDoFeats();});
 				
 				sp.append("span").text(function(d,i){
-					return d[1];
+					return d[0].label;
 				});
 				
 				sp.append("br");

@@ -3,16 +3,22 @@ var cmap1 = [d3.rgb(255, 237, 160) , d3.rgb(254, 178, 76), d3.rgb(240, 59, 32)];
 var cmap2 = [ d3.rgb(194, 230, 153), d3.rgb(120, 198, 121), d3.rgb(49, 163, 84), d3.rgb(0, 104, 55)];
 
 var f_weight = {
-		label: "Weight",
+		label: "Weight (Kap)",
 		type: "segments",
 		unit: "segments",
 		range: [-1,+1],
-		colormap : function(v){return cmap1[v];},
+		colormap : function(v,i){
+//			return d3.hsl(50,0.9,0.5);
+			if (i%2==0)
+				return d3.hsl(250,1,0.5);
+			else
+				return d3.hsl(50,1,0.5);
+		},
 		data: [ ]
 };
 
 var f_space = {
-		label: "Space (Pathway)",
+		label: "Space (Kap)",
 		type: "segments",
 		unit: "segments",
 		range: [-1,+1],
@@ -434,18 +440,18 @@ function calcSpace_Pathway (frames, skips, joint) {
 		temp[index/skips] = new Array(Math.floor(frames.length/skips));
 		
 		
-		for (i = 0;i<index;i+=skips) {
+		for (i = skips;i<index-skips;i+=skips) {
 			
 		//
 		var sum = 0;
-		for (j = i+skips;j<=index;j+=skips) {
-			sum += eculDist(frames[j-skips][joint],frames[j][joint]);
+		for (j = i;j<=index;j+=skips) {
+			sum += eculDist(frames[index][joint],frames[j][joint]);
 		}
 		
 		totalDist = eculDist(frames[index][joint],frames[i][joint]);
 		
 	
-		var frac = totalDist/sum;
+		var frac = sum/totalDist;
 		
 		temp[index/skips][i] = frac;
 		//console.log(index+","+i+","+frac);
@@ -463,7 +469,7 @@ function calcSpace_Pathway (frames, skips, joint) {
     
 
 //
-	console.log(temp);
+	//console.log(temp);
 //	console.log(data);
 //	console.log(cluster(data));
 	return cluster(data);
@@ -537,21 +543,19 @@ function calcSpace_Pathway_Omid	 (frames, skips, joint) {
 	var minIndex = -1;
 	var max = -1;
 	var fracs = [];
-	var dx = 0.2;
-	
+	var T = 0.8;
+		
 	var temp = new Array(Math.floor(frames.length/skips));
 	
 	
-	//for ( index = Math.floor(frames.length/skips)*skips-skips; index >=0; index -= skips) {
-	index = Math.floor(frames.length/skips)*skips-skips;
-	while (index>=0) {
-		var next = 0;
+	for ( index = 0; index <frames.length; index += skips) {
 		
 		var min = 100000;
 		temp[index/skips] = new Array(Math.floor(frames.length/skips));
 		
 		
-		for (i = index-skips;i>=0;i-=skips) {
+		for (i = skips;i<index-skips;i+=skips) {
+			
 		//
 		var sum = 0;
 		for (j = i+skips;j<=index;j+=skips) {
@@ -562,37 +566,95 @@ function calcSpace_Pathway_Omid	 (frames, skips, joint) {
 		
 	
 		var frac = totalDist/sum;
-
+		
 		temp[index/skips][i] = frac;
-		//if ( Math.abs(frac - temp[index/skips][i+skips]) >  dx)
-		if ( Math.abs(frac - 1) >  dx)
-		{
-			
+		//console.log(index+","+i+","+frac);
+		
+		if (frac < min) {
+			min = frac;
 			minIndex = i;
-//			index = i - skips;
-//			next = 1;
-//			break;
 		}
-	
-		//minIndex = i;
+		//	
 	}
-//		if (next==1) {
-//		
-//			next = 0;
-//			continue;
-//		}
+		
 	
-		index = i - skips;
 		data[dCount++] = minIndex;
 	}
     
 
 //
-	console.log(data);
-	console.log(cluster2(data));
+	//console.log(temp);
 //	console.log(data);
 //	console.log(cluster(data));
-	return cluster2(data);
+	return cluster(data);
+}
+
+function calcSpace_Pathway_Omid2(frames, skips, joint) {
+    var data = [];
+    var dCount = 0;
+    var start = 1;
+    var end;
+    var value;
+    var min = 100000;
+    var minIndex = -1;
+    var max = -1;
+    var fracs = [];
+    var dx = 0.2;
+    
+    var temp = new Array(Math.floor(frames.length/skips));
+    
+    
+    //for ( index = Math.floor(frames.length/skips)*skips-skips; index >=0; index -= skips) {
+    index = Math.floor(frames.length/skips)*skips-skips;
+    while (index>=0) {
+            var next = 0;
+            
+            var min = 100000;
+            temp[index/skips] = new Array(Math.floor(frames.length/skips));
+            
+            
+            for (i = index-skips;i>=0;i-=skips) {
+            //
+            var sum = 0;
+            for (j = i+skips;j<=index;j+=skips) {
+                    sum += eculDist(frames[j-skips][joint],frames[j][joint]);
+            }
+            
+            totalDist = eculDist(frames[index][joint],frames[i][joint]);
+            
+    
+            var frac = totalDist/sum;
+
+            temp[index/skips][i] = frac;
+            //if ( Math.abs(frac - temp[index/skips][i+skips]) >  dx)
+            if ( Math.abs(frac - 1) >  dx)
+            {
+                    
+                    minIndex = i;
+//                    index = i - skips;
+//                    next = 1;
+//                    break;
+            }
+    
+            //minIndex = i;
+    }
+//            if (next==1) {
+//            
+//                    next = 0;
+//                    continue;
+//            }
+    
+            index = i - skips;
+            data[dCount++] = minIndex;
+    }
+
+
+//
+    console.log(data);
+    console.log(cluster2(data));
+//    console.log(data);
+//    console.log(cluster(data));
+    return cluster2(data);
 
 }
 
@@ -676,4 +738,64 @@ function simple_moving_averager(num, period) {
             n = nums.length;
         return(sum/n);
     
+}
+
+function calcWeight_K (frames, skips, joint) {
+	var data = [];
+	var dCount = 0;
+	var start = 1;
+	var end;
+	var value;
+	var min = 1000000000;
+	var minIndex = -1;
+	var max = -1;
+	var fracs = [];
+	var T = 6800;
+	var vel = [];
+	
+	var temp = new Array(Math.floor(frames.length/skips));
+	
+	veldata = calcVelocities(frames, skips, joint);
+	
+	for (i=0;i<veldata.length;i++)
+		vel[i] = veldata[i][2];
+
+	nums = [];
+	vel = vel.map(function(d) {
+		return simple_moving_averager(d, 5);
+	});	
+	nums = [];
+
+	
+	for (k=1;k<vel.length;k++) {
+		min = 1000000000;
+		 temp[index/skips] = new Array(Math.floor(frames.length/skips));
+		for (i = 0;i<k;i++) {
+			
+			dv = (vel[k]-vel[i]);
+		    dt = (skips*movan.inputFPS);
+			a = dv/dt;
+			temp[index/skips][i] = a;
+			a = Math.abs(a-T);
+			
+			if (a < min) {
+				min = a;
+				minIndex = i;
+			}
+		}
+		
+		data[dCount++] = minIndex;
+		
+		
+	}
+
+	
+	
+
+//
+	console.log(temp);
+//	console.log(data);
+//	console.log(cluster(data));
+	return cluster(data);
+
 }
