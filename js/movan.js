@@ -48,6 +48,7 @@ var movan = {
 			
 			
 			fillDefaultFeatures: function () {
+				movan.selectedFeats = [];
 				var len = movan.selectedFeats.length; 
 				
 				
@@ -115,6 +116,7 @@ var movan = {
 				movan.gskel = skel;
 				//makeFeats();
 				
+							
 				d3.select("#jointDropdown").attr("selectedJoint", movan.defSelectedJoint);
 				movan.drawJointChooser();
 				
@@ -150,7 +152,6 @@ var movan = {
 				var newSF = [];
 				var newCount = 0;
 				
-				drawnLegends = [];
 				
 				for (var f in movan.selectedFeats){
 					
@@ -167,14 +168,12 @@ var movan = {
 			},
 			
 			reDraw: function () {
-				
-				//frameSkip = +document.getElementById("sldSkips").value;
-				//padding = +document.getElementById("sldPad").value;
 				movan.frameSkip = $("#sldSkip2").slider( "option", "value" );
 				movan.padding = $("#sldPad2").slider( "option", "value" );
 				
-				d3.select("body").select("#figure").selectAll("svg").remove();
-				d3.select("body").select("#anim").selectAll("svg").remove();
+				d3.select("#figure").selectAll("svg").remove();
+				d3.select("#anim").selectAll("svg").remove();
+				d3.select("#trajec").selectAll("svg").remove();
 				
 				// Draw the figure sketch
 				movan.rootOffset = figureSketch.drawFiguresCanvas(d3.select("body").select("#figure"), 
@@ -186,27 +185,14 @@ var movan = {
 				
 				//playAnim = true;
 				
-				
+				trajectory.drawTrajectory(d3.select("#trajec"),movan.gframes,19,0,1);
 		
 				
 				//movan.makeFeats();
 				movan.reDrawFeat();
 			},
 			
-			makeFeats_old: function () {
-				
-				movan.selectedFeats = [];
-				f=0;
-				
-				
-				for (var feat in movan.availableFeatures) {
-					if (document.getElementById("chkFeat"+feat).checked) {
-						movan.selectedFeats[f]= movan.availableFeatures[feat][0];
-						movan.selectedFeats[f++].data = movan.availableFeatures[feat][2](movan.gframes, movan.frameSkip,movan.selectedJoint,0);
-					}
-				}
 			
-			},
 			
 			reDoFeats: function () {
 				
@@ -215,6 +201,7 @@ var movan = {
 			},
 			
 			reDrawFeat: function () {
+				drawnLegends = [];
 				d3.select("#featureList").selectAll("svg").remove();
 				d3.select("#featureList").selectAll("span").remove();
 				drawFeatureList(d3.select("#featureList"), movan.rootOffset, movan.selectedFeats, movan.padding);

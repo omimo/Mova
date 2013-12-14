@@ -296,6 +296,7 @@ function timeline(parent,rootOffset, feature, timel)
 	
 	// Draw Legends
 
+		
 	if ($.inArray(feature.f.label,drawnLegends)!=-1)
 		return;
 	

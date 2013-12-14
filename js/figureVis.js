@@ -75,7 +75,7 @@ drawFiguresCanvas: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 						return {
 							x : d.x / 2 + 200  + index/skips * padding,
 							y : -1 * d.y / 2 + 90 + h / 2,
-							z : d.z / 2
+							z : d.z / 2 +200
 						};
 					});
 					
