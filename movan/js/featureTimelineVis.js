@@ -3,11 +3,14 @@ var padding = 17;
 
 var overlay = [];
 
+var drawnLegends = [];
 
 function mouseOverGroup(feature,rootOffset) {
 	d3.select("body").selectAll("div.over")
 	.style("opacity", 0)
    .remove();
+	
+
 	
 	d3.select("body").select("#figure").selectAll("div")	
 	.data(feature.data)
@@ -23,7 +26,7 @@ function mouseOverGroup(feature,rootOffset) {
 	})
 	.style("height",200+"px")
 	.style("background-color", function(d) {
-		return feature.colormap(d[2]);
+		return feature.f.colormap(d[2]);
 	})
 //	.transition()
 //        .duration(2500)
@@ -36,6 +39,13 @@ function mouseOverGroup(feature,rootOffset) {
 
 function mouseOverGroup2(feature,rootOffset,timeline) {
 	d3.select("#figure").select("svg").selectAll("rect").remove();
+	
+	d3.select("#rmFeat"+feature.id).style("display","block");
+	
+	d3.select("#figure").select("svg").selectAll(".figJointId"+feature.joint)
+	.attr("fill","red")
+	.attr("r",4);
+	
 	
 	parent=d3.select("body").select("#figure").select("svg");
 	
@@ -63,7 +73,7 @@ function mouseOverGroup2(feature,rootOffset,timeline) {
 	timeline.select("#featLabel")
 	.attr("font-weight", "bold");
 	
-	if (feature.type == "segments") {
+	if (feature.f.type == "segments") {
 		parent.selectAll("rect.o")
 		.data(feature.data)
 		.enter()
@@ -79,7 +89,7 @@ function mouseOverGroup2(feature,rootOffset,timeline) {
 		})
 		.attr("height",200)
 		.attr("fill", function(d,i) {
-			return feature.colormap(d[2],i);
+			return feature.f.colormap(d[2],i);
 		})
 		.attr("fill", function(d,i) {
 			if (i%2 ==0)
@@ -102,7 +112,7 @@ function mouseOverGroup2(feature,rootOffset,timeline) {
 	.attr("class", "over")
 	.attr("stroke","none")
 	.attr("x", function(d,j) {  
-			if (feature.type!="bipolar")
+			if (feature.f.type!="bipolar")
 				return rootOffset[d[0]];//-padding;
 			else
 				return rootOffset[d[0]]+padding/2;
@@ -113,7 +123,7 @@ function mouseOverGroup2(feature,rootOffset,timeline) {
 	})
 	.attr("height",parent.attr("height")-10)
 	.attr("fill", function(d,i) {
-		return feature.colormap(d[2],i);
+		return feature.f.colormap(d[2],i);
 	}).transition()
 	.duration(500)
 	.attr("fill-opacity",0.6)
@@ -130,6 +140,17 @@ function mouseOverGroup2(feature,rootOffset,timeline) {
 };
 
 var mouseOutGroup = function (timeline) {
+	d3.selectAll(".removeFeatButton").style("display","none");
+	
+	d3.select("#figure").select("svg").selectAll(".figJoint")
+	.attr("fill","#555555")
+	.attr("r", function(d, i) {
+		if (d3.select(this).attr("class") == "figJoint figJointId"+movan.skelHeadJoint )
+			return 4;
+		else
+			return 2;
+	});
+	
 	d3.select("#figure").select("svg").selectAll("rect").transition()
 	.duration(500)
 	.style("opacity", 0)
@@ -146,32 +167,42 @@ var mouseOutGroup = function (timeline) {
 	//visualRoot.selectAll(".circle").remove()
 };
 
-function timeline(parent,rootOffset, feature)
+function timeline(parent,rootOffset, feature, timel)
 {
-	parent.on("mouseover", function(d,i) {
+	
+	//svg=parent.append("svg").attr("width", w).attr("height", feat_h);;
+	svg = parent;
+	
+	
+	timel.on("mouseover", function(d,i) {
+	 
 			mouseOverGroup2(feature,rootOffset,parent);
 		})
 		.on("mouseleave", function(d) {
 			mouseOutGroup(parent);
 		});
-
-	//svg=parent.append("svg").attr("width", w).attr("height", feat_h);;
-	svg = parent;
 	
-
 	
 	svg.append("text")
 	.attr("id","featLabel")
-	.text(feature.label+":")
+	.text(feature.f.label+ ":")
 	.attr("x",20)
-	.attr("y",25)
+	.attr("y",15)
 	.attr("font-family", "sans-serif")
 	.attr("font-size", "11pt");
-		
 	
-	if (feature.type == "segments") {
+	svg.append("text")
+	.attr("id","featLabel")
+	.text(""+movan.gskel.jointNames[feature.joint])
+	.attr("x",20)
+	.attr("y",28)
+	.attr("font-family", "sans-serif")
+	.attr("font-size", "8pt");
+	
+	
+	if (feature.f.type == "segments") {
 
-		svg.selectAll("rect.f_"+feature.title)
+		svg.selectAll("rect.f_"+feature.f.title)
 			.data(feature.data)
 			.enter()
 			.append("rect")
@@ -189,11 +220,11 @@ function timeline(parent,rootOffset, feature)
 			.attr("height", 6)
 			.attr("orgheight", 6)
 			.attr("fill", function(d,i) {
-				return feature.colormap(d[2],i);
+				return feature.f.colormap(d[2],i);
 			})
 			.attr("fill2","url(#hash)")
 			.attr("orgfill", function(d) {
-				return feature.colormap(d[2]);
+				return feature.f.colormap(d[2]);
 			})
 			.attr("val",  function(d) {
 				return (d[2]);
@@ -201,7 +232,7 @@ function timeline(parent,rootOffset, feature)
 			;
 	}
 	else {
-	svg.selectAll("rect.f_"+feature.title)
+	svg.selectAll("rect.f_"+feature.f.title)
 		.data(feature.data)
 		.enter()
 		.append("rect")
@@ -209,7 +240,7 @@ function timeline(parent,rootOffset, feature)
 		.attr("id", function(d,i) {return "featbox"+i;})
 		.attr("stroke","none")
 		.attr("x", function(d,j) {  
-			if (feature.type!="bipolar")
+			if (feature.f.type!="bipolar")
 				return rootOffset[d[0]];//-padding;
 			else
 				return rootOffset[d[0]]+padding/2;
@@ -217,7 +248,7 @@ function timeline(parent,rootOffset, feature)
 
 		})
 		.attr("y", function(d) {
-			if (feature.type=="bipolar") {
+			if (feature.f.type=="bipolar") {
 				if (d[2]>0)
 					return 10;
 				else
@@ -227,7 +258,7 @@ function timeline(parent,rootOffset, feature)
 				return 10;
 		})
 		.attr("orgtop", function(d) {
-			if (feature.type=="bipolar") {
+			if (feature.f.type=="bipolar") {
 				if (d[2]>0)
 					return 10;
 				else
@@ -240,22 +271,22 @@ function timeline(parent,rootOffset, feature)
 			return rootOffset[d[1]] - rootOffset[d[0]];
 		})
 		.attr("height", function (d) {
-			if (feature.type=="bipolar")
+			if (feature.f.type=="bipolar")
 				return 10;
 			else
 				return 20;
 		})
 		.attr("orgheight", function (d) {
-			if (feature.type=="bipolar")
+			if (feature.f.type=="bipolar")
 				return 10;
 			else
 				return 20;
 		})
 		.attr("fill", function(d,i) {
-			return feature.colormap(d[2],i);
+			return feature.f.colormap(d[2],i);
 		})
 		.attr("orgfill", function(d) {
-			return feature.colormap(d[2]);
+			return feature.f.colormap(d[2]);
 		})
 		.attr("val",  function(d) {
 			return (d[2]);
@@ -265,12 +296,17 @@ function timeline(parent,rootOffset, feature)
 	
 	// Draw Legends
 
-	var legitemW = ($("#legends").width()-20)/feature.range.length;
+	if ($.inArray(feature.f.label,drawnLegends)!=-1)
+		return;
+	
+	drawnLegends[drawnLegends.length] = feature.f.label;
+	
+	var legitemW = ($("#legends").width()-20)/feature.f.range.length;
 	
 	legsvg = d3.select("#legends").append("svg").attr("height","80px");
 	
 	legsvg.append("text")
-	.text(feature.label+" ("+feature.unit+")")
+	.text(feature.f.label+" ("+feature.f.unit+")")
 	.attr("y",15)
 	.attr("x", 10)
 	.attr("font-family", "sans-serif")
@@ -278,7 +314,7 @@ function timeline(parent,rootOffset, feature)
 	
 	
 	legsvg.selectAll("rect.legitem")
-	.data(feature.range)
+	.data(feature.f.range)
 	.enter()
 	.append("rect")
 	.attr("class", "legitem")
@@ -289,15 +325,15 @@ function timeline(parent,rootOffset, feature)
 	.attr("width",legitemW)
 	.attr("height",15)
 	.attr("fill", function (d,i) {
-		return feature.colormap(d,i);
+		return feature.f.colormap(d,i);
 	})
 	;
 	
-	if (feature.type == "segments")
+	if (feature.f.type == "segments")
 		return;
 	
 	legsvg.selectAll("text.legitem")
-	.data(feature.rangelabels)
+	.data(feature.f.rangelabels)
 	.enter()
 	.append("text")
 	.attr("text-anchor","end")
@@ -332,11 +368,36 @@ function drawFeatureList (parent,rootOffset, feats, padding)
    	 
    	 for (f=0;f<feats.length;f++)
    		 {
-   		 		var fsvg = list.append("svg").attr("width", w).attr("height", feat_h).attr("display"," block")
+
+   		 var timel = parent.append("div");
+   		 
+   		 
+   		
+   		
+   		
+   		timel.append("span")
+   		.attr("class", "ui-icon ui-icon-closethick removeFeatButton")
+   		.style("display","none")
+   		.attr("id","rmFeat"+feats[f].id)
+   		.attr("num", f)
+   		.on("click", function (d) {
+   			var id = d3.select(this).attr("num");
+   			movan.removeFeature(id);
+   			   			
+   			d3.select("#figure").select("svg").selectAll("rect").transition()
+   			.duration(500)
+   			.style("opacity", 0)
+   		   .remove();
+   			
+   			d3.select(list).select("#rmFeat"+id).remove();
+   			
+   		});	
+   		 		var fsvg = timel.append("svg").attr("width", w).attr("height", feat_h).attr("display"," block")
    		 		.style("cursor","pointer");//.append("div").attr("id","feat-"+f).style("width", w+"px").style("height", feat_h+"px");
    		 		ff = feats[f];
 
-   		 		timeline(fsvg,rootOffset,feats[f]);
+   		 	
+   		 		timeline(fsvg,rootOffset,feats[f], timel);
 
    		 		
    		 }
