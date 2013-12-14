@@ -54,7 +54,7 @@ var f_flow = {
 var f_angvel = {
 		label: "Velocity",
 		type: "cont",
-		unit: "pixels/s",
+		unit: "cm/s",
 		range: [0,100,200,300,400,500,600,700,800,900,1000],
 		rangelabels: [0,100,200,300,400,500,600,700,800,900,1000],
 		colormap : function(v){return d3.hsl(0,1,0.9-(v/1100));},
@@ -64,7 +64,7 @@ var f_angvel = {
 var f_aveangvel = {
 		label: "AveVelocity",
 		type: "cont",
-		unit: "pixels/s",
+		unit: "cm/s",
 		range: [0,100,200,300,400,500,600,700,800,900,1000],
 		rangelabels: [0,100,200,300,400,500,600,700,800,900,1000],
 		colormap : function(v){if (v>1000) v = 1000;return d3.hsl(0,1,0.9-(v/1100));},
@@ -74,7 +74,7 @@ var f_aveangvel = {
 var f_accel = {
 		label: "Acceleration",
 		type: "bipolar",
-		unit: "pixels/s^2",
+		unit: "cm/s^2",
 		range: [-1000,-900,-800,-700,-600,-400,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,1000],
 		rangelabels:['<-1000',-900,-800,-700,-600,-400,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,'>1000'],
 		colormap : function(v){
@@ -110,7 +110,7 @@ var f_accel = {
 var f_jerk = {
 		label: "Jerk",
 		type: "bipolar",
-		unit: "pixels/s^3",
+		unit: "cm/s^3",
 		range: [-1000,-900,-800,-700,-600,-500,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,1000],
 		rangelabels: ['<-1000','',-800,'',-600,'',-400,'',-200,'','',0,'',200,'',400,'',600,'',800,'','>1000'],
 		colormap : function(v){

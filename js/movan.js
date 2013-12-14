@@ -7,7 +7,7 @@ var movan = {
 			
 			 inputFPS : 0.0083, //120	
 			
-			 selectedJoint : 19,
+			 defSelectedJoint : 19,
 			 skelHeadJoint : 23,
 			 frameSkip : 5,
 
@@ -15,40 +15,89 @@ var movan = {
 			
 			
 			availableFeatures : [
-							[f_angvel,'Velocity',calcVelocities,1],
-							[f_accel,'Acceleration',calcAccel,1],
-							[f_jerk,'Jerk',calcJerk,1],
-							[f_overhips,'Joint over Hips',calcJoHips,1],
-							[f_directseg,'Direct Moves',calcSpace_Pathway_Omid,1],
-							[f_space,'Space (Pathways)',calcSpace_Pathway,1],
-							[f_weight,'Weight (Pathways)',calcWeight_K,1],
+							[f_angvel,calcVelocities,1],
+							[f_accel,calcAccel,1],
+							[f_jerk,calcJerk,1],
+							[f_overhips,calcJoHips,1],
+							[f_directseg,calcSpace_Pathway_Omid,1],
+							[f_space,calcSpace_Pathway,1],
+							[f_weight,calcWeight_K,1],
 							],
 							
 			selectedFeats : [],
 				
 			loadFeatures: function () {
 				
-				var sp = d3.select("#featCheckboxes").selectAll("span")
+				d3.select("#featDropdown")
+				.selectAll("option")
 				.data(movan.availableFeatures)
 				.enter()
-				.append("span");
-				
-				sp.append("input")
-				.attr("type","checkbox")
+				.append("option")
 				.attr("id", function(d,i) {
 					return "chkFeat"+i;
 				})
-				.each(function(d) {
-					if (d[3] ==1)
-						d3.select(this).attr("checked","checked");
+				.attr("value",function(d,i) {
+					return i;
 				})
-				.on("change",function(d){movan.reDoFeats();});
-				
-				sp.append("span").text(function(d,i){
+				.text(function(d,i){
 					return d[0].label;
 				});
+				//.on("change",function(d){movan.reDoFeats();});
 				
-				sp.append("br");
+			},
+			
+			
+			fillDefaultFeatures: function () {
+				var len = movan.selectedFeats.length; 
+				
+				
+				var sel =0;
+				var joint = 17; 
+			    movan.selectedFeats[len] =[];
+			    movan.selectedFeats[len].id = len;
+				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
+				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
+				movan.selectedFeats[len].joint = joint;
+				
+				len++;
+				
+				var joint = 18; 
+			    movan.selectedFeats[len] =[];
+			    movan.selectedFeats[len].id = len;
+				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
+				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
+				movan.selectedFeats[len].joint = joint;
+				
+				len++;
+				
+				var joint = 19; 
+			    movan.selectedFeats[len] =[];
+			    movan.selectedFeats[len].id = len;
+				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
+				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
+				movan.selectedFeats[len].joint = joint;
+				
+				len++;
+				
+				var sel = 1;
+				var joint = 19; 
+			    movan.selectedFeats[len] =[];
+			    movan.selectedFeats[len].id = len;
+				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
+				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
+				movan.selectedFeats[len].joint = joint;
+				
+				len++;
+				
+				var sel = 2;
+				var joint = 19; 
+			    movan.selectedFeats[len] =[];
+			    movan.selectedFeats[len].id = len;
+				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
+				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
+				movan.selectedFeats[len].joint = joint;
+				
+				movan.reDrawFeat();
 			},
 			
 			loadNew: function () {
@@ -65,29 +114,16 @@ var movan = {
 				movan.gframes = frames;
 				movan.gskel = skel;
 				//makeFeats();
+				
+				d3.select("#jointDropdown").attr("selectedJoint", movan.defSelectedJoint);
+				movan.drawJointChooser();
+				
 				movan.reDraw();
+				
+				movan.fillDefaultFeatures();
 			},
 
-			reDraw: function () {
-				
-				//frameSkip = +document.getElementById("sldSkips").value;
-				//padding = +document.getElementById("sldPad").value;
-				movan.frameSkip = $("#sldSkip2").slider( "option", "value" );
-				movan.padding = $("#sldPad2").slider( "option", "value" );
-				
-				d3.select("body").select("#figure").selectAll("svg").remove();
-				d3.select("body").select("#anim").selectAll("svg").remove();
-				
-				// Draw the figure sketch
-				movan.rootOffset = figureSketch.drawFiguresCanvas(d3.select("body").select("#figure"), 
-									movan.gframes, movan.gskel, movan.selectedJoint, movan.frameSkip, movan.padding);
-				
-				// Prep the animation
-				anim.animSVG = anim.makeAnim(d3.select("body").select("#anim"), 
-									movan.gframes, movan.gskel, movan.selectedJoint, movan.frameSkip, movan.padding);
-				
-				//playAnim = true;
-				
+			drawJointChooser: function () {
 				//Draw the joint chooser
 				firstFrame = movan.gframes[0].map(function(d) {
 					return {
@@ -101,18 +137,63 @@ var movan = {
 				//Create SVG element
 				d3.select("#jointChooser").selectAll("svg").remove();
 				var jointChooser = d3.select("#jointChooser").append("svg").attr("height",170);
-				figureSketch.drawJointChooser(jointChooser,firstFrame,0, movan.selectedJoint,movan.gskel,movan.reDraw);
+				figureSketch.drawJointChooser(jointChooser,firstFrame,0, d3.select("#jointDropdown").attr("selectedJoint")
+						,movan.gskel,movan.drawJointChooser);
 				
-				d3.select("#jointLabel").text(movan.gskel.jointNames[movan.selectedJoint]);
+				
+				d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select("#jointDropdown").attr("selectedJoint")]);
 				
 				///
+			},
+			
+			removeFeature: function(fid) {
+				var newSF = [];
+				var newCount = 0;
+				
+				drawnLegends = [];
+				
+				for (var f in movan.selectedFeats){
+					
+				 if (movan.selectedFeats[f].id != fid) {
+					 newSF[newCount] = movan.selectedFeats[f];
+					 newSF[newCount].id = newCount;
+					 newCount++;
+				 }
+				}
+							
+				
+				movan.selectedFeats = newSF;
+				movan.reDoFeats();
+			},
+			
+			reDraw: function () {
+				
+				//frameSkip = +document.getElementById("sldSkips").value;
+				//padding = +document.getElementById("sldPad").value;
+				movan.frameSkip = $("#sldSkip2").slider( "option", "value" );
+				movan.padding = $("#sldPad2").slider( "option", "value" );
+				
+				d3.select("body").select("#figure").selectAll("svg").remove();
+				d3.select("body").select("#anim").selectAll("svg").remove();
+				
+				// Draw the figure sketch
+				movan.rootOffset = figureSketch.drawFiguresCanvas(d3.select("body").select("#figure"), 
+									movan.gframes, movan.gskel, -1, movan.frameSkip, movan.padding);
+				
+				// Prep the animation
+				anim.animSVG = anim.makeAnim(d3.select("body").select("#anim"), 
+									movan.gframes, movan.gskel, -1, movan.frameSkip, movan.padding);
+				
+				//playAnim = true;
+				
+				
 		
 				
-				movan.makeFeats();
+				//movan.makeFeats();
 				movan.reDrawFeat();
 			},
 			
-			makeFeats: function () {
+			makeFeats_old: function () {
 				
 				movan.selectedFeats = [];
 				f=0;
@@ -129,13 +210,13 @@ var movan = {
 			
 			reDoFeats: function () {
 				
-				movan.makeFeats();
+				//movan.makeFeats();
 				movan.reDrawFeat();
 			},
 			
 			reDrawFeat: function () {
 				d3.select("#featureList").selectAll("svg").remove();
-
+				d3.select("#featureList").selectAll("span").remove();
 				drawFeatureList(d3.select("#featureList"), movan.rootOffset, movan.selectedFeats, movan.padding);
 			}
 			

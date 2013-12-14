@@ -123,6 +123,9 @@ drawSkel: function (svg, currentFrame, index, highlightJ,skel) {
 	.data(currentFrame)
 	.enter()
 	.append("circle")
+	.attr("class", function(d,i) {
+		return "figJoint figJointId"+i;
+	})
 	.attr("cx", function(d) {
 		return d.x;
 	}).attr("cy", function(d) {
@@ -215,7 +218,8 @@ drawJointChooser: function (svg, currentFrame, index, highlightJ,skel,clickCallB
 			d3.select(this).attr("fill","black");
 	})
 	.on("click", function(d) {
-		movan.selectedJoint = d3.select(this).attr("jointID");
+		//movan.selectedJoint = d3.select(this).attr("jointID");
+		d3.select("#jointDropdown").attr("selectedJoint", d3.select(this).attr("jointID"));
 		clickCallBack();
 	})
 	;
