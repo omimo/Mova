@@ -225,6 +225,77 @@ drawJointChooser: function (svg, currentFrame, index, highlightJ,skel,clickCallB
 	;
 
 	
+},
+
+drawSkelInfo: function (parent, currentFrame, skel) {
+	
+	var svg = parent.append("svg").attr("width", 250).attr("height", 200);
+	
+	console.log(currentFrame);
+	var currentFrame2 = currentFrame.map(function(d) {
+		return {
+			x : d.x / 2 + 100,
+			y : -1 * d.y / 2 + 90 + 75,
+			z : d.z / 2
+		};
+	});
+	
+	currentFrame = currentFrame2;
+	//joints
+	svg.selectAll("circle")
+	.data(currentFrame)
+	.enter()
+	.append("circle")
+	//.transition()
+	.attr("cx", function(d) {
+		return d.x;
+	}).attr("cy", function(d) {
+		return d.y;
+	})
+	.attr("r", function(d, i) {
+					if (i == movan.skelHeadJoint)
+						return 8;
+					else
+						return 5;
+	})
+	.attr("fill", 'black');
+
+	svg.selectAll("text")
+	.data(currentFrame)
+	.enter()
+	.append("text")
+	.text(function (d,i) {
+		return "";//skel.jointNames[i];
+	})
+	.attr("x", function(d) {
+		return d.x;
+	})
+	.attr("y", function (d) {
+		return d.y;
+	});
+	
+	//bones
+	svg.selectAll("line")
+	.data(movan.gskel.connections)
+	.enter()
+	.append("line")
+	//.transition()
+	.attr("stroke", "black")
+	.attr("stroke-width",6)
+	.attr("x1", function(d, j) {
+		return currentFrame[d.a].x;
+	})
+	.attr("x2", function(d, j) {
+		return currentFrame[d.b].x;
+	})
+	.attr("y1", function(d, j) {
+		return currentFrame[d.a].y;
+	})
+	.attr("y2", function(d, j) {
+		return currentFrame[d.b].y;
+	});
+
+	
 }
 
 };

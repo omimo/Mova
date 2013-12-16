@@ -183,6 +183,28 @@ function timeline(parent,rootOffset, feature, timel)
 		});
 	
 	
+	var defs = parent.append('defs');
+	var g = defs.append("pattern")
+	    .attr('id', 'hash1')
+	    .attr('patternUnits', 'userSpaceOnUse')
+	    .attr('width', '15')
+	    .attr('height', '15')
+	    .append("g").style("fill", "red")
+	    .style("stroke", "red")
+	    .style("stroke-width", 2)
+		.append("path").attr("d", "M0,0 l15,15");
+	
+	var g = defs.append("pattern")
+	    .attr('id', 'hash2')
+	    .attr('patternUnits', 'userSpaceOnUse')
+	    .attr('width', '15')
+	    .attr('height', '15')
+	    .append("g").style("fill", "red")
+	    .style("stroke", "blue")
+	    .style("stroke-width", 2)
+	    .append("path").attr("d", "M15,0 l-15,15");
+	
+	
 	svg.append("text")
 	.attr("id","featLabel")
 	.text(feature.f.label+ ":")
@@ -222,7 +244,12 @@ function timeline(parent,rootOffset, feature, timel)
 			.attr("fill", function(d,i) {
 				return feature.f.colormap(d[2],i);
 			})
-			.attr("fill2","url(#hash)")
+			.attr("fill", function(d,i) {
+			if (i%2 ==0)
+				return "url(#hash1)";
+			else
+				return "url(#hash2)";
+			})
 			.attr("orgfill", function(d) {
 				return feature.f.colormap(d[2]);
 			})

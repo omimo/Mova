@@ -186,7 +186,7 @@ var movan = {
 				//playAnim = true;
 				
 				trajectory.drawTrajectory(d3.select("#trajec"),movan.gframes,19,0,1);
-		
+				//figureSketch.drawSkelInfo(d3.select("#trajec"),movan.gframes[0],movan.gskel);
 				
 				//movan.makeFeats();
 				movan.reDrawFeat();
