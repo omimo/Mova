@@ -4,7 +4,10 @@ animIndex : 0,  // Current frame duing animation
 playAnim : false,  
 animSVG : [],  // SVG DOM element for the animation
 ds : 4,  // Down-sampling rate
-			
+
+trajJointIndex: 19,
+trajFeatIndex: 0,
+
 makeAnim: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 	
 				//var rootOffset = [];
@@ -83,23 +86,25 @@ makeAnim: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 				});
 
 			
+				if (movan.selectedFeats.length > 0 ) {
+					//The line SVG Path we draw
+					svg.append("circle")
+					.attr("class","traj")
+		            .attr("cx", function(d) { 
+						return currentFrame[anim.trajJointIndex].x;
+					}).attr("cy", function(d) {
+						return currentFrame[anim.trajJointIndex].y;
+					}).attr("r", 5)
+					.attr("fill", function(d) {
+			var i = Math.floor(anim.animIndex/movan.frameSkip);
+			if (i>=movan.selectedFeats[anim.trajFeatIndex].data.length)
+				value = movan.selectedFeats[anim.trajFeatIndex].data[i-movan.frameSkip][2];
+			else
+				value = movan.selectedFeats[anim.trajFeatIndex].data[i][2];
+			return movan.selectedFeats[anim.trajFeatIndex].f.colormap(value);
+		});
+				}
 				
-				joint = 19;
-				
-				var lineFunction = d3.svg.line()
-	            .x(function(d) { console.log(d);return d[joint].x; })
-	            .y(function(d) { return d[joint].y; })
-	             .interpolate("linear"); //basis
-
-				//The line SVG Path we draw
-				svg.append("circle")
-				.attr("class","traj")
-	            .attr("cx", function(d) { 
-					return currentFrame[joint].x;
-				}).attr("cy", function(d) {
-					return currentFrame[joint].y;
-				}).attr("r", 5)
-				.attr("fill", "red");
 				
 				
 				
@@ -115,7 +120,6 @@ makeAnim: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 				
 },
 
-featIndex: 0,
 
 drawFigure: function() {
 	if (anim.playAnim==false) return false;
@@ -134,17 +138,17 @@ drawFigure: function() {
 	svg.append("circle")
 	.attr("class","traj")
     .attr("cx", function(d) { 
-		return currentFrame[joint].x;
+		return currentFrame[anim.trajJointIndex].x;
 	}).attr("cy", function(d) {
-		return currentFrame[joint].y;
+		return currentFrame[anim.trajJointIndex].y;
 	}).attr("r", 5)
 	.attr("fill", function(d) {
 		var i = Math.floor(anim.animIndex/movan.frameSkip);
-		if (i>=movan.selectedFeats[0].data.length)
-			value = movan.selectedFeats[0].data[i-movan.frameSkip][2];
+		if (i>=movan.selectedFeats[anim.trajFeatIndex].data.length)
+			value = movan.selectedFeats[anim.trajFeatIndex].data[i-movan.frameSkip][2];
 		else
-			value = movan.selectedFeats[0].data[i][2];
-		return movan.selectedFeats[0].f.colormap(value);
+			value = movan.selectedFeats[anim.trajFeatIndex].data[i][2];
+		return movan.selectedFeats[anim.trajFeatIndex].f.colormap(value);
 	});
 	
 	//draw joints
