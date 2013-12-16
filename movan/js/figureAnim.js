@@ -82,6 +82,25 @@ makeAnim: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 						return 'black';
 				});
 
+			
+				
+				joint = 19;
+				
+				var lineFunction = d3.svg.line()
+	            .x(function(d) { console.log(d);return d[joint].x; })
+	            .y(function(d) { return d[joint].y; })
+	             .interpolate("linear"); //basis
+
+				//The line SVG Path we draw
+				svg.append("circle")
+				.attr("class","traj")
+	            .attr("cx", function(d) { 
+					return currentFrame[joint].x;
+				}).attr("cy", function(d) {
+					return currentFrame[joint].y;
+				}).attr("r", 5)
+				.attr("fill", "red");
+				
 				
 				
 				$("#featureList").scrollLeft(0);
@@ -96,6 +115,7 @@ makeAnim: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 				
 },
 
+featIndex: 0,
 
 drawFigure: function() {
 	if (anim.playAnim==false) return false;
@@ -108,6 +128,23 @@ drawFigure: function() {
 			y : -1 * d.y / 2 + 90 + h / 2,
 			z : d.z / 2
 		};
+	});
+	
+	
+	svg.append("circle")
+	.attr("class","traj")
+    .attr("cx", function(d) { 
+		return currentFrame[joint].x;
+	}).attr("cy", function(d) {
+		return currentFrame[joint].y;
+	}).attr("r", 5)
+	.attr("fill", function(d) {
+		var i = Math.floor(anim.animIndex/movan.frameSkip);
+		if (i>=movan.selectedFeats[0].data.length)
+			value = movan.selectedFeats[0].data[i-movan.frameSkip][2];
+		else
+			value = movan.selectedFeats[0].data[i][2];
+		return movan.selectedFeats[0].f.colormap(value);
 	});
 	
 	//draw joints

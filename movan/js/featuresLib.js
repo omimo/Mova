@@ -8,11 +8,10 @@ var f_weight = {
 		unit: "segments",
 		range: [-1,+1],
 		colormap : function(v,i){
-//			return d3.hsl(50,0.9,0.5);
 			if (i%2==0)
-				return d3.hsl(250,1,0.5);
+				return "url(#hash1)";//d3.hsl(250,1,0.5);
 			else
-				return d3.hsl(50,1,0.5);
+				return "url(#hash2)";//d3.hsl(50,1,0.5);
 		},
 		data: [ ]
 };
@@ -23,11 +22,10 @@ var f_space = {
 		unit: "segments",
 		range: [-1,+1],
 		colormap : function(v,i){
-//			return d3.hsl(50,0.9,0.5);
 			if (i%2==0)
-				return d3.hsl(250,1,0.5);
+				return "url(#hash1)";//d3.hsl(250,1,0.5);
 			else
-				return d3.hsl(50,1,0.5);
+				return "url(#hash2)";//d3.hsl(50,1,0.5);
 		},
 		data: [ ]
 };
@@ -52,7 +50,7 @@ var f_flow = {
 };
 
 var f_angvel = {
-		label: "Velocity",
+		label: "Speed",
 		type: "cont",
 		unit: "cm/s",
 		range: [0,100,200,300,400,500,600,700,800,900,1000],
@@ -76,7 +74,8 @@ var f_accel = {
 		type: "bipolar",
 		unit: "cm/s^2",
 		range: [-1000,-900,-800,-700,-600,-400,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,1000],
-		rangelabels:['<-1000',-900,-800,-700,-600,-400,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,'>1000'],
+		//rangelabels:['<-1000',-900,-800,-700,-600,-400,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,'>1000'],
+		rangelabels: ['<-1000','',-800,'',-600,'',-400,'',-200,'','',0,'',200,'',400,'',600,'',800,'','>1000'],
 		colormap : function(v){
 			if (v>1000) v = 1000;
 			if (v<-1000) v = -1000;
@@ -134,9 +133,9 @@ var f_directseg = {
 		rangelabels: [-1,+1],
 		colormap : function(v,i){
 			if (i%2==0)
-				return d3.hsl(250,1,0.5);
+				return "url(#hash1)";//d3.hsl(250,1,0.5);
 			else
-				return d3.hsl(50,1,0.5);
+				return "url(#hash2)";//d3.hsl(50,1,0.5);
 		},
 		data: [ ]
 };
