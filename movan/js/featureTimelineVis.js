@@ -167,7 +167,7 @@ var mouseOutGroup = function (timeline) {
 	//visualRoot.selectAll(".circle").remove()
 };
 
-function timeline(parent,rootOffset, feature, timel)
+function timeline(parent,rootOffset, feature, timel, findex)
 {
 	
 	//svg=parent.append("svg").attr("width", w).attr("height", feat_h);;
@@ -175,11 +175,16 @@ function timeline(parent,rootOffset, feature, timel)
 	
 	
 	timel.on("mouseover", function(d,i) {
-	 
 			mouseOverGroup2(feature,rootOffset,parent);
 		})
 		.on("mouseleave", function(d) {
 			mouseOutGroup(parent);
+		})
+		.on("click", function (d) {
+			console.log("dfgsfsd");
+			d3.select("#anim").selectAll("circle.traj").remove();
+			anim.trajJointIndex = feature.joint;
+			anim.trajFeatIndex =findex;
 		});
 	
 	
@@ -425,7 +430,7 @@ function drawFeatureList (parent,rootOffset, feats, padding)
    		 		ff = feats[f];
 
    		 	
-   		 		timeline(fsvg,rootOffset,feats[f], timel);
+   		 		timeline(fsvg,rootOffset,feats[f], timel,f);
 
    		 		
    		 }
