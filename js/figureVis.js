@@ -73,9 +73,9 @@ drawFiguresCanvas: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 		
 					currentFrame = frames[index].map(function(d) {
 						return {
-							x : d.x / 2 + 200  + index/skips * padding,
-							y : -1 * d.y / 2 + 90 + h / 2,
-							z : d.z / 2 +200
+							x : d.x * movan.figureScale + 200  + index/skips * padding,
+							y : -1 * d.y * movan.figureScale+ 90 + h / 2,
+							z : d.z * movan.figureScale +200
 						};
 					});
 					
@@ -234,9 +234,9 @@ drawSkelInfo: function (parent, currentFrame, skel) {
 	console.log(currentFrame);
 	var currentFrame2 = currentFrame.map(function(d) {
 		return {
-			x : d.x / 2 + 100,
-			y : -1 * d.y / 2 + 90 + 75,
-			z : d.z / 2
+			x : d.x * movan.figureScale + 100,
+			y : -1 * d.y * movan.figureScale + 90 + 75,
+			z : d.z * movan.figureScale
 		};
 	});
 	
