@@ -32,9 +32,9 @@ makeAnim: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 
 				currentFrame = frames[anim.animIndex].map(function(d) {
 					return {
-						x : d.x / 2 + 400 ,
-						y : -1 * d.y / 2 + 90 + h / 2,
-						z : d.z / 2
+						x : d.x * movan.figureScale + 400 ,
+						y : -1 * d.y * movan.figureScale + 90 + h / 2,
+						z : d.z * movan.figureScale
 					};
 				});
 				
@@ -128,9 +128,9 @@ drawFigure: function() {
 	//console.log(playAnim);
 	currentFrame = movan.gframes[anim.animIndex].map(function(d) {
 		return {
-			x : d.x / 2 + 400 ,
-			y : -1 * d.y / 2 + 90 + h / 2,
-			z : d.z / 2
+			x : d.x * movan.figureScale + 400 ,
+			y : -1 * d.y * movan.figureScale + 90 + h / 2,
+			z : d.z * movan.figureScale
 		};
 	});
 	

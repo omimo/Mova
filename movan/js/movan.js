@@ -11,7 +11,7 @@ var movan = {
 			 skelHeadJoint : 23,
 			 frameSkip : 5,
 
-			
+			figureScale: 1, //TODO: Need to add a scale control in the GUI (or automatic detection)
 			
 			
 			availableFeatures : [
@@ -169,7 +169,23 @@ var movan = {
 
 				var moveFile = "movs/"+document.getElementById("fileSelect").value;
 				var skelFile = "movs/ecuad1.skel2";
-
+				
+				//FIXME: This is just a dummy way to do it!
+				//TODO: Put the skel data in the mocap csv file
+				
+				
+				if (moveFile.search("KAREN") != -1) {
+					movan.figureScale = 2;
+					movan.skelHeadJoint = 7;
+					skelFile = "movs/MSDec9.skel";
+				}
+				else 
+				{
+					movan.figureScale = 0.5;
+					movan.skelHeadJoint = 23;
+				}
+					
+				
 				loadData(moveFile, skelFile, movan.callbackForData);
 			},
 			
@@ -192,9 +208,9 @@ var movan = {
 				//Draw the joint chooser
 				firstFrame = movan.gframes[0].map(function(d) {
 					return {
-						x : d.x / 2 + 140,
-						y : -1 * d.y / 2 + 90 + 75,
-						z : d.z / 2
+						x : d.x * movan.figureScale + 140,
+						y : -1 * d.y * movan.figureScale + 90 + 75,
+						z : d.z * movan.figureScale
 					};
 				});
 					
