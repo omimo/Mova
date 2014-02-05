@@ -20,8 +20,11 @@ var movan = {
 							[f_jerk,calcJerk,1],
 							[f_overhips,calcJoHips,1],
 							[f_directseg,calcSpace_Pathway_Omid,1],
-							[f_space,calcSpace_Pathway,1],
+							[f_space,calcSpace_K,1],
 							[f_weight,calcWeight_K,1],
+							[f_time,calcTime_K,1],
+							[f_flow,calcFlow_K,1],
+							[f_BEA_Ann,readAnn,1]
 							],
 							
 			selectedFeats : [],
@@ -96,6 +99,66 @@ var movan = {
 			    movan.selectedFeats[len].id = len;
 				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
 				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
+				movan.selectedFeats[len].joint = joint;
+				
+				len++;
+				
+				var sel = 4;  //direct segments
+				var joint = 19; 
+			    movan.selectedFeats[len] =[];
+			    movan.selectedFeats[len].id = len;
+				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
+				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
+				movan.selectedFeats[len].joint = joint;
+				
+				len++;
+				
+				var sel = 5; //space
+				var joint = 19; 
+			    movan.selectedFeats[len] =[];
+			    movan.selectedFeats[len].id = len;
+				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
+				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
+				movan.selectedFeats[len].joint = joint;
+				
+				len++;
+				
+				var sel = 6; //weight
+				var joint = 19; 
+			    movan.selectedFeats[len] =[];
+			    movan.selectedFeats[len].id = len;
+				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
+				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
+				movan.selectedFeats[len].joint = joint;
+				
+				len++;
+				
+				var sel = 7;  //time
+				var joint = 19; 
+			    movan.selectedFeats[len] =[];
+			    movan.selectedFeats[len].id = len;
+				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
+				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
+				movan.selectedFeats[len].joint = joint;
+				
+				len++;
+				
+				var sel = 8;  //flow
+				var joint = 19; 
+			    movan.selectedFeats[len] =[];
+			    movan.selectedFeats[len].id = len;
+				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
+				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
+				movan.selectedFeats[len].joint = joint;
+				
+				len++;
+				
+				var sel = 9;  //BEA Ann
+				var filename = 'testann1.csv'; 
+			    movan.selectedFeats[len] =[];
+			    movan.selectedFeats[len].id = len;
+				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
+				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,filename,0);
 				movan.selectedFeats[len].joint = joint;
 				
 				movan.reDrawFeat();

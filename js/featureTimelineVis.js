@@ -351,12 +351,27 @@ function timeline(parent,rootOffset, feature, timel, findex)
 	.enter()
 	.append("rect")
 	.attr("class", "legitem")
-	.attr("y",20)
+	.attr("y", function (d) {
+		if (feature.f.type == "bipolar") {
+			if (d>0)
+					return 20;
+				else
+					return 30;
+		} 
+		else
+			return 20;
+		
+	})
 	.attr("x", function (d,i) {
 		return legitemW*i;
 	})
 	.attr("width",legitemW)
-	.attr("height",15)
+	.attr("height",function (d) {
+			if (feature.f.type=="bipolar")
+				return 10;
+			else
+				return 15;
+		})
 	.attr("fill", function (d,i) {
 		return feature.f.colormap(d,i);
 	})
@@ -371,7 +386,7 @@ function timeline(parent,rootOffset, feature, timel, findex)
 	.append("text")
 	.attr("text-anchor","end")
 	.attr("transform", function(d,i) {
-		return "translate("+(legitemW*i+legitemW/2+5)+",40)rotate(-90)";
+		return "translate("+(legitemW*i+legitemW/2+5)+",45)rotate(-90)";
 	})
 	.attr("y2",50)
 	.attr("x2", function (d,i) {

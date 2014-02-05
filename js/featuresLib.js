@@ -2,6 +2,17 @@ var colormap = ["blue","red","yellow"];
 var cmap1 = [d3.rgb(255, 237, 160) , d3.rgb(254, 178, 76), d3.rgb(240, 59, 32)];
 var cmap2 = [ d3.rgb(194, 230, 153), d3.rgb(120, 198, 121), d3.rgb(49, 163, 84), d3.rgb(0, 104, 55)];
 
+$BEAcolorScale = d3.scale.category20c();
+colorbrewer2_qual = ['rgb(166,206,227)','rgb(31,120,180)','rgb(178,223,138)','rgb(51,160,44)','rgb(251,154,153)','rgb(227,26,28)','rgb(253,191,111)','rgb(255,127,0)'];
+colorbrewer2_seq_9_OrRd = ['rgb(255,255,204)','rgb(255,237,160)','rgb(254,217,118)','rgb(254,178,76)','rgb(253,141,60)','rgb(252,78,42)','rgb(227,26,28)','rgb(189,0,38)','rgb(128,0,38)'];
+colorbrewer2_seq_9_YlOrRd = ['rgb(255,255,204)','rgb(255,237,160)','rgb(254,217,118)','rgb(254,178,76)','rgb(253,141,60)','rgb(252,78,42)','rgb(227,26,28)','rgb(189,0,38)','rgb(128,0,38)'];
+colorbrewer2_seq_9_PuRd = ['rgb(247,244,249)','rgb(231,225,239)','rgb(212,185,218)','rgb(201,148,199)','rgb(223,101,176)','rgb(231,41,138)','rgb(206,18,86)','rgb(152,0,67)','rgb(103,0,31)'];
+
+colorbrewer2_div_11_RdBu = ['rgb(103,0,31)','rgb(178,24,43)','rgb(214,96,77)','rgb(244,165,130)','rgb(253,219,199)','rgb(247,247,247)','rgb(209,229,240)','rgb(146,197,222)','rgb(67,147,195)','rgb(33,102,172)','rgb(5,48,97)'];
+colorbrewer2_div_11_PuOr = ['rgb(127,59,8)','rgb(179,88,6)','rgb(224,130,20)','rgb(253,184,99)','rgb(254,224,182)','rgb(247,247,247)','rgb(216,218,235)','rgb(178,171,210)','rgb(128,115,172)','rgb(84,39,136)','rgb(45,0,75)'];
+colorbrewer2_div_11_PRGn = ['rgb(64,0,75)','rgb(118,42,131)','rgb(153,112,171)','rgb(194,165,207)','rgb(231,212,232)','rgb(247,247,247)','rgb(217,240,211)','rgb(166,219,160)','rgb(90,174,97)','rgb(27,120,55)','rgb(0,68,27)'];
+
+
 var f_weight = {
 		label: "Weight (Kap)",
 		type: "segments",
@@ -31,21 +42,29 @@ var f_space = {
 };
 
 var f_time = {
-		label: "Time",
+		label: "Time (Kap)",
 		type: "segments",
 		unit: "segments",
 		range: [-1,+1],
-		colormap :function(v){return cmap2[v];},
-		data: [ ]
+		colormap : function(v,i){
+			if (i%2==0)
+				return "url(#hash1)";//d3.hsl(250,1,0.5);
+			else
+				return "url(#hash2)";//d3.hsl(50,1,0.5);
+		},		data: [ ]
 };
 
 var f_flow = {
-		label: "Flow",
+		label: "Flow (Kap)",
 		type: "segments",
 		unit: "segments",
 		range: [-1,+1],
-//		colormap : [d3.rgb(255, 255, 204), d3.rgb(194, 230, 153), d3.rgb(120, 198, 121), d3.rgb(49, 163, 84), d3.rgb(0, 104, 55)],
-		colormap : function(v){return cmap1[v];},
+		colormap : function(v,i){
+			if (i%2==0)
+				return "url(#hash1)";//d3.hsl(250,1,0.5);
+			else
+				return "url(#hash2)";//d3.hsl(50,1,0.5);
+		},
 		data: [ ]
 };
 
@@ -53,9 +72,17 @@ var f_angvel = {
 		label: "Speed",
 		type: "cont",
 		unit: "cm/s",
-		range: [0,100,200,300,400,500,600,700,800,900,1000],
+		range2: [50,150,250,350,450,550,650,750,850,950,1050],
+		range: [0,100,200,300,400,500,600,700,800,900],
+
 		rangelabels: [0,100,200,300,400,500,600,700,800,900,1000],
-		colormap : function(v){return d3.hsl(0,1,0.9-(v/1100));},
+		colormap : function(v){
+			if (v>1000) v = 1000;
+			if (v<0) v = 0;
+			var val = Math.round(v/100);
+			return colorbrewer2_seq_9_PuRd[val];
+//			return d3.hsl(0,1,0.9-(v/1100));
+			},
 		data: [ ]
 };
 
@@ -73,10 +100,17 @@ var f_accel = {
 		label: "Acceleration",
 		type: "bipolar",
 		unit: "cm/s^2",
-		range: [-1000,-900,-800,-700,-600,-400,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,1000],
+		range: [-1000,-800,-600,-400,-200,1,200,400,600,800,1000],
+		rangelabels: ['<-1000',-800,-600,-400,-200,0,200,400,600,800,'>1000'],
 		//rangelabels:['<-1000',-900,-800,-700,-600,-400,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,'>1000'],
-		rangelabels: ['<-1000','',-800,'',-600,'',-400,'',-200,'','',0,'',200,'',400,'',600,'',800,'','>1000'],
+		//rangelabels: ['<-1000','',-800,'',-600,'',-400,'',-200,'','',0,'',200,'',400,'',600,'',800,'','>1000'],
 		colormap : function(v){
+			if (v>1000) v = 1000;
+			if (v<-1000) v = -1000;
+			var val = Math.round(v/200)+6;
+			return colorbrewer2_div_11_RdBu[11-val];
+			},
+		colormap3 : function(v){
 			if (v>1000) v = 1000;
 			if (v<-1000) v = -1000;
 		
@@ -110,9 +144,17 @@ var f_jerk = {
 		label: "Jerk",
 		type: "bipolar",
 		unit: "cm/s^3",
-		range: [-1000,-900,-800,-700,-600,-500,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,1000],
-		rangelabels: ['<-1000','',-800,'',-600,'',-400,'',-200,'','',0,'',200,'',400,'',600,'',800,'','>1000'],
+		range: [-1000,-800,-600,-400,-200,1,200,400,600,800,1000],
+		rangelabels: ['<-1000',-800,-600,-400,-200,0,200,400,600,800,'>1000'],
+//		range: [-1000,-900,-800,-700,-600,-500,-400,-300,-200,-100,-1,1,100,200,300,400,500,600,700,800,900,1000],
+//		rangelabels: ['<-1000','',-800,'',-600,'',-400,'',-200,'','',0,'',200,'',400,'',600,'',800,'','>1000'],
 		colormap : function(v){
+			if (v>1000) v = 1000;
+			if (v<-1000) v = -1000;
+			var val = Math.round(v/200)+6;
+			return colorbrewer2_div_11_PRGn[11-val];
+			},		
+		colormap2 : function(v){
 			if (v>1000) v = 1000;
 			if (v<-1000) v = -1000;
 		
@@ -151,6 +193,20 @@ var f_overhips = {
 				return d3.hsl(250,1,0.5);
 			else
 				return d3.hsl(50,1,0.5);
+		},
+		data: [ ]
+};
+
+
+var f_BEA_Ann = {
+		label: "BEA Annotated",
+		type: "annot",
+		unit: "Annotation",
+		range: [0,1,2,3,4,5,6,7],
+		rangelabels: ['Slash','Dab', 'Punch', 'Wring', 'Flick', 'Float', 'Press', 'Glide'],
+		colormap : function(v,i){
+			return colorbrewer2_qual[v];
+			
 		},
 		data: [ ]
 };
@@ -418,62 +474,7 @@ function calcAveAccel(frames, skips, joint) {
 }
 
 
-function calcSpace_Pathway (frames, skips, joint) {
-	var data = [];
-	var dCount = 0;
-	var start = 1;
-	var end;
-	var value;
-	var min = 100000;
-	var minIndex = -1;
-	var max = -1;
-	var fracs = [];
-	var T = 0.8;
-		
-	var temp = new Array(Math.floor(frames.length/skips));
-	
-	
-	for ( index = 0; index <frames.length; index += skips) {
-		
-		var min = 100000;
-		temp[index/skips] = new Array(Math.floor(frames.length/skips));
-		
-		
-		for (i = skips;i<index-skips;i+=skips) {
-			
-		//
-		var sum = 0;
-		for (j = i;j<=index;j+=skips) {
-			sum += eculDist(frames[index][joint],frames[j][joint]);
-		}
-		
-		totalDist = eculDist(frames[index][joint],frames[i][joint]);
-		
-	
-		var frac = sum/totalDist;
-		
-		temp[index/skips][i] = frac;
-		//console.log(index+","+i+","+frac);
-		
-		if (frac < min) {
-			min = frac;
-			minIndex = i;
-		}
-		//	
-	}
-		
-	
-		data[dCount++] = minIndex;
-	}
-    
 
-//
-	//console.log(temp);
-//	console.log(data);
-//	console.log(cluster(data));
-	return cluster(data);
-
-}
 
 function calcSpace_Pathway_Cont	 (frames, skips, joint) {
 	var data = [];
@@ -739,6 +740,64 @@ function simple_moving_averager(num, period) {
     
 }
 
+function calcSpace_K (frames, skips, joint) {
+	var data = [];
+	var dCount = 0;
+	var start = 1;
+	var end;
+	var value;
+	var min = 100000;
+	var minIndex = -1;
+	var max = -1;
+	var fracs = [];
+	var T = 0.8;
+		
+	var temp = new Array(Math.floor(frames.length/skips));
+	
+	
+	for ( index = 0; index <frames.length; index += skips) {
+		
+		var min = 100000;
+		temp[index/skips] = new Array(Math.floor(frames.length/skips));
+		
+		var k = index;
+		
+		for (i = skips;i<k-skips;i+=skips) {
+			
+		//
+		var sum = 0;
+		for (j = i;j<=k;j+=skips) {
+			sum += eculDist(frames[k][joint],frames[j][joint]);
+		}
+		
+		totalDist = eculDist(frames[k][joint],frames[i][joint]);
+		
+	
+		var frac = sum/totalDist;
+		
+		temp[k/skips][i] = frac;
+		//console.log(index+","+i+","+frac);
+		
+		if (frac < min) {
+			min = frac;
+			minIndex = i;
+		}
+		//	
+	}
+		
+	
+		data[dCount++] = minIndex;
+	}
+    
+
+//
+	//console.log(temp);
+//	console.log(data);
+//	console.log(cluster(data));
+	return cluster(data);
+
+}
+
 function calcWeight_K (frames, skips, joint) {
 	var data = [];
 	var dCount = 0;
@@ -749,7 +808,7 @@ function calcWeight_K (frames, skips, joint) {
 	var minIndex = -1;
 	var max = -1;
 	var fracs = [];
-	var T = 6800;
+	var T_max = 6800;
 	var vel = [];
 	
 	var temp = new Array(Math.floor(frames.length/skips));
@@ -768,14 +827,15 @@ function calcWeight_K (frames, skips, joint) {
 	
 	for (k=1;k<vel.length;k++) {
 		min = 1000000000;
-		 temp[index/skips] = new Array(Math.floor(frames.length/skips));
+		temp[index/skips] = new Array(Math.floor(frames.length/skips));
+		
 		for (i = 0;i<k;i++) {
 			
-			dv = (vel[k]-vel[i]);
+			dv = (Math.abs(vel[k])-Math.abs(vel[i]));
 		    dt = (skips*movan.inputFPS);
 			a = dv/dt;
+			a = Math.abs(a-T_max);
 			temp[index/skips][i] = a;
-			a = Math.abs(a-T);
 			
 			if (a < min) {
 				min = a;
@@ -789,12 +849,155 @@ function calcWeight_K (frames, skips, joint) {
 	}
 
 	
-	
-
 //
 	console.log(temp);
 //	console.log(data);
 //	console.log(cluster(data));
 	return cluster(data);
 
+}
+
+function calcTime_K (frames, skips, joint) {
+	var data = [];
+	var dCount = 0;
+	var start = 1;
+	var end;
+	var value;
+	var min = 100000;
+	var minIndex = -1;
+	var max = -1;
+	var fracs = [];
+	var T_max = 20000;
+	var vel = [];
+		
+	
+	var temp = new Array(Math.floor(frames.length/skips));
+
+	veldata = calcVelocities(frames, skips, joint);
+	
+	for (i=0;i<veldata.length;i++)
+		vel[i] = veldata[i][2];
+
+	nums = [];
+	vel = vel.map(function(d) {
+		return simple_moving_averager(d, 5);
+	});	
+	nums = [];
+
+	
+	for (k=1;k<vel.length;k++) {
+	min = 1000000000;
+		temp[index/skips] = new Array(Math.floor(frames.length/skips));
+		
+		for (i = 0;i<k;i++) {		
+			var sum = 0;
+			for (j = i+1;j<=k;j++) {
+				dv = (Math.abs(vel[j]-vel[j-1]));
+		   		 dt = (skips*movan.inputFPS);
+				a = dv/dt;
+				sum += a;
+			}		
+			temp[index/skips][i] = sum;
+			a = Math.abs(sum-T_max);
+			
+			
+			if (a < min) {
+				min = a;
+				minIndex = i;
+			}
+		}
+		
+		data[dCount++] = minIndex;
+		
+		
+	}
+
+	
+//
+	console.log(temp);
+//	console.log(data);
+//	console.log(cluster(data));
+	return cluster(data);
+
+}
+
+function calcFlow_K (frames, skips, joint) {
+	var data = [];
+	var dCount = 0;
+	var start = 1;
+	var end;
+	var value;
+	var min = 100000;
+	var minIndex = -1;
+	var max = -1;
+	var fracs = [];
+	var T_max = 1000;
+	var acc = [];
+		
+	
+	var temp = new Array(Math.floor(frames.length/skips));
+
+	accdata = calcAccel(frames, skips, joint);
+	
+	for (i=0;i<accdata.length;i++)
+		acc[i] = accdata[i][2];
+
+	nums = [];
+	acc = acc.map(function(d) {
+		return simple_moving_averager(d, 5);
+	});	
+	nums = [];
+
+	
+	for (k=1;k<acc.length;k++) {
+	min = 1000000000;
+		temp[index/skips] = new Array(Math.floor(frames.length/skips));
+		
+		for (i = 0;i<k;i++) {		
+			var sum = 0;
+			for (j = i+1;j<=k;j++) {
+				da = (Math.abs(acc[j]-acc[j-1]));
+		   		 dt = (skips*movan.inputFPS);
+				jerk = dv/dt;
+				sum += jerk;
+			}		
+			temp[index/skips][i] = sum;
+			value = Math.abs(sum-T_max);
+			
+			
+			if (value < min) {
+				min = value;
+				minIndex = i;
+			}
+		}
+		data[dCount++] = minIndex;
+		
+		
+	}
+
+	
+//
+	console.log(temp);
+	console.log(data);
+//	console.log(cluster(data));
+	return cluster(data);
+
+}
+
+function readAnn (frames, skips, filename) {
+	var data = [];
+	var dCount = 0;
+	var ann = 0;
+	
+	var rnd_window_size = Math.floor(frames.length/(skips*8));
+	console.log(rnd_window_size);
+	
+	for ( index = 0; index <frames.length; index += skips) {
+		data[dCount++] = ann;
+		if(dCount % rnd_window_size == 0 ) 
+			ann++;
+		if (ann>7) ann =0;
+	}
+	console.log(data);
+	return cluster(data);
 }
