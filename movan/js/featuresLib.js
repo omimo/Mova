@@ -14,7 +14,7 @@ colorbrewer2_div_11_PRGn = ['rgb(64,0,75)','rgb(118,42,131)','rgb(153,112,171)',
 
 
 var f_weight = {
-		label: "Weight (Kap)",
+		label: "Weight (exp)",
 		type: "segments",
 		unit: "segments",
 		range: [-1,+1],
@@ -28,7 +28,7 @@ var f_weight = {
 };
 
 var f_space = {
-		label: "Space (Kap)",
+		label: "Space (exp)",
 		type: "segments",
 		unit: "segments",
 		range: [-1,+1],
@@ -42,7 +42,7 @@ var f_space = {
 };
 
 var f_time = {
-		label: "Time (Kap)",
+		label: "Time (exp)",
 		type: "segments",
 		unit: "segments",
 		range: [-1,+1],
@@ -55,7 +55,7 @@ var f_time = {
 };
 
 var f_flow = {
-		label: "Flow (Kap)",
+		label: "Flow (exp)",
 		type: "segments",
 		unit: "segments",
 		range: [-1,+1],
@@ -199,11 +199,11 @@ var f_overhips = {
 
 
 var f_BEA_Ann = {
-		label: "BEA Annotated",
+		label: "Sample Annotation",
 		type: "annot",
 		unit: "Annotation",
 		range: [0,1,2,3,4,5,6,7,8],
-		rangelabels: ['None','Slash','Dab', 'Punch', 'Wring', 'Flick', 'Float', 'Press', 'Glide'],
+		rangelabels: ['None','A','B', 'C', 'D', 'E', 'F', 'G', 'H'],
 		colormap : function(v,i){
 			return colorbrewer2_qual[v];
 			

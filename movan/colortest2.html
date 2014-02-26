@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chroma.js</title>
+    <script type="text/javascript" src="js/chroma.min.js"></script>
+</head>
+<body>
+	
+	<div id="s1" style="display:block;">&nbsp;</div><br/>
+	<div id="s2" style="display:block;">&nbsp;</div><br/>
+	<div id="s3" style="display:block;">&nbsp;</div>
+
+    <script type="text/javascript">
+
+    function showScale(cs, outerdiv, log) {
+        cs.out('hex');
+        var c = document.createElement('div');
+        for (var i=0; i<= 1; i += 0.004) {
+            var d = document.createElement('div');
+            d.style.display = 'inline-block';
+            d.style.width = '2px';
+            d.style.height = '30px';
+            d.style.background = cs(log ? Math.pow(10, i * 3): i);
+            c.appendChild(d);
+        }
+        outerdiv.appendChild(c);
+    }
+
+	var bezInterpolator1 = chroma.interpolate.bezier(['#fff7ec', '#7f0000'  ]);
+
+    var scales2 = [
+  
+
+
+        "scale(['#fff7ec', '#7f0000' ]).domain([0,1], 20)",
+        "scale(bezInterpolator1).domain([0,1], 20).correctLightness(true);",
+        "scale(['#fff7ec', '#fc8d59', '#7f0000' ]).domain([0,1], 20)",
+		"scale(chroma.interpolate.bezier(['#fff7ec', '#fc8d59', '#7f0000' ])).domain([0,1], 20).correctLightness(true);",
+		
+
+    ];
+
+  var scales = [
+  
+
+
+        "scale(['white', 'darkred' ]).domain([0,1], 15)",
+                "scale(['white', 'orangered', 'deeppink', 'darkred' ]).domain([0,1], 15);",
+		"scale(chroma.interpolate.bezier(['white', 'orangered', 'deeppink', 'darkred' ])).domain([0,1], 15).correctLightness(true);",
+  //      "scale(chroma.interpolate.bezier(['lightyellow', 'orangered', 'deeppink', 'darkred' ])).domain([0,1], 20);",
+
+
+
+    ];
+    
+   // for (var s in scales) 
+    {
+        s = scales[0];
+       d = document.createElement('div');
+        d2 = document.createElement('div');
+        d.style.position = 'relative';
+       	 d2.style.position = 'relative';
+        d.style.cssFloat= 'left';
+        d2.style.cssFloat= 'left';
+        document.getElementById("s1").appendChild(d2);
+        document.getElementById("s1").appendChild(d);
+        d2.innerHTML = "a)";
+        d.innerHTML = "<div style='position:absolute;top:5px;left:2px;padding-right:20px;color:#000;text-shadow:-1px -1px 0px rgba(255,255,255,0.3), 1px 1px 0px rgba(255,255,255,0.3), -1px 1px 0px rgba(255,255,255,0.3), 1px -1px 0px rgba(255,255,255,0.3)'></div>";
+        showScale(eval("chroma." + s), d, s.indexOf("log") > 0);
+        
+         document.body.appendChild(document.createElement('br'));
+        
+                s = scales[1];
+           d = document.createElement('div');
+        d2 = document.createElement('div');
+        d.style.position = 'relative';
+        d2.style.position = 'relative';
+        d.style.cssFloat= 'left';
+        d2.style.cssFloat= 'left';
+    document.getElementById("s2").appendChild(d2);
+        document.getElementById("s2").appendChild(d);
+        d2.innerHTML = "b)";
+        d.innerHTML = "<div style='position:absolute;top:5px;left:2px;padding-right:20px;color:#000;text-shadow:-1px -1px 0px rgba(255,255,255,0.3), 1px 1px 0px rgba(255,255,255,0.3), -1px 1px 0px rgba(255,255,255,0.3), 1px -1px 0px rgba(255,255,255,0.3)'></div>";
+        showScale(eval("chroma." + s), d, s.indexOf("log") > 0);
+        
+        
+           document.body.appendChild(document.createElement('br'));
+           
+           
+                s = scales[2];
+        d = document.createElement('div');
+        d2 = document.createElement('div');
+        d.style.position = 'relative';
+        d2.style.position = 'relative';
+        d.style.cssFloat= 'left';
+        d2.style.cssFloat= 'left';
+    document.getElementById("s3").appendChild(d2);
+        document.getElementById("s3").appendChild(d);
+        d2.innerHTML = "c)";
+        d.innerHTML = "<div style='position:absolute;top:5px;left:2px;padding-right:20px;color:#000;text-shadow:-1px -1px 0px rgba(255,255,255,0.3), 1px 1px 0px rgba(255,255,255,0.3), -1px 1px 0px rgba(255,255,255,0.3), 1px -1px 0px rgba(255,255,255,0.3)'></div>";
+        showScale(eval("chroma." + s), d, s.indexOf("log") > 0);
+    }
+
+
+
+    </script>
+
+</body>
+</html>
