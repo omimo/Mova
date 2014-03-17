@@ -119,50 +119,6 @@ var movan = {
 				
 				len++;
 				
-				var sel = 5; //space
-				var joint = 19; 
-			    movan.selectedFeats[len] =[];
-			    movan.selectedFeats[len].id = len;
-			    movan.selectedFeats[len].featID = sel;
-				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
-				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
-				movan.selectedFeats[len].joint = joint;
-				
-				len++;
-				
-				var sel = 6; //weight
-				var joint = 19; 
-			    movan.selectedFeats[len] =[];
-			    movan.selectedFeats[len].id = len;
-			    movan.selectedFeats[len].featID = sel;
-				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
-				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
-				movan.selectedFeats[len].joint = joint;
-				
-				len++;
-				
-				var sel = 7;  //time
-				var joint = 19; 
-			    movan.selectedFeats[len] =[];
-			    movan.selectedFeats[len].id = len;
-			    movan.selectedFeats[len].featID = sel;
-				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
-				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
-				movan.selectedFeats[len].joint = joint;
-				
-				len++;
-				
-				var sel = 8;  //flow
-				var joint = 19; 
-			    movan.selectedFeats[len] =[];
-			    movan.selectedFeats[len].id = len;
-			    movan.selectedFeats[len].featID = sel;
-				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
-				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
-				movan.selectedFeats[len].joint = joint;
-				
-				len++;
-				
 				var sel = 9;  //BEA Ann
 				var filename = 'testann1.csv'; 
 			    movan.selectedFeats[len] =[];
@@ -175,16 +131,19 @@ var movan = {
 				movan.reDrawFeat();
 			},
 			
-			loadNew: function () {
+			loadNew: function (moveFile) {
 							
 
-				var moveFile = "movs/"+document.getElementById("fileSelect").value;
+				//var moveFile = "";//"movs/"+document.getElementById("fileSelect").value;
 				var skelFile = "movs/ecuad1.skel2";
+		
+				if (moveFile =="") return;
 				
 				//FIXME: This is just a dummy way to do it!
 				//TODO: Put the skel data in the mocap csv file
 				
 				
+		
 				if (moveFile.search("KAREN") != -1) {
 					movan.figureScale = 2;
 					movan.skelHeadJoint = 7;
