@@ -7,7 +7,7 @@ var movan = {
 			
 			 inputFPS : 0.0083, //120	
 			
-			 defSelectedJoint : 19,
+			 defSelectedJoint : 0, //19,
 			 skelHeadJoint : 23,
 			 frameSkip : 5,
 
@@ -54,7 +54,7 @@ var movan = {
 				movan.selectedFeats = [];
 				var len = movan.selectedFeats.length; 
 				
-				
+				/*
 				var sel =0;
 				var joint = 17; 
 			    movan.selectedFeats[len] =[];
@@ -170,7 +170,7 @@ var movan = {
 			    movan.selectedFeats[len].featID = sel;
 				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
 				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,filename);
-				movan.selectedFeats[len].joint = joint;
+				movan.selectedFeats[len].joint = joint;*/
 				
 				movan.reDrawFeat();
 			},
@@ -224,14 +224,15 @@ var movan = {
 						z : d.z * movan.figureScale
 					};
 				});
-					
+				
+				d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select("#jointDropdown").attr("selectedJoint")]);
+				
 					
 				//Create SVG element
 				d3.select("#jointChooser").selectAll("svg").remove();
 				var jointChooser = d3.select("#jointChooser").append("svg").attr("height",170);
 				figureSketch.drawJointChooser(jointChooser,firstFrame,0, d3.select("#jointDropdown").attr("selectedJoint")
 						,movan.gskel,movan.drawJointChooser);
-				
 				
 				d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select("#jointDropdown").attr("selectedJoint")]);
 				
