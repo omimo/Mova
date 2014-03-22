@@ -220,6 +220,11 @@ drawJointChooser: function (svg, currentFrame, index, highlightJ,skel,clickCallB
 	.on("click", function(d) {
 		//movan.selectedJoint = d3.select(this).attr("jointID");
 		d3.select("#jointDropdown").attr("selectedJoint", d3.select(this).attr("jointID"));
+		highlightJ = d3.select(this).attr("jointID");
+		//d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select("#jointDropdown").attr("selectedJoint")]);
+		//d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select(this).attr("jointID")]);
+
+		
 		clickCallBack();
 	})
 	;
