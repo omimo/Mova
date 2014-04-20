@@ -1,6 +1,6 @@
-MovAn
+Mova
 =====
 
-Movement Analyzer extracts visualizes a set of features from motion capture sequences
+Mova extracts visualizes a set of features from motion capture sequences
 
 
