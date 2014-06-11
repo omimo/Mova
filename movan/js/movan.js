@@ -24,7 +24,7 @@ var movan = {
 							[f_weight,calcWeight_K,1],
 							[f_time,calcTime_K,1],
 							[f_flow,calcFlow_K,1],
-							[f_BEA_Ann,readAnn,1]
+							[f_BEA_Ann,readAnn2,1]
 							],
 							
 			selectedFeats : [],
@@ -54,9 +54,9 @@ var movan = {
 				movan.selectedFeats = [];
 				var len = movan.selectedFeats.length; 
 				
-				/*
-				var sel =0;
-				var joint = 17; 
+				
+				var sel =9;
+				var joint = 11; 
 			    movan.selectedFeats[len] =[];
 			    movan.selectedFeats[len].id = len;
 			    movan.selectedFeats[len].featID = sel;
@@ -66,6 +66,7 @@ var movan = {
 				
 				len++;
 				
+				/*
 				var joint = 18; 
 			    movan.selectedFeats[len] =[];
 			    movan.selectedFeats[len].id = len;
