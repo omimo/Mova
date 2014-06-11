@@ -199,6 +199,20 @@ var f_overhips = {
 
 
 var f_BEA_Ann = {
+		label: "BEAs",
+		type: "annot",
+		unit: "Annotation",
+		range: ['None','Float','Punch', 'Glide', 'Slash', 'Dab', 'Wring', 'Flick', 'Press'],
+		rangelabels: ['None','Float','Punch', 'Glide', 'Slash', 'Dab', 'Wring', 'Flick', 'Press'],
+		colormap : function(v,i){
+			rangelabels =  ['None','Float','Punch', 'Glide', 'Slash', 'Dab', 'Wring', 'Flick', 'Press'];
+			return colorbrewer2_qual[rangelabels.indexOf(v)];
+			
+		},
+		data: [ ]
+};
+
+var f_SMPL_Ann = {
 		label: "Sample Annotation",
 		type: "annot",
 		unit: "Annotation",
@@ -1009,18 +1023,40 @@ function readAnn (frames, skips, filename) {
 function readAnn2 (frames, skips, joint, filename) {
 	var data = [];
 	var dCount = 0;
-	var ann = 0;
+	var framelength = 1.0/120.0 * 1000; //framelength in milliseconds
 	
-	var input = [[1,9,0],[10,50,1]];
-	var rnd_window_size = Math.floor(frames.length/(skips*8));
-	console.log(rnd_window_size);
+	var unparsedAnn  = "0.0 8266.57 None\n";
+		unparsedAnn += "8266.57 12640.4 Float\n";
+		unparsedAnn += "12640.4 14040.0 Punch\n";
+		unparsedAnn += "14040.0 17976.5 Glide\n";
+		unparsedAnn += "17976.5 19070.0 Slash\n";
+		unparsedAnn += "19070.0 20119.7 Dab\n";
+		unparsedAnn += "20119.7 23837.5 Wring\n";
+		unparsedAnn += "23837.5 24887.2 Flick\n";
+		unparsedAnn += "24887.2 30835.6 Press\n";
+		unparsedAnn += "30835.6 33136.0 None\n";
+
+	var data = d3.dsv(" ").parseRows(unparsedAnn);
+
+	// put joints together
+	annotes = data.map(function(d) {
+		var ann = [];
+		ann.start = d[0];
+		ann.end = d[1];
+		ann.label = d[2];
+
+		return ann;
+	});
 	
-	for ( index = 0; index <frames.length; index += skips) {
-		data[dCount++] = ann;
-		if(dCount % rnd_window_size == 0 ) 
-			ann++;
-		if (ann>7) ann =0;
+	var annotes_frame = [];
+	
+	for (i=0; i<annotes.length; i++) {
+		annotes_frame[i] = [];
+		annotes_frame[i][0] = Math.round((annotes[i].start / framelength)/skips);
+		annotes_frame[i][1] = Math.round((annotes[i].end / framelength)/skips);
+		annotes_frame[i][2] = annotes[i].label; 
 	}
-	console.log(data);
-	return cluster(data);
+	console.log(annotes);
+	console.log(annotes_frame);
+	return annotes_frame;
 }
