@@ -86,24 +86,24 @@ makeAnim: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 				});
 
 			
-				if (movan.selectedFeats.length > 0 ) {
-					//The line SVG Path we draw
-					svg.append("circle")
-					.attr("class","traj")
-		            .attr("cx", function(d) { 
-						return currentFrame[anim.trajJointIndex].x;
-					}).attr("cy", function(d) {
-						return currentFrame[anim.trajJointIndex].y;
-					}).attr("r", 5)
-					.attr("fill", function(d) {
-			var i = Math.floor(anim.animIndex/movan.frameSkip);
-			if (i>=movan.selectedFeats[anim.trajFeatIndex].data.length)
-				value = movan.selectedFeats[anim.trajFeatIndex].data[i-movan.frameSkip][2];
-			else
-				value = movan.selectedFeats[anim.trajFeatIndex].data[i][2];
-			return movan.selectedFeats[anim.trajFeatIndex].f.colormap(value);
-		});
-				}
+//				if (movan.selectedFeats.length > 0 ) {
+//					//The line SVG Path we draw
+//					svg.append("circle")
+//					.attr("class","traj")
+//		            .attr("cx", function(d) { 
+//						return currentFrame[anim.trajJointIndex].x;
+//					}).attr("cy", function(d) {
+//						return currentFrame[anim.trajJointIndex].y;
+//					}).attr("r", 5)
+//					.attr("fill", function(d) {
+//			var i = Math.floor(anim.animIndex/movan.frameSkip);
+//			if (i>=movan.selectedFeats[anim.trajFeatIndex].data.length)
+//				value = movan.selectedFeats[anim.trajFeatIndex].data[i-movan.frameSkip][2];
+//			else
+//				value = movan.selectedFeats[anim.trajFeatIndex].data[i][2];
+//			return movan.selectedFeats[anim.trajFeatIndex].f.colormap(value);
+//		});
+//				}
 				
 				
 				
@@ -135,21 +135,21 @@ drawFigure: function() {
 	});
 	
 	
-	svg.append("circle")
-	.attr("class","traj")
-    .attr("cx", function(d) { 
-		return currentFrame[anim.trajJointIndex].x;
-	}).attr("cy", function(d) {
-		return currentFrame[anim.trajJointIndex].y;
-	}).attr("r", 5)
-	.attr("fill", function(d) {
-		var i = Math.floor(anim.animIndex/movan.frameSkip);
-		if (i>=movan.selectedFeats[anim.trajFeatIndex].data.length)
-			value = movan.selectedFeats[anim.trajFeatIndex].data[i-movan.frameSkip][2];
-		else
-			value = movan.selectedFeats[anim.trajFeatIndex].data[i][2];
-		return movan.selectedFeats[anim.trajFeatIndex].f.colormap(value);
-	});
+//	svg.append("circle")
+//	.attr("class","traj")
+//    .attr("cx", function(d) { 
+//		return currentFrame[anim.trajJointIndex].x;
+//	}).attr("cy", function(d) {
+//		return currentFrame[anim.trajJointIndex].y;
+//	}).attr("r", 5)
+//	.attr("fill", function(d) {
+//		var i = Math.floor(anim.animIndex/movan.frameSkip);
+//		if (i>=movan.selectedFeats[anim.trajFeatIndex].data.length)
+//			value = movan.selectedFeats[anim.trajFeatIndex].data[i-movan.frameSkip][2];
+//		else
+//			value = movan.selectedFeats[anim.trajFeatIndex].data[i][2];
+//		return movan.selectedFeats[anim.trajFeatIndex].f.colormap(value);
+//	});
 	
 	//draw joints
 	svg.selectAll("circle")
