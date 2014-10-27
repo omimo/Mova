@@ -55,7 +55,7 @@ var movan = {
 				var len = movan.selectedFeats.length; 
 				
 				
-				var sel =9;
+				var sel =0;
 				var joint = 11; 
 			    movan.selectedFeats[len] =[];
 			    movan.selectedFeats[len].id = len;
@@ -64,6 +64,40 @@ var movan = {
 				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
 				movan.selectedFeats[len].joint = joint;
 				
+				len++;
+				
+		
+				var joint = 19; 
+			    movan.selectedFeats[len] =[];
+			    movan.selectedFeats[len].id = len;
+			    movan.selectedFeats[len].featID = sel;
+				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
+				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
+				movan.selectedFeats[len].joint = joint;
+				
+				len++;
+				
+				
+				 sel =0;
+				var joint = 26; 
+			    movan.selectedFeats[len] =[];
+			    movan.selectedFeats[len].id = len;
+			    movan.selectedFeats[len].featID = sel;
+				movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
+				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
+				movan.selectedFeats[len].joint = joint;
+				
+				len++;
+				
+				 sel =0;
+				var joint = 31; 
+				movan.selectedFeats[len] =[];
+				movan.selectedFeats[len].id = len;
+				movan.selectedFeats[len].featID = sel;
+			    movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
+				movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip,joint,0);
+				movan.selectedFeats[len].joint = joint;
+					
 				len++;
 				
 				/*
@@ -180,21 +214,21 @@ var movan = {
 							
 
 				var moveFile = "movs/"+document.getElementById("fileSelect").value;
-				var skelFile = "movs/ecuad1.skel2";
+				var skelFile = "movs/ECU3.skel";
 				
 				//FIXME: This is just a dummy way to do it!
 				//TODO: Put the skel data in the mocap csv file
 				
 				
-				if (moveFile.search("KAREN") != -1) {
-					movan.figureScale = 2;
-					movan.skelHeadJoint = 7;
-					skelFile = "movs/MSDec9.skel";
+				if (moveFile.search("CMU") != -1) {
+					movan.figureScale = 4;
+					movan.skelHeadJoint = 19;
+					skelFile = "movs/cmu.skel";
 				}
 				else 
 				{
-					movan.figureScale = 0.5;
-					movan.skelHeadJoint = 23;
+					movan.figureScale = 2;
+					movan.skelHeadJoint = 7;
 				}
 					
 				
@@ -220,8 +254,8 @@ var movan = {
 				//Draw the joint chooser
 				firstFrame = movan.gframes[0].map(function(d) {
 					return {
-						x : d.x * movan.figureScale + 140,
-						y : -1 * d.y * movan.figureScale + 90 + 75,
+						x : d.x * movan.figureScale + 460,
+						y : -1 * d.y * movan.figureScale + 160 + 75,
 						z : d.z * movan.figureScale
 					};
 				});

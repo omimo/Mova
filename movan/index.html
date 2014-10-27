@@ -109,9 +109,9 @@
 				$("#sldPad2").slider({
 					animate : true,
 					min : 10,
-					max : 70,
+					max : 100,
 					step : 1,
-					value : 25,
+					value : 50,
 					change : function(event, ui) {
 						movan.reDraw();
 
@@ -130,7 +130,7 @@
 					min : 5,
 					max : 50,
 					step : 1,
-					value : 5,
+					value : 10,
 					change : function(event, ui) {
 						movan.reDraw();
 					}
@@ -226,14 +226,32 @@
 					</div>
 					<select name="drop1" id="fileSelect" size="4" multiple="multiple"
 					onchange="movan.loadNew()" style="border:2px solid #ccc; width:200px; height: 120px; overflow-y: auto;">
-					 <option value="KAREN_BEAS_001.csv" selected="selected">KAREN_BEAS_001.bvh</option> 
-						<option value="Punch4.csv">Punch4.bvh</option>
-						<option value="Float4.csv">Float3.bvh</option>
-						<option value="Dab1.csv">Dab1.bvh</option>
-						<option value="Flick1.csv">Flick1.bvh</option>
-						<option value="Slash4.csv">Slash4.bvh</option>
-						<option value="Glide3.csv">Glide3.bvh</option>
-						<option value="Wring2.csv">Wring2.bvh</option>
+					
+						<option value="gen_HVHA.csv" selected="selected">gen_HVHA.bvh</option> 
+						<option value="gen_HVLA.csv">gen_HVLA.bvh</option>
+						<option value="gen_HVNA.csv">gen_HVNA.bvh</option>
+						<option value="gen_LVHA.csv">gen_LVHA.bvh</option>
+						<option value="gen_LVLA.csv">gen_LVLA.bvh</option>
+						<option value="gen_LVNA.csv">gen_LVNA.bvh</option>
+						<option value="gen_NVHA.csv">gen_NVHA.bvh</option>
+						<option value="gen_NVLA.csv">gen_NVLA.bvh</option>
+						<option value="gen_NVNA.csv">gen_NVNA.bvh</option> 
+					 <!-- <option value="AV_StraightWalk_Mered_HVHA.csv" selected="selected">AV_StraightWalk_HVHA.bvh</option> 
+						<option value="AV_StraightWalk_Mered_HVLA.csv">AV_StraightWalk_HVLA.bvh</option>
+						<option value="AV_StraightWalk_Mered_HVNA.csv">AV_StraightWalk_HVNA.bvh</option>
+						<option value="AV_StraightWalk_Mered_LVHA.csv">AV_StraightWalk_LVHA.bvh</option>
+						<option value="AV_StraightWalk_Mered_LVLA.csv">AV_StraightWalk_LVLA.bvh</option>
+						<option value="AV_StraightWalk_Mered_LVNA.csv">AV_StraightWalk_LVNA.bvh</option>
+						<option value="AV_StraightWalk_Mered_NVHA.csv">AV_StraightWalk_NVHA.bvh</option>
+						<option value="AV_StraightWalk_Mered_NVLA.csv">AV_StraightWalk_NVLA.bvh</option>
+						<option value="AV_StraightWalk_Mered_NVNA.csv">AV_StraightWalk_NVNA.bvh</option> -->
+						<option value="HVHA_to_LVHA.csv">HVHA_to_LVHA.bvh</option>
+						<option value="HVHA_to_HVLA.csv">HVHA_to_HVLA.bvh</option>
+						<option value="NVHA_to_NVLA.csv">NVHA_to_NVLA.bvh</option>
+						<option value="HVNA_to_LVNA.csv">HVNA_to_LVNA.bvh</option>
+						<option value="AV_8Walk_1.csv">AV_8Walk_1.bvh</option>
+						<option value="tpose.csv">tpose.bvh</option>
+						<option value="CMU35_GenWalk.csv">CMU35_GenWalk.bvh</option>
 					</select>
 
 				</div>

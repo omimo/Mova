@@ -73,19 +73,36 @@ var f_angvel = {
 		type: "cont",
 		unit: "cm/s",
 		range2: [50,150,250,350,450,550,650,750,850,950,1050],
-		range: [0,100,200,300,400,500,600,700,800,900],
+		range: [0,30,60,90,120,150,180,210,240,270],
 
-		rangelabels: [0,100,200,300,400,500,600,700,800,'> 900'],
+		rangelabels: [0,30,60,90,120,150,180,210,240,'> 270'],
 		colormap : function(v){
-			if (v>1000) v = 1000;
+			if (v>270) v = 270;
 			if (v<0) v = 0;
-			var val = Math.round(v/100);
-			return colorbrewer2_seq_9_PuRd[val];
+			var val = Math.round(v/30);
+			return colorbrewer2_seq_9_YlOrRd[val];
 //			return d3.hsl(0,1,0.9-(v/1100));
 			},
 		data: [ ]
 };
 
+//var f_angvel = {
+//		label: "Speed",
+//		type: "cont",
+//		unit: "cm/s",
+//		range2: [50,150,250,350,450,550,650,750,850,950,1050],
+//		range: [0,100,200,300,400,500,600,700,800,900],
+//
+//		rangelabels: [0,100,200,300,400,500,600,700,800,'> 900'],
+//		colormap : function(v){
+//			if (v>1000) v = 1000;
+//			if (v<0) v = 0;
+//			var val = Math.round(v/100);
+//			return colorbrewer2_seq_9_PuRd[val];
+////			return d3.hsl(0,1,0.9-(v/1100));
+//			},
+//		data: [ ]
+//};
 var f_aveangvel = {
 		label: "AveVelocity",
 		type: "cont",

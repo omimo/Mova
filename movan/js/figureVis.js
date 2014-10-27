@@ -73,7 +73,7 @@ drawFiguresCanvas: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 		
 					currentFrame = frames[index].map(function(d) {
 						return {
-							x : d.x * movan.figureScale + 200  + index/skips * padding,
+							x : d.x * movan.figureScale + 500  + index/skips * padding,
 							y : -1 * d.y * movan.figureScale+ 90 + h / 2,
 							z : d.z * movan.figureScale +200
 						};
