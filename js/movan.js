@@ -175,6 +175,35 @@ var movan = {
 				
 				movan.reDrawFeat();
 			},
+
+			loadGroup: function (asset_array) {
+				console.log("parsed resources:")
+				obj = JSON.parse(asset_array);
+				for (i = 0; i < obj.length; ++i)
+					console.log(obj[i]);
+
+			},
+
+			loadBvh: function () {
+
+				var motion_data;
+
+				console.log("parsing bvh");
+				BVH.read("movs/example.bvh", function(motion) {
+				  console.log(motion);
+
+				  console.log("list");
+
+				loadBvh(motion, movan.callbackForData);
+
+
+				});
+				console.log("bvh parsed");
+
+
+
+				// loadData(frames, skeleton, movan.callbackForData);
+			},
 			
 			loadNew: function () {
 							

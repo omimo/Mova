@@ -1,9 +1,9 @@
 function loadData(moveFile, skelFile, callback) {
-				
+
 				//var frames =[];
 	// Read the movement
-				d3.text(moveFile, function(unparsedData) {
-					var data = d3.csv.parseRows(unparsedData);
+	d3.text(moveFile, function(unparsedData) {
+		var data = d3.csv.parseRows(unparsedData);
 
 					// put joints together
 					f = data.map(function(d) {
@@ -44,17 +44,81 @@ function loadData(moveFile, skelFile, callback) {
 								}
 
 							}
-						
-						skel.connections = cons;
-						skel.jointNames = JointNames;
-						
-						
+
+							skel.connections = cons;
+							skel.jointNames = JointNames;
+
+
 						//console.log(frames);
 					//	setTimeout(function() {callback(frames,skel);},200);
-						callback(f,skel);
-					});
+					callback(f,skel);
 				});
+	});
 
-				
 
+
+}
+
+function loadBvh(bvhMotion, callback) {
+	//var frames =[];
+
+
+	var skeleton = [];
+	var JointNames = [];
+	var JointRefs = new Object();
+	var cons = [];
+	var count;
+
+	for (i = 0; i < bvhMotion.nodeList.length; ++i) {
+		node = bvhMotion.nodeList[i];
+		JointNames[i] = node.id;
+		JointRefs[node.id] = i; 
+	}
+
+	for (i = 0; i < bvhMotion.nodeList.length; ++i) {
+		node = bvhMotion.nodeList[i];
+
+		for (j = 0; j < node.children.length; ++j) {
+			var index = JointRefs[node.children[j].id]
+			cons[count++] = {
+				a : i,
+				b : index
 			}
+		}
+	}
+
+	skeleton.connections = cons;
+	skeleton.jointNames = JointNames;
+
+	// Read the movement
+
+	// console.log(bvhMotion.nodeList);
+
+	// var frames = bvhMotion.
+
+	var frames = [];
+
+	for (i = 0; i < bvhMotion.numFrames; ++i) {
+
+		var joints = [];
+
+		for (j = 0; j < bvhMotion.nodeList.length; ++j) {
+			node = bvhMotion.nodeList[i];
+
+			var state = bvhMotion.at(i + 1);
+			var frame = state.of(JointNames[j]);
+
+			joints[j * 3] = frame.offsetX;
+			joints[j * 3 + 1] = frame.offsetY;
+			joints[j * 3 + 2] = frame.offsetZ;
+			console.log
+		}
+
+		frames[i] = joints;
+	}
+	console.log("SKELETON");
+	console.log(skeleton);
+
+	callback(frames,skeleton);
+
+};
