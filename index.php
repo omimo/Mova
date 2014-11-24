@@ -293,9 +293,22 @@
 		</div>
 
 		<script type="text/javascript">
+			
 			d3.timer(anim.drawFigure, 15);
-			movan.loadFeatures();
-			movan.loadNew();
+
+			$group = <?php echo $_GET["group_id"] ?>;
+
+			$.get("guzzler.php", { 'group_id' : $group }, function(data_files) {
+				urls = JSON.parse(data_files);
+				for (i = 0; i < data_files.length; ++i)
+					console.log(urls[i])
+				// console.log(data_files);
+				// movan.loadGroup(data);
+				// movan.loadBvh(); // TEMP: default
+			});
+
+			// movan.loadFeatures();
+			// movan.loadNew();
 		
 		</script>
 
