@@ -1,6 +1,4 @@
-// 
-
-
+// By Ankit 
 var BVHReader = function () {
 
     this.load = function (url, callback) {
@@ -97,10 +95,11 @@ BVHReader.BVH.Joint = function (name) {
         return name === "Site";
     };
     this.rotationIndex = function () {
-        console.log("Not implemented");
+        console.log("Not implemented"); //Why?!
     };
     this.positionIndex = function () {
-        console.log("Not implemented");
+        console.log("Not implemented"); //Why?!
+        //it could return something like {x:6, y:4, z:5}
     };
     this.getChannels = function () {
         var allChannels = [];
@@ -132,6 +131,7 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
         return frameArray;
     };
     this.getChannelsAt = function (frameNum) {
+    	//How do I know which column is what?
         return frameArray[frameNum];
     };
     this.getFrameRate = function () {
@@ -140,7 +140,19 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
     this.getSkeleton = function () {
         return root;
     };
+
+    this.getHeadJoint = function () {
+    	// do a quick search in the joint names to see if any of them matches head, else return the something!!!!
+    	console.log("Not yet implemented");
+    };
+    this.getPositionsAt = function (frameNum) {
+    	//for each joint, calculate its position in XYZ
+        //return an array of joints, each with .x, .y, and .z properties
+    	
+        return frameArray[frameNum];
+    };
     this.getTPose = function () {
+    	// This function is basically the same as the getPositionsAt except that all the rotations will be 0
         console.log("Not yet implemented");
     };
 };

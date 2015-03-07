@@ -4,18 +4,18 @@ var movan = {
 		
 		
 		
-			 gframes : [],
-			 gskel : [],
+			 //gframes : [],
+			 //gskel : [],
 			 grootOffset : [],
 			 gpadding : 10,
 			
-			 inputFPS : 0.0083, //120	
+			 //inputFPS : 0.0083, //120	
 			
 			 defSelectedJoint : 0, //19,
-			 skelHeadJoint : 23,
+			 //skelHeadJoint : 23,
 			 frameSkip : 5,
 
-			figureScale: 1, //TODO: Need to add a scale control in the GUI (or automatic detection)
+			//figureScale: 1, //TODO: Need to add a scale control in the GUI (or automatic detection)
 			
 			
 			availableFeatures : [
@@ -217,15 +217,11 @@ var movan = {
 				
 				movan.dataTracks.push({content: dataTrack, type: t});
 				
-				console.log(dataTrack);
-				
-				movan.gframes = frames;
-				movan.gskel = skel;
-				//makeFeats();
+				thisTrackIndex = movan.dataTracks.length;
 				
 							
 				d3.select("#jointDropdown").attr("selectedJoint", movan.defSelectedJoint);
-				movan.drawJointChooser();
+				movan.drawJointChooser(movan.dataTracks[thisTrackIndex].content.getTPose());
 				
 				movan.reDraw();
 				
