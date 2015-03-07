@@ -1,6 +1,10 @@
 var movan = {
 
-	 		 gframes : [],
+	 		 dataTracks : [],
+		
+		
+		
+			 gframes : [],
 			 gskel : [],
 			 grootOffset : [],
 			 gpadding : 10,
@@ -179,6 +183,13 @@ var movan = {
 			loadNew: function () {
 							
 
+				var trackURL = document.getElementById("fileSelect").value;
+				
+			
+				
+				fileHandler.loadDataTrack(trackURL,movan.callbackForData);
+				
+				/*
 				var moveFile = "movs/"+document.getElementById("fileSelect").value;
 				var skelFile = "movs/ecuad1.skel2";
 				
@@ -199,9 +210,14 @@ var movan = {
 					
 				
 				loadData(moveFile, skelFile, movan.callbackForData);
+				*/
 			},
 			
-			callbackForData: function(frames, skel) {
+			callbackForData: function(dataTrack, t) {
+				
+				movan.dataTracks.push({content: dataTrack, type: t});
+				
+				console.log(dataTrack);
 				
 				movan.gframes = frames;
 				movan.gskel = skel;

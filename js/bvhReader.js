@@ -1,16 +1,19 @@
-var MOVA = MOVA || {};
-MOVA.BVHReader = function () {
+// 
+
+
+var BVHReader = function () {
 
     this.load = function (url, callback) {
         $.get(url, function (str) {
-            var dataReturn = parse(str);
+            var dataReturn = parse(str);            
             var jointStack = dataReturn[0];
             var jointMap = dataReturn[1];
             var jointArray = dataReturn[2];
             if (callback)
-                callback(new MOVA.BVH.Skeleton(jointStack[0], jointMap, jointArray, dataReturn[3], dataReturn[4], dataReturn[5]));
+                callback(new BVHReader.BVH.Skeleton(jointStack[0], jointMap, jointArray, dataReturn[3], dataReturn[4], dataReturn[5]),'BVH');
         });
     };
+    
     function parse(str) {
         var lines = str.split('\n');
         var jointStack = [];
@@ -50,10 +53,10 @@ MOVA.BVHReader = function () {
         line = line.trim();
         if (line.indexOf("ROOT") > -1 || line.indexOf("JOINT") > -1 || line.indexOf("End") > -1) {
             var parts = line.split(" ");
-            var joint = new MOVA.BVH.Joint(parts[1]);
+            var joint = new BVHReader.BVH.Joint(parts[1]);
             jointStack.push(joint);
             if (line.indexOf("End") < 0) {
-                joint.jointIndex = Object.keys(jointMap).length
+                joint.jointIndex = Object.keys(jointMap).length;
                 jointMap[parts[1]] = joint;
                 jointArray.push(joint);
                 if (jointArray.length == 1) {
@@ -75,7 +78,7 @@ MOVA.BVHReader = function () {
             if (jointStack.length > 1) {
                 child = jointStack.pop();
                 jointStack[jointStack.length - 1].children.push(child);
-                child.parent = jointStack[jointStack.length - 1]
+                child.parent = jointStack[jointStack.length - 1];
             }
         } else if (line.indexOf("MOTION") == 0) {
             return false;
@@ -85,9 +88,9 @@ MOVA.BVHReader = function () {
     };
 };
 
-MOVA.BVH = MOVA.BVH || {};
+BVHReader.BVH = BVHReader.BVH || {};
 
-MOVA.BVH.Joint = function (name) {
+BVHReader.BVH.Joint = function (name) {
     this.name = name;
     this.children = [];
     this.isEndSite = function () {
@@ -112,7 +115,7 @@ MOVA.BVH.Joint = function (name) {
     };
 };
 
-MOVA.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameArray) {
+BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameArray) {
     thisSkeleton = this;
     this.root = root;
     this.jointMap = map;
