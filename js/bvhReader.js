@@ -33,7 +33,6 @@ var BVHReader = function () {
                 break;
             if (line.indexOf("Frames") === 0) {
                 frameCount = +(line.split(/\b/)[2]);
-                console.log(line)
             } else if (line.indexOf("Frame Time") === 0) {
                 frameTime = +( line.substr(line.indexOf(":") + 1).trim() )
             } else {
@@ -69,9 +68,12 @@ var BVHReader = function () {
         } else if (line.indexOf("OFFSET") === 0) {
             var parts = line.split(" ");
             jointStack[jointStack.length - 1]["offset"] = parts.slice(1);
+            for(x in jointStack[jointStack.length - 1]["offset"]){
+                jointStack[jointStack.length - 1]["offset"][x] = +jointStack[jointStack.length - 1]["offset"][x]
+            }
         } else if (line.indexOf("CHANNELS") === 0) {
             var parts = line.split(" ");
-            jointStack[jointStack.length - 1]["channelNames"] = parts.slice(2);
+            jointStack[jointStack.length - 1].setChannelNames(parts.slice(2));
             jointStack[jointStack.length - 1]["channelLength"] = +parts[1];
         } else if (line.indexOf("}") === 0) {
             if (jointStack.length > 1) {
@@ -95,16 +97,12 @@ BVHReader.BVH.Joint = function (name) {
     this.isEndSite = function () {
         return name === "Site";
     };
-    this.rotationIndex = function () {
-        console.log("Not implemented"); //Why?!
-    };
-    this.positionIndex = function () {
-        console.log("Not implemented"); //Why?!
-        //it could return something like {x:6, y:4, z:5}
-    };
+    this.rotationIndex = {};
+    this.positionIndex = {};
+    
     this.getChannels = function () {
         var allChannels = [];
-        for (i = 0; i < this.frameArray.length; i++) {
+        for (i = 0; i < this.skeleton.frameArray.length; i++) {
             allChannels.push(this.getChannelsAt(i));
         }
         return allChannels;
@@ -113,6 +111,22 @@ BVHReader.BVH.Joint = function (name) {
         var channelsAtFrame = this.skeleton.frameArray[frameNum];
         return channelsAtFrame.slice(this.channelOffset, this.channelOffset + this.channelLength);
     };
+
+    this.setChannelNames = function (nameArr){
+        this.channelNames = nameArr;
+        for(i in this.channelNames){
+            var name = this.channelNames[i];
+            switch(name){
+                case "Xposition": this.positionIndex.x = i; break;
+                case "Yposition": this.positionIndex.y = i; break;
+                case "Zposition": this.positionIndex.z = i; break;
+
+                case "Xrotation": this.rotationIndex.x = i; break;
+                case "Yrotation": this.rotationIndex.y = i; break;
+                case "Zrotation": this.rotationIndex.z = i; break;
+            }
+        }
+    }
 };
 
 BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameArray) {
@@ -127,12 +141,19 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
     for (i = 0; i < this.jointArray.length; i++) {
         this.jointArray[i].skeleton = thisSkeleton;
     }
+    
+    //all the structures are ready. let's calculate the positions
+    for(j=0; j < this.jointArray.length; j++){
+        var joint = this.jointArray[j];
+        updateWithPositions(joint);
+    }
 
     this.getChannels = function () {
         return frameArray;
     };
     this.getChannelsAt = function (frameNum) {
     	//How do I know which column is what?
+        //Why do you need the column index?
         return frameArray[frameNum];
     };
     this.getFrameRate = function () {
@@ -143,18 +164,134 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
     };
 
     this.getHeadJoint = function () {
-
     	// do a quick search in the joint names to see if any of them matches head, else return the something!!!!
         return jointMap["Head"];
     };
     this.getPositionsAt = function (frameNum) {
     	//for each joint, calculate its position in XYZ
-        //return an array of joints, each with .x, .y, and .z properties
-    	
+        //return an array of joints, each with .x, .y, and .z properties    	
         return frameArray[frameNum];
     };
     this.getTPose = function () {
     	// This function is basically the same as the getPositionsAt except that all the rotations will be 0
         console.log("Not yet implemented");
     };
+
+    function updateWithPositions(joint){
+        var channelNames = joint.channelNames;
+        joint.channels = joint.getChannels();
+        joint.rotations = [];
+        joint.positions = [];
+        for(i in joint.channels){
+            var channel = joint.channels[i];
+            var xpos = deg2rad(channel[joint.positionIndex.x] || 0),
+            ypos =  deg2rad(channel[joint.positionIndex.y] || 0),
+            zpos =  deg2rad(channel[joint.positionIndex.z] || 0),
+            xangle =  deg2rad(channel[joint.rotationIndex.x] || 0),
+            yangle =  deg2rad(channel[joint.rotationIndex.y] || 0),
+            zangle= deg2rad(channel[joint.rotationIndex.z] || 0);
+
+            var rotMatrix = getRotationMatrix(xangle, yangle, zangle, "xyz");
+            var posMatrix = [xpos, ypos, zpos];
+
+            if(joint.parent){
+                joint.positions[i] = vectorAdd(matrixMultiply((vectorAdd(joint.offset, posMatrix)),joint.parent.rotations[i]), joint.parent.positions[i])
+                joint.rotations[i] = matrixMultiply( rotMatrix, joint.parent.rotations[i]);
+            }else{
+                //its the root
+                joint.rotations[i] = rotMatrix;
+                joint.positions[i] = vectorAdd(joint.offset , posMatrix);
+            }
+        }
+    }
+
+    function deg2rad(deg){
+        return deg * (Math.PI/180);
+    }
+
+    function vectorAdd(a, b){
+        var res = [];
+        if(a.length != b.length){
+            return undefined;
+        }else{
+            for(i in a){
+                res[i] = a[i] + b[i];
+            }
+        }
+        return res;
+    }
+
+    function getRotationMatrix(xangle, yangle, zangle, order){
+        var c1 = Math.cos(xangle),
+        c2 = Math.cos(yangle),
+        c3 = Math.cos(zangle),
+        s1 = Math.sin(xangle),
+        s2 = Math.sin(yangle),
+        s3 = Math.sin(zangle);
+
+
+        if(order === undefined || order.trim() === ""){
+            order = "zxy";
+        }
+
+        var rotMat = [
+            [1,0,0],
+            [0,1,0],
+            [0,0,1]
+        ];
+
+        switch(order){
+            case "zxy":
+                rotMat = [
+                    [c2*c3-s1*s2*s3, c2*s3+s1*s2*c3, -s2*c1],
+                    [-c1*s3, c1*c3, s1]
+                    [s2*c3+c2*s1*s3, s2*s3-c2*s1*c3, c2*c1]
+                ];
+            break;
+            default:
+              for (o in order){
+                var axis = order[o];
+                var t;
+                switch(axis){
+                    case "x":
+                        t = [
+                                [1, 0, 0],
+                                [0,  c1, s1],
+                                [0, -s1, c1],
+                            ]
+                        break;
+                    case "y":
+                        t = [
+                                [c2,0,-s2],
+                                [0,1,0],
+                                [s2,0,c2]
+                            ]
+                        break;
+                    case "z":
+                        t = [[c3,s3,0],[-s3,c3,0],[0,0,1]]
+                        break;
+                }
+
+                rotMat = matrixMultiply(t, rotMat)
+
+              }
+          }
+
+        return rotMat;
+    }
+
+    function matrixMultiply(a, b) {
+        var result = [];
+        for(var j = 0; j < b.length; j++) {
+            result[j] = [];
+            for(var k = 0; k < a[0].length; k++) {
+                var sum = 0;
+                for(var i = 0; i < a.length; i++) {
+                    sum += a[i][k] * b[j][i];
+                }
+                result[j].push(sum);
+            }
+        }
+        return result;
+    }
 };
