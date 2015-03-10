@@ -32,9 +32,10 @@ var BVHReader = function () {
             if (line === "")
                 break;
             if (line.indexOf("Frames") === 0) {
-                frameCount = +(line.split(" ")[1]);
+                frameCount = +(line.split(/\b/)[2]);
+                console.log(line)
             } else if (line.indexOf("Frame Time") === 0) {
-                frameTime = +(line.split(" ")[2]);
+                frameTime = +( line.substr(line.indexOf(":") + 1).trim() )
             } else {
                 var parts = line.split(" ");
                 for (var j = 0; j < parts.length; j++)
@@ -142,8 +143,9 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
     };
 
     this.getHeadJoint = function () {
+
     	// do a quick search in the joint names to see if any of them matches head, else return the something!!!!
-    	console.log("Not yet implemented");
+        return jointMap["Head"];
     };
     this.getPositionsAt = function (frameNum) {
     	//for each joint, calculate its position in XYZ
