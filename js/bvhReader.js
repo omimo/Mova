@@ -169,8 +169,22 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
     };
     this.getPositionsAt = function (frameNum) {
     	//for each joint, calculate its position in XYZ
-        //return an array of joints, each with .x, .y, and .z properties    	
-        return frameArray[frameNum];
+        //return an array of joints, each with .x, .y, and .z properties  
+    	posFrame = [];
+    	
+    	for (j=0;j<this.jointArray.length;j++) {
+    		posFrame.push(this.jointArray[j].positions[frameNum]);
+    	}
+    	
+    	posFrame = posFrame.map(function(d) {
+			return {
+				x : d[0],
+				y : d[1],
+				z : d[2],
+			};
+		});
+    	
+        return posFrame;
     };
     this.getTPose = function () {
     	// This function is basically the same as the getPositionsAt except that all the rotations will be 0
