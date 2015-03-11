@@ -217,11 +217,12 @@ var movan = {
 				
 				movan.dataTracks.push({content: dataTrack, type: t});
 				
-				thisTrackIndex = movan.dataTracks.length;
+				thisTrackIndex = movan.dataTracks.length - 1;
 				
 							
 				d3.select("#jointDropdown").attr("selectedJoint", movan.defSelectedJoint);
-				movan.drawJointChooser(movan.dataTracks[thisTrackIndex].content.getTPose());
+				//movan.drawJointChooser(movan.dataTracks[thisTrackIndex].content.getTPose());
+				movan.drawJointChooser(movan.dataTracks[thisTrackIndex].content.getPositionsAt(1));
 				
 				movan.reDraw();
 				
