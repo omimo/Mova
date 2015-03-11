@@ -184,18 +184,20 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
         joint.positions = [];
         for(i in joint.channels){
             var channel = joint.channels[i];
-            var xpos = deg2rad(channel[joint.positionIndex.x] || 0),
-            ypos =  deg2rad(channel[joint.positionIndex.y] || 0),
-            zpos =  deg2rad(channel[joint.positionIndex.z] || 0),
+            var xpos = channel[joint.positionIndex.x] || 0,
+            ypos =  channel[joint.positionIndex.y] || 0,
+            zpos =  channel[joint.positionIndex.z] || 0,
             xangle =  deg2rad(channel[joint.rotationIndex.x] || 0),
             yangle =  deg2rad(channel[joint.rotationIndex.y] || 0),
             zangle= deg2rad(channel[joint.rotationIndex.z] || 0);
 
-            var rotMatrix = getRotationMatrix(xangle, yangle, zangle, "xyz");
+            var rotMatrix = getRotationMatrix(xangle, yangle, zangle, "zxy");
             var posMatrix = [xpos, ypos, zpos];
 
             if(joint.parent){
-                joint.positions[i] = vectorAdd(matrixMultiply((vectorAdd(joint.offset, posMatrix)),joint.parent.rotations[i]), joint.parent.positions[i])
+                var t = vectorAdd(joint.offset, posMatrix);
+                var u = matrixMultiply(t,joint.parent.rotations[i]);
+                joint.positions[i] = vectorAdd(u, joint.parent.positions[i]);
                 joint.rotations[i] = matrixMultiply( rotMatrix, joint.parent.rotations[i]);
             }else{
                 //its the root
@@ -209,17 +211,6 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
         return deg * (Math.PI/180);
     }
 
-    function vectorAdd(a, b){
-        var res = [];
-        if(a.length != b.length){
-            return undefined;
-        }else{
-            for(i in a){
-                res[i] = a[i] + b[i];
-            }
-        }
-        return res;
-    }
 
     function getRotationMatrix(xangle, yangle, zangle, order){
         var c1 = Math.cos(xangle),
@@ -228,7 +219,6 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
         s1 = Math.sin(xangle),
         s2 = Math.sin(yangle),
         s3 = Math.sin(zangle);
-
 
         if(order === undefined || order.trim() === ""){
             order = "zxy";
@@ -244,7 +234,7 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
             case "zxy":
                 rotMat = [
                     [c2*c3-s1*s2*s3, c2*s3+s1*s2*c3, -s2*c1],
-                    [-c1*s3, c1*c3, s1]
+                    [-c1*s3, c1*c3, s1],
                     [s2*c3+c2*s1*s3, s2*s3-c2*s1*c3, c2*c1]
                 ];
             break;
@@ -273,25 +263,19 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
                 }
 
                 rotMat = matrixMultiply(t, rotMat)
-
               }
           }
 
         return rotMat;
     }
-
-    function matrixMultiply(a, b) {
-        var result = [];
-        for(var j = 0; j < b.length; j++) {
-            result[j] = [];
-            for(var k = 0; k < a[0].length; k++) {
-                var sum = 0;
-                for(var i = 0; i < a.length; i++) {
-                    sum += a[i][k] * b[j][i];
-                }
-                result[j].push(sum);
-            }
-        }
-        return result;
-    }
 };
+
+function vectorAdd(a, b){
+    return math.add(math.matrix(a), math.matrix(b)).toArray();
+}
+
+function matrixMultiply(m1, m2) {
+    var a = math.matrix(m1);
+    var b = math.matrix(m2);
+    return math.multiply(a, b).toArray();
+}
