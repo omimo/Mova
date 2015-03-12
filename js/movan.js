@@ -15,7 +15,7 @@ var movan = {
 			 //skelHeadJoint : 23,
 			 frameSkip : 5,
 
-			//figureScale: 1, //TODO: Need to add a scale control in the GUI (or automatic detection)
+			figureScale: 2, //TODO: Need to add a scale control in the GUI (or automatic detection)
 			
 			
 			availableFeatures : [
@@ -232,26 +232,34 @@ var movan = {
 				movan.fillDefaultFeatures();
 			},
 
-			drawJointChooser: function () {
+			drawJointChooser: function (frame) {
 				//Draw the joint chooser
-				firstFrame = movan.gframes[0].map(function(d) {
+							
+				firstFrame = frame.map(function(d) {					
 					return {
-						x : d.x * movan.figureScale + 140,
-						y : -1 * d.y * movan.figureScale + 90 + 75,
+						x : d.x * movan.figureScale + 120,
+						y : -1 * d.y * movan.figureScale + 220,
 						z : d.z * movan.figureScale
 					};
 				});
 				
-				d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select("#jointDropdown").attr("selectedJoint")]);
+				console.log(firstFrame);
+				
+				track = movan.dataTracks[movan.dataTracks.length - 1].content;
+				d3.select("#jointLabel").text(track.jointArray[d3.select("#jointDropdown").attr("selectedJoint")]);
 				
 					
 				//Create SVG element
 				d3.select("#jointChooser").selectAll("svg").remove();
 				var jointChooser = d3.select("#jointChooser").append("svg").attr("height",170);
-				figureSketch.drawJointChooser(jointChooser,firstFrame,0, d3.select("#jointDropdown").attr("selectedJoint")
-						,movan.gskel,movan.drawJointChooser);
 				
-				d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select("#jointDropdown").attr("selectedJoint")]);
+				//figureSketch.drawJointChooser(jointChooser,firstFrame,0, d3.select("#jointDropdown").attr("selectedJoint")
+				//		,movan.gskel,movan.drawJointChooser);
+				
+				
+				figureSketch.drawJointChooserbvh (jointChooser,firstFrame,movan.gskel,movan.drawJointChooser);
+				
+				//d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select("#jointDropdown").attr("selectedJoint")]);
 				
 				///
 			},

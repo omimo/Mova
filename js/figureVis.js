@@ -150,6 +150,8 @@ drawSkel: function (svg, currentFrame, index, highlightJ,skel) {
 
 drawJointChooser: function (svg, currentFrame, index, highlightJ,skel,clickCallBack) {
 	//bones
+	
+	
 	svg.selectAll("line.f" + index)
 	.data(skel.connections)
 	.enter()
@@ -231,6 +233,72 @@ drawJointChooser: function (svg, currentFrame, index, highlightJ,skel,clickCallB
 
 	
 },
+
+
+drawJointChooserbvh: function (svg, currentFrame, clickCallBack) {
+	console.log(currentFrame);
+	highlightJ = 1;
+	//draw joints
+	svg.selectAll("circle.f")
+	.data(currentFrame)
+	.enter()
+	.append("circle")
+	.style("cursor","pointer")
+	.attr("cx", function(d) {
+		return d.x;
+	}).attr("cy", function(d) {
+		return d.y;
+	}).attr("r", function(d, i) {
+		if (i == highlightJ)
+			return 6;
+		else if (i == movan.skelHeadJoint)
+			return 6;
+		else
+			return 5;
+	})
+	.attr("jointID", function(d,i){return i;})
+	.attr("fill", function(d, i) {
+		if (i == highlightJ )
+			return 'red';
+		else
+			return 'black';
+	})
+	.on("mouseover", function (d) {
+		d3.select(this).attr("r",6).attr("fill", "orange");
+		
+		//d3.select("#jointLabel").text(skel.jointNames[d3.select(this).attr("jointID")]);
+	})
+	.on("mouseout", function (d) {
+		d3.select("#jointLabel").text(skel.jointNames[highlightJ]);
+		r = 2;
+		if (i == highlightJ)
+			r= 6;
+		else if (i == movan.skelHeadJoint)
+			r= 6;
+		else
+			r = 5;
+		d3.select(this).attr("r",r);
+		
+		if ( d3.select(this).attr("jointID") == highlightJ)
+			d3.select(this).attr("fill","red");
+		else
+			d3.select(this).attr("fill","black");
+	})
+	.on("click", function(d) {
+		//movan.selectedJoint = d3.select(this).attr("jointID");
+		d3.select("#jointDropdown").attr("selectedJoint", d3.select(this).attr("jointID"));
+		highlightJ = d3.select(this).attr("jointID");
+		//d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select("#jointDropdown").attr("selectedJoint")]);
+		//d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select(this).attr("jointID")]);
+
+		
+		clickCallBack();
+	})
+	;
+
+	
+},
+
 
 drawSkelInfo: function (parent, currentFrame, skel) {
 	
