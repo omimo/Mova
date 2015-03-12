@@ -205,11 +205,20 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
             yangle =  deg2rad(channel[joint.rotationIndex.y] || 0),
             zangle= deg2rad(channel[joint.rotationIndex.z] || 0);
 
-            var rotMatrix = getRotationMatrix(xangle, yangle, zangle, "zxy");
+            var rotMatrix = getRotationMatrix(zangle, xangle, yangle, "xyz");
             var posMatrix = [xpos, ypos, zpos];
 
             if(joint.parent){
+            	posMatrix = [0,0,0];
+            	
                 var t = vectorAdd(joint.offset, posMatrix);
+                if (i==0 && (joint.name ==  "Spine" || joint.name == "L_Femur")) {
+                	console.log("x: "+xangle + "y: "+yangle + "z: "+zangle );
+                	console.log(posMatrix);
+                	console.log(joint.offset);
+                	console.log(t);
+                }
+                
                 var u = matrixMultiply(t,joint.parent.rotations[i]);
                 joint.positions[i] = vectorAdd(u, joint.parent.positions[i]);
                 joint.rotations[i] = matrixMultiply( rotMatrix, joint.parent.rotations[i]);
@@ -226,7 +235,40 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
     }
 
 
-    function getRotationMatrix(xangle, yangle, zangle, order){
+    function getRotationMatrix (alpha, beta, gamma) {
+    	
+    //inputs are the intrinsic rotation angles in RADIANTS
+    var ca = Math.cos(alpha),
+    	sa = Math.sin(alpha),
+    	
+    	cb = Math.cos(beta),
+    	sb = Math.sin(beta),
+    	
+    	cg = Math.cos(gamma),
+    	sg = Math.sin(gamma),
+    	
+    Rx = [[1, 0, 0], [0, ca, -sa], [0, sa, ca]];
+    
+    Ry = [[cb, 0, sb], [0, 1, 0], [-sb, 0, cb]];
+    
+    Rz = [[cg, -sg, 0], [sg, cg, 0], [0,    0,   1]];
+    
+    
+  
+    
+    var Rzm = math.matrix(Rz);
+    var Rym = math.matrix(Ry);
+    var Rxm = math.matrix(Rx);
+    
+    var tt = math.multiply(Rzm, Rym);
+    
+    return  math.multiply(tt,Rxm).toArray();
+    //rotationMatrix = math. //Rz*Ry*Rx;
+    
+    //     R = Rx*Ry*Rz;
+	}
+
+    function getRotationMatrix1 (xangle, yangle, zangle, order){
         var c1 = Math.cos(xangle),
         c2 = Math.cos(yangle),
         c3 = Math.cos(zangle),
@@ -245,7 +287,7 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
         ];
 
         switch(order){
-            case "zxy":
+            case "___zxy":
                 rotMat = [
                     [c2*c3-s1*s2*s3, c2*s3+s1*s2*c3, -s2*c1],
                     [-c1*s3, c1*c3, s1],

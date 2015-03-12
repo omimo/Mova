@@ -219,6 +219,9 @@ var movan = {
 				
 				thisTrackIndex = movan.dataTracks.length - 1;
 				
+				console.log("correct ones for MS2: 6.4016	71.316	-217.97 \n	6.5816	79.787	-217.97");
+				console.log(dataTrack.getPositionsAt(0)[0]);
+				console.log(dataTrack.getPositionsAt(0)[1]);
 							
 				d3.select("#jointDropdown").attr("selectedJoint", movan.defSelectedJoint);
 				//movan.drawJointChooser(movan.dataTracks[thisTrackIndex].content.getTPose());

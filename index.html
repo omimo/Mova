@@ -9,6 +9,8 @@
 		<link rel="stylesheet" type="text/css" href="jq/css/jquery-ui-slider-pips.css">
 
 		<script type="text/javascript" src="d3/d3.v3.min.js"></script>
+		<script type="text/javascript" src="js/math.min.js"></script>
+
 
 		<script type="text/javascript" src="js/bvhReader.js"></script>
 		<script type="text/javascript" src="js/fileHandler.js"></script>
@@ -229,9 +231,9 @@
 						Select a file:
 					</div>
 					<select name="drop1" id="fileSelect" size="4" multiple="multiple"
-					onchange="fileHandler.loadDataTrack()" style="border:2px solid #ccc; width:200px; height: 120px; overflow-y: auto;">
+					onchange="movan.loadNew()" style="border:2px solid #ccc; width:200px; height: 120px; overflow-y: auto;">
 					 <option value="movs/MS2_8Walk_M.bvh" selected="selected">MS2_8Walk_M.bvh</option> 
-						<option value="Punch4.csv">Punch4.bvh</option>
+						<option value="movs/Slash_x4_0001KAREN.bvh">Slash_x4_0001KAREN.bvh</option>
 						<option value="Float4.csv">Float3.bvh</option>
 						<option value="Dab1.csv">Dab1.bvh</option>
 						<option value="Flick1.csv">Flick1.bvh</option>
@@ -320,13 +322,5 @@
 		<div id="footer" style="clear:both;text-align:center;padding-top:20px;">
 			<small>(C) Omid Alemi - Fall 2013</small>
 		</div>
-
-		<script type="text/javascript">
-		reader = new BVHReader();
-		reader.load("movs/MS2_8Walk_M.bvh", function(data){
-			bvhData = data;
-		})
-		</script>
-	
  </body>
 </html>

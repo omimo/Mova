@@ -8,7 +8,7 @@ fileHandler.loadDataTrack = function (url, callback) {
 	
 	
 	// if file is bvh
-	
+	console.log(">"+url);
 	reader = new BVHReader;
 	reader.load(url,callback);
 	//console.log(reader);
