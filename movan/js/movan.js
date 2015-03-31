@@ -215,6 +215,7 @@ var movan = {
 
 				var moveFile = "movs/"+document.getElementById("fileSelect").value;
 				var skelFile = "movs/ECU3.skel";
+				var skelFile = "movs/MS2_8Walk_M.skel";
 				
 				//FIXME: This is just a dummy way to do it!
 				//TODO: Put the skel data in the mocap csv file
@@ -241,6 +242,7 @@ var movan = {
 				movan.gskel = skel;
 				//makeFeats();
 				
+				console.log(frames);
 							
 				d3.select("#jointDropdown").attr("selectedJoint", movan.defSelectedJoint);
 				movan.drawJointChooser();
