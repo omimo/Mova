@@ -205,7 +205,7 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
             yangle =  deg2rad(channel[joint.rotationIndex.y] || 0),
             zangle= deg2rad(channel[joint.rotationIndex.z] || 0);
 
-            var rotMatrix = getRotationMatrix(zangle, xangle, yangle, "xyz");
+            var rotMatrix = getRotationMatrix(zangle, yangle, xangle, "xyz");
             var posMatrix = [xpos, ypos, zpos];
 
             if(joint.parent){
@@ -224,6 +224,10 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
                 joint.rotations[i] = matrixMultiply( rotMatrix, joint.parent.rotations[i]);
             }else{
                 //its the root
+                if (i==0) {
+                    console.log("root's rotmat: ");
+                    console.log(rotMatrix);
+                }
                 joint.rotations[i] = rotMatrix;
                 joint.positions[i] = vectorAdd(joint.offset , posMatrix);
             }
@@ -235,7 +239,7 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
     }
 
 
-    function getRotationMatrix (alpha, beta, gamma) {
+    function getRotationMatrix(alpha, beta, gamma) {
     	
     //inputs are the intrinsic rotation angles in RADIANTS
     var ca = Math.cos(alpha),
