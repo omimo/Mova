@@ -220,13 +220,17 @@ var movan = {
 				
 				thisTrackIndex = movan.dataTracks.length - 1;
 				
-				console.log("correct ones for MS2: 6.4016	71.316	-217.97 \n	6.6537    79.784   -218.15");
-				console.log(dataTrack.getPositionsAt(0)[0]);
-				console.log(dataTrack.getPositionsAt(0)[1]);
+				console.log("correct ones for MS2: 6.4016	71.316	-217.97 \n	6.6537	79.784	-218.15 \n " +
+					"6.4822	93.607	-218.12 \n 6.6249	98.12	-218.46");
+				
+
+				for (i=0;i<21;i++) {
+					console.log(dataTrack.getPositionsAt(0)[i]);
+				}
 							
 				d3.select("#jointDropdown").attr("selectedJoint", movan.defSelectedJoint);
 				//movan.drawJointChooser(movan.dataTracks[thisTrackIndex].content.getTPose());
-				movan.drawJointChooser(movan.dataTracks[thisTrackIndex].content.getPositionsAt(1));
+				movan.drawJointChooser(movan.dataTracks[thisTrackIndex].content.getPositionsAt(0));
 				
 				movan.reDraw();
 				

@@ -206,31 +206,34 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
             zangle= deg2rad(channel[joint.rotationIndex.z] || 0);
 
             var rotMatrix = math.transpose(getRotationMatrix(xangle, yangle, zangle, "xyz"));
+            //var rotMatrix = getRotationMatrix1(xangle, yangle, zangle, "xyz"); //this also works
             var posMatrix = [xpos, ypos, zpos];
 
             if(joint.parent){
             	posMatrix = [0,0,0];
             	
                 var t = vectorAdd(joint.offset, posMatrix);
-                var u = matrixMultiply(t,joint.parent.rotations[i]);
-
-                 if (i==0 && (joint.name ==  "Spine" || joint.name == "L_Femur")) {
-                    console.log("x: "+xangle + "y: "+yangle + "z: "+zangle );
-                    console.log(posMatrix);
-                    console.log(joint.offset);
-                    console.log(t);
-                    console.log(u);
-                }
-
+                var u = matrixMultiply(t, joint.parent.rotations[i]);
                 
                 joint.positions[i] = vectorAdd(u, joint.parent.positions[i]);
                 joint.rotations[i] = matrixMultiply( rotMatrix, joint.parent.rotations[i]);
+
+
+                 if (i==0 && (joint.name ==  "Spine" || joint.name == "L_Femur")) {
+                    /*console.log("head's rot mat: ");
+                    console.log(joint.rotations[i]);
+                    console.log(t);
+                    console.log(u);
+                    
+                    console.log("x: "+xangle + "y: "+yangle + "z: "+zangle );
+                    console.log(posMatrix);
+                    
+                    
+                    */
+                }
+
             }else{
                 //its the root
-                if (i==0) {
-                    console.log("root's rotmat: ");
-                    console.log(rotMatrix);
-                }
                 joint.rotations[i] = rotMatrix;
                 joint.positions[i] = vectorAdd(joint.offset , posMatrix);
             }
