@@ -239,7 +239,7 @@ var movan = {
 				firstFrame = frame.map(function(d) {					
 					return {
 						x : d.x * movan.figureScale + 100,
-						y : -1 * d.y * movan.figureScale + 120,
+						y : -1 * d.y * movan.figureScale + 220,
 						z : d.z * movan.figureScale
 					};
 				});
