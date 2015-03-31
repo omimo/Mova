@@ -205,21 +205,24 @@ BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameA
             yangle =  deg2rad(channel[joint.rotationIndex.y] || 0),
             zangle= deg2rad(channel[joint.rotationIndex.z] || 0);
 
-            var rotMatrix = getRotationMatrix(zangle, yangle, xangle, "xyz");
+            var rotMatrix = math.transpose(getRotationMatrix(xangle, yangle, zangle, "xyz"));
             var posMatrix = [xpos, ypos, zpos];
 
             if(joint.parent){
             	posMatrix = [0,0,0];
             	
                 var t = vectorAdd(joint.offset, posMatrix);
-                if (i==0 && (joint.name ==  "Spine" || joint.name == "L_Femur")) {
-                	console.log("x: "+xangle + "y: "+yangle + "z: "+zangle );
-                	console.log(posMatrix);
-                	console.log(joint.offset);
-                	console.log(t);
-                }
-                
                 var u = matrixMultiply(t,joint.parent.rotations[i]);
+
+                 if (i==0 && (joint.name ==  "Spine" || joint.name == "L_Femur")) {
+                    console.log("x: "+xangle + "y: "+yangle + "z: "+zangle );
+                    console.log(posMatrix);
+                    console.log(joint.offset);
+                    console.log(t);
+                    console.log(u);
+                }
+
+                
                 joint.positions[i] = vectorAdd(u, joint.parent.positions[i]);
                 joint.rotations[i] = matrixMultiply( rotMatrix, joint.parent.rotations[i]);
             }else{

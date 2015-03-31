@@ -220,7 +220,7 @@ var movan = {
 				
 				thisTrackIndex = movan.dataTracks.length - 1;
 				
-				console.log("correct ones for MS2: 6.4016	71.316	-217.97 \n	6.5816	79.787	-217.97");
+				console.log("correct ones for MS2: 6.4016	71.316	-217.97 \n	6.9058	88.251	-218.33");
 				console.log(dataTrack.getPositionsAt(0)[0]);
 				console.log(dataTrack.getPositionsAt(0)[1]);
 							
@@ -238,7 +238,7 @@ var movan = {
 							
 				firstFrame = frame.map(function(d) {					
 					return {
-						x : d.x * movan.figureScale + 120,
+						x : d.x * movan.figureScale + 100,
 						y : -1 * d.y * movan.figureScale + 220,
 						z : d.z * movan.figureScale
 					};
