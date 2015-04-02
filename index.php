@@ -31,6 +31,9 @@
 		<script src="jq/jquery.selectric.js"></script>
 
 		<script type="text/javascript" src="js/math.min.js"></script>
+		<script type="text/javascript" src="js/jqx-all.js"></script>
+		<script type="text/javascript" src="js/annotation-track.js"></script>
+		<script type="text/javascript" src="js/annotation.js"></script>
 
 		<script>
 			(function(i, s, o, g, r, a, m) {
@@ -55,15 +58,6 @@
 				$("#maintabs").tabs().click(function(event, ui) {
 					$("#featureList").scrollLeft(0);
 				});
-
-				// $("#tabs").click(function(event, ui){
-				// console.log(event);
-				// if (event.options.selected == 0)
-				// playAnim = false;
-				// else if (event.options.selected == 1)
-				// {playAnim = true;console.log("heee");}
-				// }
-				// );
 
 				$("#btnPlay").button();
 				$("#btnPlay").click(function(event) {
@@ -167,17 +161,143 @@
 					movan.reDrawFeat();
 				});
 
+				/**		
+				 * Source : http://stackoverflow.com/questions/814613/how-to-read-get-data-from-a-url-using-javascript
+				 */
+				function parseURLParams(url) {
+			        var queryStart = url.indexOf("?") + 1,
+			            queryEnd   = url.indexOf("#") + 1 || url.length + 1,
+			            query = url.slice(queryStart, queryEnd - 1),
+			            pairs = query.replace(/\+/g, " ").split("&"),
+			            parms = {}, i, n, v, nv;
+			    
+			        if (query === url || query === "") {
+			            return;
+			        }
+			    
+			        for (i = 0; i < pairs.length; i++) {
+			            nv = pairs[i].split("=");
+			            n = decodeURIComponent(nv[0]);
+			            v = decodeURIComponent(nv[1]);
+			    
+			            if (!parms.hasOwnProperty(n)) {
+			                parms[n] = [];
+			            }
+			    
+			            parms[n].push(nv.length === 2 ? v : null);
+			        }
+			        return parms;
+		    	}
+			    
+			    function apiCall(url, cbk){
+			      $.ajax({
+			         type: "GET",
+			         url: url,
+			         success: cbk
+			      });
+			    }
+					
+				var params = parseURLParams(document.URL);
+				
+				var take_id = params["take_id"][0];
+				var url = "/takes/"+take_id+".json";
+				
+				apiCall(url, function(data){
+				  var data_tracks = data.data_tracks;
+				  var bvhFiles = [];
+				  var c3dFiles = [];
+				  var movFiles = [];
+				  var mp4Files = [];
+				  data_tracks.forEach(function(d){
+				  	console.log(d)
+				    if(d.data_track_url.indexOf("bvh.json") > -1){
+				      bvhFiles.push(d.data_track_url);
+				    }else if(d.data_track_url.indexOf("c3d.json") > -1){
+				    	c3dFiles.push(d.data_track_url);
+				    }else if(d.data_track_url.indexOf("mp4.json") > -1){
+				    	mp4Files.push(d.data_track_url)
+				    }else if(d.data_track_url.indexOf("mov.json") > -1){
+				    	movFiles.push(d.data_track_url)
+				    }
+
+				  })
+				  
+				  if(bvhFiles.length > 0){
+				    //for now do it just for the first one
+				    apiCall(bvhFiles[0], function(data){
+				      var asset_url = data.asset_url;
+				      bvhData = new BVHReader().load(asset_url, showBVH)
+				    })
+				  }
+
+				  if(movFiles.length > 0){
+				    //for now do it just for the first one
+				    apiCall(movFiles[0], function(data){
+				      var asset_url = data.asset_url;
+				      console.log("Setting mov video: " + asset_url)
+				      video = $("#mov-video")[0];
+				      video.innerHTML = '<source type="video/mov" src="'+asset_url+'">';
+				    })
+				  }
+
+
+				  if(mp4Files.length > 0){
+				    //for now do it just for the first one
+				    apiCall(mp4Files[0], function(data){
+				      var asset_url = data.asset_url;
+				      console.log("Setting mp4 video: " + asset_url)
+				      video = $("#mp4-video")[0];
+				      video.innerHTML = '<source type="video/mp4" src="'+asset_url+'">';
+				    })
+				  }
+				});
+
+				initAnnotation();
+
 			});
 		</script>
 
 		<style>
+	    .track{
+	      opacity: .5;
+	    }
+
+	    .segment{
+	      cursor: move;
+	      opacity: .3
+	    }
+
+	    rect.selected{
+	      fill: red;
+	    }
+
+	    .background{
+	      fill: yellow;
+	      opacity: .7;
+	    }
+
+	    .brush{
+	      opacity: .5;
+	    }
+
+	    .slider .handle {
+	      fill: #fff;
+	      stroke: #000;
+	      stroke-opacity: .5;
+	      stroke-width: 1.25px;
+	      cursor: crosshair;
+	    }
+
+	    rect.selected-ex{
+	      fill: orange;
+	    }
 		</style>
 	</head>
 	<body>
 
 		<div id="header" style="clear:both;">
 			<h1 style="float: left;">Mova: Movement Analytics Platform</h1>
-			<h4 style="float: right;">Version 0.7  |   <a href="Mova_Intro.mov" target="_blank">Video Intro</a></h4>
+			<h4 style="float: right;">Version 0.5 - Testing    |   <a href="Mova_Intro.mov" target="_blank">Video Intro</a></h4>
 		</div>
 
 		<div id="canCont">
@@ -189,8 +309,12 @@
 					<li>
 						<a href="#anim">Animation</a>
 					</li>
-				
-
+					<li>
+						<a href="#mp4">MP4</a>
+					</li>
+					<li>
+						<a href="#mov">MOV</a>
+					</li>
 				</ul>
 				<div id="anim">
 					<button id="btnPlay">
@@ -199,6 +323,18 @@
 				</div>
 				<div id="figure">
 
+				</div>
+
+				<div id="mp4">
+					<video id="mp4-video" controls>
+					    
+				    </video>	
+				</div>
+
+				<div id="mov">
+					<video id="mov-video" controls>
+					    
+				    </video>	
 				</div>
 			
 				<div id="featureList">
@@ -211,6 +347,18 @@
 				</div>
 			</div>
 		</div>
+		<div id="annotation-area">
+		    <svg id="svg-container" width="500" height="300">
+
+		    </svg>
+
+
+		    <div id="annotation-graph-dialog">
+		        <div id='jqxTree'>
+		        </div>
+		    </div>
+		</div>
+
 
 		<div id="sidebar">
 			<ul class="tooboxTitle">
@@ -233,9 +381,9 @@
 					</div>
 					<select name="drop1" id="fileSelect" size="4" multiple="multiple"
 					onchange="movan.loadNew()" style="border:2px solid #ccc; width:200px; height: 120px; overflow-y: auto;">
-					 <option value="movs/MS2_8Walk_M_nopos.bvh" selected="selected">MS2_8Walk_M_nopos.bvh</option> 
-						<option value="movs/Slash_x4_0001KAREN.bvh">Slash_x4_0001KAREN.bvh</option>
-						<option value="movs/MS2_8Walk_M.bvh">MS2_8Walk_M.bvh</option>
+					 <option value="KAREN_BEAS_001.csv" selected="selected">KAREN_BEAS_001.bvh</option> 
+						<option value="Punch4.csv">Punch4.bvh</option>
+						<option value="Float4.csv">Float3.bvh</option>
 						<option value="Dab1.csv">Dab1.bvh</option>
 						<option value="Flick1.csv">Flick1.bvh</option>
 						<option value="Slash4.csv">Slash4.bvh</option>
@@ -300,10 +448,22 @@
 		</div>
 
 		<script type="text/javascript">
+			
 			d3.timer(anim.drawFigure, 15);
-			movan.loadFeatures();
-			movan.loadNew();
-		
+
+		<?php
+			if(isset($_GET["group_id"])){
+		?>
+				$group = <?php echo $_GET["group_id"] ?>;
+				$.get("guzzler.php", { 'group_id' : $group }, function(data_files) {
+					urls = JSON.parse(data_files);
+					for (i = 0; i < data_files.length; ++i)
+						console.log(urls[i])
+				});
+		<?php
+			}
+		?>
+
 		</script>
 
 		<script type="text/javascript">
@@ -320,8 +480,108 @@
 				});
 			});
 		</script>
+		
+		<script type="text/javascript">
+		
+		/**
+		 * Source : http://stackoverflow.com/questions/814613/how-to-read-get-data-from-a-url-using-javascript
+		 */
+		function parseURLParams(url) {
+	        var queryStart = url.indexOf("?") + 1,
+	            queryEnd   = url.indexOf("#") + 1 || url.length + 1,
+	            query = url.slice(queryStart, queryEnd - 1),
+	            pairs = query.replace(/\+/g, " ").split("&"),
+	            parms = {}, i, n, v, nv;
+	    
+	        if (query === url || query === "") {
+	            return;
+	        }
+	    
+	        for (i = 0; i < pairs.length; i++) {
+	            nv = pairs[i].split("=");
+	            n = decodeURIComponent(nv[0]);
+	            v = decodeURIComponent(nv[1]);
+	    
+	            if (!parms.hasOwnProperty(n)) {
+	                parms[n] = [];
+	            }
+	    
+	            parms[n].push(nv.length === 2 ? v : null);
+	        }
+	        return parms;
+    	}
+	    
+	    function apiCall(url, cbk){
+	      $.ajax({
+	         type: "GET",
+	         url: url,
+	         success: cbk
+	      });
+	    }
+			
+		var params = parseURLParams(document.URL);
+		
+		var take_id = params["take_id"][0];
+		var url = "/takes/"+take_id+".json";
+		
+		apiCall(url, function(data){
+		  var data_tracks = data.data_tracks;
+		  var bvhFiles = [];
+		  var c3dFiles = [];
+		  var movFiles = [];
+		  var mp4Files = [];
+		  data_tracks.forEach(function(d){
+		  	console.log(d)
+		    if(d.data_track_url.indexOf("bvh.json") > -1){
+		      bvhFiles.push(d.data_track_url);
+		    }else if(d.data_track_url.indexOf("c3d.json") > -1){
+		    	c3dFiles.push(d.data_track_url);
+		    }else if(d.data_track_url.indexOf("mp4.json") > -1){
+		    	mp4Files.push(d.data_track_url)
+		    }else if(d.data_track_url.indexOf("mov.json") > -1){
+		    	movFiles.push(d.data_track_url)
+		    }
+
+		  })
+		  
+		  if(bvhFiles.length > 0){
+		    //for now do it just for the first one
+		    apiCall(bvhFiles[0], function(data){
+		      var asset_url = data.asset_url;
+		      bvhData = new BVHReader().load(asset_url, showBVH)
+		    })
+		  }
+
+		  if(movFiles.length > 0){
+		    //for now do it just for the first one
+		    apiCall(movFiles[0], function(data){
+		      var asset_url = data.asset_url;
+		      console.log("Setting mov video: " + asset_url)
+		      video = $("#mov-video")[0];
+		      video.innerHTML = '<source type="video/mov" src="'+asset_url+'">';
+		    })
+		  }
+
+
+		  if(mp4Files.length > 0){
+		    //for now do it just for the first one
+		    apiCall(mp4Files[0], function(data){
+		      var asset_url = data.asset_url;
+		      console.log("Setting mp4 video: " + asset_url)
+		      video = $("#mp4-video")[0];
+		      video.innerHTML = '<source type="video/mp4" src="'+asset_url+'">';
+		    })
+		  }
+
+
+		})
+		function showBVH(data){
+		  g_bvh = data;
+		  //add code to visualize g_bvh
+		}
+		</script>
 		<div id="footer" style="clear:both;text-align:center;padding-top:20px;">
 			<small>(C) Omid Alemi - Fall 2013</small>
 		</div>
- </body>
+	</body>
 </html>
