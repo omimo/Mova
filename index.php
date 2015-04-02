@@ -34,6 +34,7 @@
 		<script type="text/javascript" src="js/jqx-all.js"></script>
 		<script type="text/javascript" src="js/annotation-track.js"></script>
 		<script type="text/javascript" src="js/annotation.js"></script>
+		<script type="text/javascript" src="js/video.js"></script>
 
 		<script>
 			(function(i, s, o, g, r, a, m) {
