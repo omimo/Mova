@@ -241,7 +241,7 @@
 				    //for now do it just for the first one
 				    apiCall(bvhFiles[0], function(data){
 				      var asset_url = data.asset_url;
-				      bvhData = new BVHReader().load(asset_url, showBVH)
+				      fileHandler.loadDataTrack(asset_url,movan.callbackForData);
 				    })
 				  }
 
@@ -470,7 +470,7 @@
 		<script type="text/javascript">
 			d3.timer(anim.drawFigure, 15);
 			movan.loadFeatures();
-			movan.loadNew();
+			//movan.loadNew();
 		
 		</script>
 
