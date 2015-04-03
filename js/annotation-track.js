@@ -1,10 +1,36 @@
 AnnotationTrack = function(svg, scale, topleft){
 	var thiz = this;
 
+	thiz.selected = null;
+
 	this.svg = svg;
 	this.scale = scale;
 	this.segmentData = [];
 	this.topleft = topleft;
+
+	this.annotateSelected = function(annotation){
+		for(var i in thiz.segmentData){
+			if(thiz.segmentData[i].selected){
+				thiz.segmentData[i].annotation = annotation;
+			}
+		}
+	}
+
+	thiz.getAnnotationData = function(){
+		var annotations = [];
+		var startOffset = scale.range()[0];
+		for(var i in thiz.segmentData){
+			var d = thiz.segmentData[i];
+			var _t = {
+				"start"		: scale.invert(thiz.segmentData[i].x + startOffset),
+				"end"		: scale.invert(thiz.segmentData[i].x + thiz.segmentData[i].width + startOffset),
+				"annotation": thiz.segmentData[i].annotation
+			}
+
+			annotations.push(_t);
+		}
+		return annotations;
+	}
 
 	this.segments = function(){
 		//use the scale and segment data to create extents

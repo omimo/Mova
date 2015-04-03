@@ -268,3 +268,5 @@ font: 18px/30px sans-serif}
 .selectricItems li { padding: 5px; cursor: pointer; display: block; border-bottom: 1px solid #EEE; color: #666; border-top: 1px solid #FFF; }
 .selectricItems li.selected { background: #EFEFEF; color: #444; border-top-color: #E0E0E0; }
 .selectricItems li:hover { background: #F0F0F0; color: #444; }
+
+i { cursor: pointer
