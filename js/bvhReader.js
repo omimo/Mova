@@ -7,8 +7,9 @@ var BVHReader = function () {
             var jointStack = dataReturn[0];
             var jointMap = dataReturn[1];
             var jointArray = dataReturn[2];
+            var connectivityMatrix = dataReturn[3]
             if (callback)
-                callback(new BVHReader.BVH.Skeleton(jointStack[0], jointMap, jointArray, dataReturn[3], dataReturn[4], dataReturn[5]),'BVH');
+                callback(new BVHReader.BVH.Skeleton(jointStack[0], jointMap, jointArray, dataReturn[3], dataReturn[4], dataReturn[5], dataReturn[6]),'BVH');
         });
     };
     
@@ -17,11 +18,12 @@ var BVHReader = function () {
         var jointStack = [];
         var jointMap = {};
         var jointArray = [];
+        var connectivityMatrix = {};
         var frameCount, frameTime, frameArray = [];
         var i = 0;
         //parse structure
         for (i = 1; i < lines.length; i++) {
-            if (!parseLine(lines[i], jointStack, jointMap, jointArray)) {
+            if (!parseLine(lines[i], jointStack, jointMap, jointArray, connectivityMatrix)) {
                 break;
             }
         }
@@ -44,11 +46,11 @@ var BVHReader = function () {
         }
 
         //parse motion
-        return [jointStack, jointMap, jointArray, frameCount, frameTime, frameArray];
+        return [jointStack, jointMap, jointArray, connectivityMatrix, frameCount, frameTime, frameArray];
     }
 
     //parses individual line in the bvh file.
-    var parseLine = function (line, jointStack, jointMap, jointArray) {
+    var parseLine = function (line, jointStack, jointMap, jointArray, connectivityMatrix) {
         line = line.trim();
         if (line.indexOf("ROOT") > -1 || line.indexOf("JOINT") > -1 || line.indexOf("End") > -1) {
             var parts = line.split(" ");
@@ -83,6 +85,16 @@ var BVHReader = function () {
                 child = jointStack.pop();
                 jointStack[jointStack.length - 1].children.push(child);
                 child.parent = jointStack[jointStack.length - 1];
+
+                if(!connectivityMatrix[child.name]){
+                    connectivityMatrix[child.name] = {}
+                }
+                connectivityMatrix[child.name][child.parent.name] = 1;
+
+                if(!connectivityMatrix[child.parent.name]){
+                    connectivityMatrix[child.parent.name] = {}
+                }
+                connectivityMatrix[child.parent.name][child.name] = 1;
             }
         } else if (line.indexOf("MOTION") == 0) {
             return false;
@@ -133,11 +145,12 @@ BVHReader.BVH.Joint = function (name, index) {
     }
 };
 
-BVHReader.BVH.Skeleton = function (root, map, arr, frameCount, frameTime, frameArray) {
+BVHReader.BVH.Skeleton = function (root, map, arr, connectivityMatrix, frameCount, frameTime, frameArray) {
     thisSkeleton = this;
     this.root = root;
     this.jointMap = map;
     this.jointArray = arr;
+    this.connectivityMatrix = connectivityMatrix;
     this.frameCount = frameCount;
     this.frameTime = frameTime;
     this.frameArray = frameArray;
