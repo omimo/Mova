@@ -47,21 +47,24 @@ var BVHReader = function () {
         return [jointStack, jointMap, jointArray, frameCount, frameTime, frameArray];
     }
 
+    //parses individual line in the bvh file.
     var parseLine = function (line, jointStack, jointMap, jointArray) {
         line = line.trim();
         if (line.indexOf("ROOT") > -1 || line.indexOf("JOINT") > -1 || line.indexOf("End") > -1) {
             var parts = line.split(" ");
+            var title = parts[1]; //temporary variable to be used after creating the joint object
+            parts[1] = parts[1] + "-" + jointArray.length;
             var joint = new BVHReader.BVH.Joint(parts[1]);
+            joint.title = title;
             jointStack.push(joint);
-            if (line.indexOf("End") < 0) {
-                joint.jointIndex = Object.keys(jointMap).length;
-                jointMap[parts[1]] = joint;
-                jointArray.push(joint);
-                if (jointArray.length == 1) {
-                    joint.channelOffset = 0;
-                } else {
-                    joint.channelOffset = jointArray[jointArray.length - 2].channelOffset + jointArray[jointArray.length - 2].channelLength;
-                }
+
+            joint.jointIndex = Object.keys(jointMap).length;
+            jointMap[parts[1]] = joint;
+            jointArray.push(joint);
+            if (jointArray.length == 1) {
+                joint.channelOffset = 0;
+            } else {
+                joint.channelOffset = jointArray[jointArray.length - 2].channelOffset + jointArray[jointArray.length - 2].channelLength;
             }
         } else if (line.indexOf("{") === 0) {
 
@@ -91,7 +94,8 @@ var BVHReader = function () {
 
 BVHReader.BVH = BVHReader.BVH || {};
 
-BVHReader.BVH.Joint = function (name) {
+BVHReader.BVH.Joint = function (name, index) {
+
     this.name = name;
     this.children = [];
     this.isEndSite = function () {
