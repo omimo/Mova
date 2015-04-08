@@ -182,36 +182,9 @@ var movan = {
 			
 			loadNew: function () {
 							
-
 				var trackURL = document.getElementById("fileSelect").value;
-				
-			
+				fileHandler.loadDataTrack(trackURL,movan.callbackForData);				
 
-				
-				fileHandler.loadDataTrack(trackURL,movan.callbackForData);
-				
-				/*
-				var moveFile = "movs/"+document.getElementById("fileSelect").value;
-				var skelFile = "movs/ecuad1.skel2";
-				
-				//FIXME: This is just a dummy way to do it!
-				//TODO: Put the skel data in the mocap csv file
-				
-				
-				if (moveFile.search("KAREN") != -1) {
-					movan.figureScale = 2;
-					movan.skelHeadJoint = 7;
-					skelFile = "movs/MSDec9.skel";
-				}
-				else 
-				{
-					movan.figureScale = 0.5;
-					movan.skelHeadJoint = 23;
-				}
-					
-				
-				loadData(moveFile, skelFile, movan.callbackForData);
-				*/
 			},
 			
 			callbackForData: function(dataTrack, t) {
@@ -242,10 +215,8 @@ var movan = {
 					};
 				});
 				
-				console.log(firstFrame);
-				
 				track = movan.dataTracks[movan.dataTracks.length - 1].content;
-				d3.select("#jointLabel").text(track.jointArray[d3.select("#jointDropdown").attr("selectedJoint")]);
+				d3.select("#jointLabel").text(track.jointArray[d3.select("#jointDropdown").attr("selectedJoint")].title);
 				
 					
 				//Create SVG element
@@ -293,9 +264,11 @@ var movan = {
 				d3.select("#anim").selectAll("svg").remove();
 				d3.select("#trajec").selectAll("svg").remove();
 				
+				track = movan.dataTracks[movan.dataTracks.length - 1].content;
+
 				// Draw the figure sketch
 				movan.rootOffset = figureSketch.drawFiguresCanvas(d3.select("body").select("#figure"), 
-									movan.gframes, movan.gskel, -1, movan.frameSkip, movan.padding);
+									track, -1, movan.frameSkip, movan.padding);
 				
 				// Prep the animation
 				anim.animSVG = anim.makeAnim(d3.select("body").select("#anim"), 

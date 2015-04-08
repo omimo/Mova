@@ -118,7 +118,7 @@
 						$("#jointChooser").css("display", "none");
 
 					var t = $("#jointDropdown").position().top + $("#jointDropdown").height() + 6;
-					console.log(t);
+					
 					$("#jointChooser").css("top", t);
 				});
 

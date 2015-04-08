@@ -1,16 +1,15 @@
 var figureSketch = {
 	
-drawFiguresCanvas: function (parent,frames, skel, highlightJ, frameSkip, pad) {
+drawFiguresCanvas: function (parent,track, highlightJ, frameSkip, pad) {
 	
 				var rootOffset = [];
 
 				padding = pad;
 				skips = frameSkip;
-				
-				w = (padding)*frames.length/skips+300;
+							
+				w = (padding)*track.frameCount/skips+300;
 				h = 200;
 				
-
 
 				var svg = parent.append("svg")
 					.attr("width", w)
@@ -29,75 +28,36 @@ drawFiguresCanvas: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 				.style("fill", "none")
 				.style("stroke-width", 0);
 
-				
-				
+	
 				/////////////////////
 				
-				var index = 0;
-				var eye = {
-						x : w / 2 - 900 + index * 15,
-						y : h / 2,
-						z : 800
-					};
+				for ( index = 0; index < track.frameCount; index += skips) {
+					currentFrame = track.getPositionsAt(index).map(function(d,i) {
+						var xx;
+						if (i==0) 
+							 xx =  100  + index/skips * padding;
+						else 
+							xx = d.x * movan.figureScale + 100  + index/skips * padding;
 
-					/*
-					 currentFrame = frames[index].map(function(d) {
-					 return {x:(eye.z * (d.x-eye.x)) / (eye.z + d.z) + eye.x,
-					 y: (eye.z * (d.y-eye.y)) / (eye.z + d.z) + eye.y,
-					 z:d.z/2
-					 };
-					 });*/
-
-				
-					
-					////////////
-				
-				
-				for ( index = 0; index < frames.length; index += skips) {
-					
-
-					var eye = {
-						x : w / 2 +100 + index/skips * padding,
-						y : h/2,
-						z : 800
-					};
-
-					
-//					 currentFrame = frames[index].map(function(d) {
-//					 return {x:(eye.z * (d.x-eye.x)) / (eye.z + d.z) + eye.x,
-//					 y: (eye.z * (d.y-eye.y)) / (eye.z + d.z) + eye.y,
-//					 z:d.z/2
-//					 };
-//					 });
-					 
-		
-					currentFrame = frames[index].map(function(d) {
 						return {
-							x : d.x * movan.figureScale + 200  + index/skips * padding,
-							y : -1 * d.y * movan.figureScale+ 90 + h / 2,
-							z : d.z * movan.figureScale +200
+							x : xx,
+							y : -1 * d.y * movan.figureScale + 220,
+							z : d.z * movan.figureScale
 						};
 					});
 					
 					rootOffset[index/skips] = currentFrame[0].x;
 					//Create SVG element
-					figureSketch.drawSkel(svg,currentFrame,index, highlightJ,skel);
-			
-					
-
+					figureSketch.drawSkel(svg,currentFrame,index, highlightJ,track);
 				}
-
-
-
-				return rootOffset;
-
+				return rootOffset; //we need this to align the figures with features
 	},
 
 
-drawSkel: function (svg, currentFrame, index, highlightJ,skel) {
+drawSkel: function (svg, currentFrame, index, highlightJ,mocap) {
 	//bones
 	svg.selectAll("line.f" + index)
-	.data(skel.connections)
+	.data(mocap.connectivityMatrix)
 	.enter()
 	.append("line")
 	.attr("stroke", "grey")
@@ -236,7 +196,7 @@ drawJointChooserCSV: function (svg, currentFrame, index, highlightJ,skel,clickCa
 
 drawJointChooser: function (svg, currentFrame, mocap, highlightJ, clickCallBack) {
 	index = 0;
-	console.log(mocap.connectivityMatrix);
+	
 	//bones
 	svg.selectAll("line.f" + index)
 	.data(mocap.connectivityMatrix)
@@ -288,10 +248,10 @@ drawJointChooser: function (svg, currentFrame, mocap, highlightJ, clickCallBack)
 	.on("mouseover", function (d) {
 		d3.select(this).attr("r",6).attr("fill", "orange");
 		
-		d3.select("#jointLabel").text(skel.jointNames[d3.select(this).attr("jointID")]);
+		d3.select("#jointLabel").text(track.jointArray[d3.select(this).attr("jointID")].title);
 	})
 	.on("mouseout", function (d) {
-		d3.select("#jointLabel").text(skel.jointNames[highlightJ]);
+		d3.select("#jointLabel").text(track.jointArray[highlightJ].title);
 		r = 2;
 		if (i == highlightJ)
 			r= 6;
@@ -314,7 +274,7 @@ drawJointChooser: function (svg, currentFrame, mocap, highlightJ, clickCallBack)
 		//d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select(this).attr("jointID")]);
 
 		
-		clickCallBack();
+		clickCallBack(mocap);
 	})
 	;
 
