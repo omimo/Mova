@@ -344,14 +344,9 @@
 				<div id="figure">
 
 				</div>
-			
-
-				<div id="featureList">
-
-				</div>
 
 				<div id="mp4">
-					<video id="mp4-video" controls width="640">
+					<video id="mp4-video" controls width="95%">
 					    <source type="video/mp4" src="sample_mpeg4.mp4">
 				    </video>	
 				</div>
@@ -361,6 +356,12 @@
 					    
 				    </video>	
 				</div>
+
+				<div id="featureList">
+
+				</div>
+
+				
 			</div>
 			<div id="legends">
 				<div style="font-family: Verdana, Arial, sans-serif;font-weight: bold;font-size: 11.5pt;padding-bottom: 5px;">

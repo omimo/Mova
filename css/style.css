@@ -127,6 +127,9 @@ div.over2 {
 	padding-bottom:0.5em;
 }
 
+#mp4 {
+	float: left;
+}
 
 .ui-accordion .ui-accordion-content {
 	padding: 1em 0.5em;
