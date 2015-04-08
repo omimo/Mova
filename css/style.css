@@ -110,8 +110,15 @@ div.over2 {
 	overflow-y: auto;
 	padding-bottom: 20px;
 }
+
 #maintabs {
 	padding-bottom: 10px;
+	float: left;
+}
+
+#annotation-area {
+	padding-bottom: 10px;
+	padding-top: 10px;
 	float: left;
 }
 

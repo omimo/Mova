@@ -318,9 +318,9 @@
 		<div id="canCont">
 			<div id="maintabs">
 				<ul>
-					<li>
+<!-- 					<li>
 						<a href="#annotation-area">annotation</a>
-					</li>
+					</li> -->
 					<li>
 						<a href="#figure">Figure Sketch</a>
 					</li>
@@ -334,19 +334,7 @@
 						<a href="#mov">MOV</a>
 					</li>
 				</ul>
-				<div id="annotation-area">
-					<div id="controls-wrapper">
-						<span id="play-btn"><i class="fa fa-play fa-sm"></i></span> &nbsp;&nbsp;&nbsp;
-						<span id="pause-btn"><i class="fa fa-pause fa-sm"></i></span> &nbsp;&nbsp;&nbsp;
-						<span id="download-btn"><i class="fa fa-save fa-sm"></i></span> &nbsp;&nbsp;&nbsp;
-						<span id="link"></span>
-					</div>
-				    <svg id="svg-container" width="500" height="300"></svg>
-				    <div id="annotation-graph-dialog">
-				        <div id='jqxTree'>
-				        </div>
-				    </div>
-				</div>
+
 
 				<div id="anim">
 					<button id="btnPlay">
@@ -357,6 +345,7 @@
 
 				</div>
 			
+
 				<div id="featureList">
 
 				</div>
@@ -378,6 +367,19 @@
 					Legends:
 				</div>
 			</div>
+				<div id="annotation-area">
+					<div id="controls-wrapper">
+						<span id="play-btn"><i class="fa fa-play fa-sm"></i></span> &nbsp;&nbsp;&nbsp;
+						<span id="pause-btn"><i class="fa fa-pause fa-sm"></i></span> &nbsp;&nbsp;&nbsp;
+						<span id="download-btn"><i class="fa fa-save fa-sm"></i></span> &nbsp;&nbsp;&nbsp;
+						<span id="link"></span>
+					</div>
+				    <svg id="svg-container" width="500" height="300"></svg>
+				    <div id="annotation-graph-dialog">
+				        <div id='jqxTree'>
+				        </div>
+				    </div>
+				</div>
 		</div>
 
 		<div id="sidebar">
