@@ -59,6 +59,11 @@
 
 		</script>
 		<script>
+			//this is an array of the controllers for tabs; one controller per tab
+			tabControllers = [];
+
+			//this is an array of all the resources
+			remoteResourceMapByType = {};
 			$(document).ready(function() {
 
 				$("#maintabs").tabs().click(function(event, ui) {
@@ -219,52 +224,110 @@
 				
 				apiCall(url, function(data){
 				  var data_tracks = data.data_tracks;
+
 				  var bvhFiles = [];
 				  var c3dFiles = [];
 				  var movFiles = [];
 				  var mp4Files = [];
 				  data_tracks.forEach(function(d){
-				  	console.log(d)
-				    if(d.data_track_url.indexOf("bvh.json") > -1){
-				      bvhFiles.push(d.data_track_url);
-				    }else if(d.data_track_url.indexOf("c3d.json") > -1){
-				    	c3dFiles.push(d.data_track_url);
-				    }else if(d.data_track_url.indexOf("mp4.json") > -1){
-				    	mp4Files.push(d.data_track_url)
-				    }else if(d.data_track_url.indexOf("mov.json") > -1){
-				    	movFiles.push(d.data_track_url)
-				    }
 
+				  	var resourceURL = d.data_track_url;
+				  	var lastIndexOfHyphen = resourceURL.lastIndexOf("-");
+				  	var resourceType = resourceURL.substring(lastIndexOfHyphen + 1, resourceURL.lastIndexOf("."));
+
+				  	if(!remoteResourceMapByType[resourceType]){
+				  		remoteResourceMapByType[resourceType] = [];
+				  	}
+		  			remoteResourceMapByType[resourceType].push(resourceURL);
 				  })
 				  
-				  if(bvhFiles.length > 0){
-				    //for now do it just for the first one
-				    apiCall(bvhFiles[0], function(data){
-				      var asset_url = data.asset_url;
-				      fileHandler.loadDataTrack(asset_url,movan.callbackForData);
-				    })
-				  }
-
-				  if(movFiles.length > 0){
-				    //for now do it just for the first one
-				    apiCall(movFiles[0], function(data){
-				      var asset_url = data.asset_url;
-				      console.log("Setting mov video: " + asset_url)
-				      video = $("#mov-video")[0];
-				      video.innerHTML = '<source type="video/mov" src="'+asset_url+'">';
-				    })
+				  //add a bvh tab for each
+				  for(var type in remoteResourceMapByType){
+				  	var resources = remoteResourceMapByType[type];
+				  	for(var i in resources){
+				  		var resource = resources[i];
+				  		showResource(type, resource);
+				  	}
 				  }
 
 
-				  if(mp4Files.length > 0){
-				    //for now do it just for the first one
-				    apiCall(mp4Files[0], function(data){
-				      var asset_url = data.asset_url;
-				      console.log("Setting mp4 video: " + asset_url)
-				      video = $("#mp4-video")[0];
-				      video.innerHTML = '<source type="video/mp4" src="'+asset_url+'">';
-				    })
+				  function showResource(type, resource){
+				  	console.log("#showResource " + type + " " + resource)
+				  	switch(type){
+				  		case "bvh":
+				  		apiCall(resource, function(data){
+				  			var asset_url = data.asset_url;
+				  			console.log("asset " + asset_url)
+				  			var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
+				  			//add the nav pill for tab
+				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
+				  			//add the tab
+				  			$("<div id='"+tabId+"'></div>").appendTo("#tabs-container");
+				  			$("#maintabs").tabs("refresh");
+				  		})
+				  		break;
+
+				  		case "mp4":
+				  		//TODO create new tab and load the video
+		  				apiCall(resource, function(data){
+				  			var asset_url = data.asset_url;
+
+				  			var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
+				  			//add the nav pill for tab
+				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
+				  			//add the tab
+				  			$("<div id='"+tabId+"'><video id='mp4-video-'"+tabId+" controls width='640px'> \
+				  				<source type='video/mp4' src='"+asset_url+"'></video></div>").appendTo("#tabs-container");
+				  			$("#maintabs").tabs("refresh");
+				  		});
+				  		break;
+
+				  		case "mov":
+				  		//TODO create new tab and load the video
+				  		apiCall(resource, function(data){
+				  			var asset_url = data.asset_url;
+
+				  			var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
+				  			//add the nav pill for tab
+				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
+				  			//add the tab
+				  			$("<div id='"+tabId+"'><video id='mov-video-'"+tabId+" controls width='640px'> \
+				  				<source type='video/mov' src='"+asset_url+"'></video></div>").appendTo("#tabs-container");
+				  			$("#maintabs").tabs("refresh");
+				  		});
+				  		break;
+
+				  	}
 				  }
+
+				  // if(bvhFiles.length > 0){
+				  //   //for now do it just for the first one
+				  //   apiCall(bvhFiles[0], function(data){
+				  //     var asset_url = data.asset_url;
+				  //     fileHandler.loadDataTrack(asset_url,movan.callbackForData);
+				  //   })
+				  // }
+
+				  // if(movFiles.length > 0){
+				  //   //for now do it just for the first one
+				  //   apiCall(movFiles[0], function(data){
+				  //     var asset_url = data.asset_url;
+				  //     console.log("Setting mov video: " + asset_url)
+				  //     video = $("#mov-video")[0];
+				  //     video.innerHTML = '<source type="video/mov" src="'+asset_url+'">';
+				  //   })
+				  // }
+
+
+				  // if(mp4Files.length > 0){
+				  //   //for now do it just for the first one
+				  //   apiCall(mp4Files[0], function(data){
+				  //     var asset_url = data.asset_url;
+				  //     console.log("Setting mp4 video: " + asset_url)
+				  //     video = $("#mp4-video")[0];
+				  //     video.innerHTML = '<source type="video/mp4" src="'+asset_url+'">';
+				  //   })
+				  // }
 				});
 
 				// TODO need to move this function call to inside the apiCall callback
@@ -334,28 +397,30 @@
 						<a href="#mov">MOV</a>
 					</li>
 				</ul>
+	
+				<!-- tabs-container is used here to ensure that #featureList does not appear
+					before the content of dynamically added tabs -->
+				<div id="tabs-container">
+					<div id="anim">
+						<button id="btnPlay">
+							&nbsp;Play&nbsp;&nbsp;
+						</button>
+					</div>
+					<div id="figure">
 
+					</div>
 
-				<div id="anim">
-					<button id="btnPlay">
-						&nbsp;Play&nbsp;&nbsp;
-					</button>
+					<div id="mp4">
+						<video id="mp4-video" controls width="95%">
+					    </video>	
+					</div>
+
+					<div id="mov">
+						<video id="mov-video" controls>						    
+					    </video>	
+					</div>				
 				</div>
-				<div id="figure">
-
-				</div>
-
-				<div id="mp4">
-					<video id="mp4-video" controls width="95%">
-					    <source type="video/mp4" src="sample_mpeg4.mp4">
-				    </video>	
-				</div>
-
-				<div id="mov">
-					<video id="mov-video" controls>
-					    
-				    </video>	
-				</div>
+				
 
 				<div id="featureList">
 
@@ -375,7 +440,7 @@
 						<span id="download-btn"><i class="fa fa-save fa-sm"></i></span> &nbsp;&nbsp;&nbsp;
 						<span id="link"></span>
 					</div>
-				    <svg id="svg-container" width="500" height="300"></svg>
+				    <svg id="svg-container" width="900" height="300"></svg>
 				    <div id="annotation-graph-dialog">
 				        <div id='jqxTree'>
 				        </div>
