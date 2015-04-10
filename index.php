@@ -258,12 +258,17 @@
 				  		apiCall(resource, function(data){
 				  			var asset_url = data.asset_url;
 				  			console.log("asset " + asset_url)
-				  			var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
-				  			//add the nav pill for tab
-				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
-				  			//add the tab
-				  			$("<div id='"+tabId+"'></div>").appendTo("#tabs-container");
-				  			$("#maintabs").tabs("refresh");
+
+				  			// TODO uncomment following lines for creating new tab for bvh after fixing in Omid's code
+				  			// for now assume that there just a single bvh that gets loaded in the default bvh tab
+				  			fileHandler.loadDataTrack(asset_url,movan.callbackForData);
+
+				  			// var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
+				  			// //add the nav pill for tab
+				  			// $("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
+				  			// //add the tab
+				  			// $("<div id='"+tabId+"'></div>").appendTo("#tabs-container");
+				  			// $("#maintabs").tabs("refresh");
 				  		})
 				  		break;
 
