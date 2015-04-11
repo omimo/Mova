@@ -262,7 +262,8 @@ BVHReader.BVH.Skeleton = function (root, map, arr, connectivityMatrix, frameCoun
             }else{
                 //its the root
                 joint.rotations[i] = rotMatrix;
-                joint.positions[i] = vectorAdd(joint.offset , posMatrix);
+                joint.positions[i] = posMatrix;//vectorAdd(joint.offset , posMatrix); 
+                // ^ we can safely ignore the root's offset
             }
         }
     }

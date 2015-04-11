@@ -35,13 +35,13 @@ drawFiguresCanvas: function (parent,track, highlightJ, frameSkip, pad) {
 					currentFrame = track.getPositionsAt(index).map(function(d,i) {
 						var xx;
 						if (i==0) 
-							 xx =  100  + index/skips * padding;
+							 xx = d.x * movan.figureScale + 150  + index/skips * padding;
 						else 
-							xx = d.x * movan.figureScale + 100  + index/skips * padding;
+							xx = d.x * movan.figureScale + 150  + index/skips * padding;
 
 						return {
 							x : xx,
-							y : -1 * d.y * movan.figureScale + 220,
+							y : -1 * d.y * movan.figureScale + 160,
 							z : d.z * movan.figureScale
 						};
 					});
@@ -65,17 +65,18 @@ drawSkel: function (svg, currentFrame, index, highlightJ,mocap) {
 	.attr("x1",0).attr("x2",0)
 	//.transition().duration(1000).ease("elastic")
 	.attr("x1", function(d, j) {
-		return currentFrame[d.a].x;
+		return currentFrame[d[0].jointIndex].x;
 	})
 	.attr("x2", function(d, j) {
-		return currentFrame[d.b].x;
+		return currentFrame[d[1].jointIndex].x;
 	})
 	.attr("y1", function(d, j) {
-		return currentFrame[d.a].y;
+		return currentFrame[d[0].jointIndex].y;
 	})
 	.attr("y2", function(d, j) {
-		return currentFrame[d.b].y;
+		return currentFrame[d[1].jointIndex].y;
 	});
+
 	
 	
 	//draw joints
@@ -206,17 +207,16 @@ drawJointChooser: function (svg, currentFrame, mocap, highlightJ, clickCallBack)
 	.attr("x1",0).attr("x2",0)
 	//.transition().duration(1000).ease("elastic")
 	.attr("x1", function(d, j) {
-		console.log(d);
-		return currentFrame[d.a].x;
+		return currentFrame[d[0].jointIndex].x;
 	})
 	.attr("x2", function(d, j) {
-		return currentFrame[d.b].x;
+		return currentFrame[d[1].jointIndex].x;
 	})
 	.attr("y1", function(d, j) {
-		return currentFrame[d.a].y;
+		return currentFrame[d[0].jointIndex].y;
 	})
 	.attr("y2", function(d, j) {
-		return currentFrame[d.b].y;
+		return currentFrame[d[1].jointIndex].y;
 	});
 	
 	

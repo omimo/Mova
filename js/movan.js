@@ -209,8 +209,8 @@ var movan = {
 							
 				firstFrame = frame.map(function(d) {					
 					return {
-						x : d.x * movan.figureScale + 100,
-						y : -1 * d.y * movan.figureScale + 220,
+						x : d.x * movan.figureScale + 110,
+						y : -1 * d.y * movan.figureScale + 160,
 						z : d.z * movan.figureScale
 					};
 				});
