@@ -101,7 +101,7 @@ div.over2 {
 }
 
 #figure {
-	overflow-x: hidden;
+	overflow-x: scroll;
 	padding-left: 0px;
 }
 
