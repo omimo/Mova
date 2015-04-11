@@ -63,11 +63,19 @@ var BVHReader = function () {
             joint.jointIndex = Object.keys(jointMap).length;
             jointMap[parts[1]] = joint;
             jointArray.push(joint);
-            if (jointArray.length == 1) {
-                joint.channelOffset = 0;
-            } else {
+            //if the joint is not an end site
+            if( line.indexOf("End") != 0 ){
+                if (jointArray.length == 1) {
+                    joint.channelOffset = 0;
+                } else {
+                    joint.channelOffset = jointArray[jointArray.length - 2].channelOffset + jointArray[jointArray.length - 2].channelLength;
+                }                
+            }else{
+                //channelLength is 0 for end joints
+                joint.channelLength = 0;
                 joint.channelOffset = jointArray[jointArray.length - 2].channelOffset + jointArray[jointArray.length - 2].channelLength;
             }
+
         } else if (line.indexOf("{") === 0) {
 
         } else if (line.indexOf("OFFSET") === 0) {
@@ -113,7 +121,7 @@ BVHReader.BVH.Joint = function (name, index) {
     this.name = name;
     this.children = [];
     this.isEndSite = function () {
-        return name === "Site";
+        return this.children.length == 0;
     };
     this.rotationIndex = {};
     this.positionIndex = {};
