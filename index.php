@@ -97,7 +97,7 @@
 				var setSizes = function() {
 
 					$("#canCont").height($(document).height() - 150 - $("#footer").height());
-					$("#featureList").height($("#canCont").height() - 290);
+					$("#featureList").height($("#canCont").height() - 490);
 
 					$("#maintabs").width($(document).width() - $("#legends").width() - 60);
 					$("#legends").height($("#canCont").height());
