@@ -276,6 +276,8 @@ function calcVelocities(frames, skips, joint) {
 	var min = 100000;
 	var max = -1;
 
+	var fps = movan.dataTracks[movan.dataTracks.length - 1].content.frameTime;
+
 	for ( index = skips; index < frames.length; index += skips) {
 		ind2 = index/skips;
 		
@@ -283,11 +285,12 @@ function calcVelocities(frames, skips, joint) {
 //	    a = a + Math.pow((frames[index][joint].y-frames[index-skips][joint].y),2);
 //	    a = a + Math.pow((frames[index][joint].z-frames[index-skips][joint].z),2);
 //	    v = Math.sqrt(a)/(skips*inputFPS);
+	
 		
-		
-		
-		v = eculDist(frames[index][joint],frames[index-skips][joint])/(skips*movan.inputFPS);
-		
+		//v = eculDist(joint.positions[index],joint.positions[index-skips])/(skips*fps);
+
+		v = eculDist(frames[index][joint],frames[index-skips][joint])/(skips*fps);
+
 	    start = Math.floor(index/skips) -1;
 	    end = index/skips;
 		data[dCount++] = [start,end,v];
@@ -300,12 +303,9 @@ function calcVelocities(frames, skips, joint) {
 	}
 	
 
-	
 	d = max-min;
 //	for (i=0;i<data.length;i++)
 //		data[i][2]=data[i][2];
-	
-
 	
 	return data;
 }
@@ -356,7 +356,7 @@ function calcAveVelocities(frames, skips, joint) {
 }
 
 function calcAccel(frames, skips, joint) {
-console.log("dsdsdsds");
+
 	var data = [];
 	var dCount = 0;
 	var start = 1;
@@ -365,7 +365,8 @@ console.log("dsdsdsds");
 	var min = 100000;
 	var max = -1;
 	var vel = [];
-	
+	var fps = movan.dataTracks[movan.dataTracks.length - 1].content.frameTime;
+
 	veldata = calcVelocities(frames, skips, joint);
 	
 	for (i=0;i<veldata.length;i++)
@@ -381,7 +382,7 @@ console.log("dsdsdsds");
 	for (i=1;i<vel.length;i++) {
 		dv = Math.pow((vel[i]-vel[i-1]),2);
 		dv = (vel[i]-vel[i-1]);
-	    dt = (skips*movan.inputFPS);
+	    dt = (skips*fps);
 		a = dv/dt;
 		
 	    start = i -1;
@@ -413,7 +414,8 @@ function calcJerk(frames, skips, joint) {
 	var min = 100000;
 	var max = -1;
 	var ac = [];
-	
+	var fps = movan.dataTracks[movan.dataTracks.length - 1].content.frameTime;
+
 	acdata = calcAccel(frames, skips, joint);
 	
 	
@@ -425,7 +427,7 @@ function calcJerk(frames, skips, joint) {
 	for (i=1;i<ac.length;i++) {
 		
 		da = (ac[i]-ac[i-1]);
-	    dt = (skips*movan.inputFPS);
+	    dt = (skips*fps);
 	    jr = da/dt;
 		
 	    start = i -1;

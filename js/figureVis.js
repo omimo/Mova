@@ -29,9 +29,9 @@ drawFiguresCanvas: function (parent,track, highlightJ, frameSkip, pad) {
 				.style("stroke-width", 0);
 
 	
-				/////////////////////
-				
-				for ( index = 0; index < track.frameCount; index += skips) {
+				/////////////////////			
+				//var firstRootX = track.getPositionsAt(0)[0].x;
+				for ( index = 0; index < track.frameCount; index += skips) {					
 					currentFrame = track.getPositionsAt(index).map(function(d,i) {
 						var xx;
 						if (i==0) 

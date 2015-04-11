@@ -58,7 +58,7 @@ var movan = {
 				movan.selectedFeats = [];
 				var len = movan.selectedFeats.length; 
 				
-				
+				/*
 				var sel =9;
 				var joint = 11; 
 			    movan.selectedFeats[len] =[];
@@ -70,7 +70,7 @@ var movan = {
 				
 				len++;
 				
-				/*
+				
 				var joint = 18; 
 			    movan.selectedFeats[len] =[];
 			    movan.selectedFeats[len].id = len;
@@ -228,8 +228,6 @@ var movan = {
 				
 				figureSketch.drawJointChooser(jointChooser, firstFrame, mocap, d3.select("#jointDropdown").attr("selectedJoint")						
 					,movan.drawJointChooser);
-
-				//figureSketch.drawJointChooserbvh (jointChooser,firstFrame,mocap,movan.drawJointChooser);
 				
 				//d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select("#jointDropdown").attr("selectedJoint")]);
 				
@@ -267,12 +265,12 @@ var movan = {
 				track = movan.dataTracks[movan.dataTracks.length - 1].content;
 
 				// Draw the figure sketch
-				movan.rootOffset = figureSketch.drawFiguresCanvas(d3.select("body").select("#figure"), 
+				movan.dataTracks[movan.dataTracks.length - 1].rootOffset = figureSketch.drawFiguresCanvas(d3.select("body").select("#figure"), 
 									track, -1, movan.frameSkip, movan.padding);
 				
 				// Prep the animation
 				anim.animSVG = anim.makeAnim(d3.select("body").select("#anim"), 
-									movan.gframes, movan.gskel, -1, movan.frameSkip, movan.padding);
+									track, -1, movan.frameSkip, movan.padding);
 				
 				//playAnim = true;
 				
@@ -293,10 +291,18 @@ var movan = {
 			},
 			
 			calcFeats: function () {
-			 for (ii=0;ii<movan.selectedFeats.length;ii++) {
-				 console.log(ii);
-				movan.selectedFeats[ii].data = movan.availableFeatures[movan.selectedFeats[ii].featID][1](movan.gframes, movan.frameSkip,movan.selectedFeats[ii].joint,'');
 				
+				track = movan.dataTracks[movan.dataTracks.length - 1].content;
+
+				posFrameArray = [];
+				for (f=0;f<track.frameCount;f++) {
+					posFrameArray[f] = track.getPositionsAt(f);
+				}
+			
+
+			 	for (ii=0;ii<movan.selectedFeats.length;ii++) {
+					movan.selectedFeats[ii].data = 
+						movan.availableFeatures[movan.selectedFeats[ii].featID][1](posFrameArray, movan.frameSkip,movan.selectedFeats[ii].joint,'');
 				}
 			},
 			
@@ -304,7 +310,7 @@ var movan = {
 				drawnLegends = [];
 				d3.select("#featureList").selectAll("svg").remove();
 				d3.select("#featureList").selectAll("span").remove();
-				drawFeatureList(d3.select("#featureList"), movan.rootOffset, movan.selectedFeats, movan.padding);
+				drawFeatureList(d3.select("#featureList"), movan.dataTracks[movan.dataTracks.length - 1].content, movan.dataTracks[movan.dataTracks.length - 1].rootOffset, movan.selectedFeats, movan.padding);
 			}
 			
 };

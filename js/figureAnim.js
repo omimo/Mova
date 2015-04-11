@@ -8,17 +8,7 @@ ds : 4,  // Down-sampling rate
 trajJointIndex: 19,
 trajFeatIndex: 0,
 
-makeAnim: function (parent,frames, skel, highlightJ, frameSkip, pad) {
-	
-				//var rootOffset = [];
-
-				padding = pad;
-				skips = frameSkip;
-				
-				w = (padding)*4+500;
-				h = 200;
-				
-
+makeAnim: function (parent,mocap, highlightJ, frameSkip, pad) {
 
 				var svg = parent.append("svg")
 					.attr("width", w)
@@ -29,37 +19,33 @@ makeAnim: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 				
 				anim.animIndex = 0;
 				
-
-				currentFrame = frames[anim.animIndex].map(function(d) {
+				currentFrame = mocap.getPositionsAt(anim.animIndex).map(function(d) {
 					return {
-						x : d.x * movan.figureScale + 400 ,
-						y : -1 * d.y * movan.figureScale + 90 + h / 2,
+						x : d.x * movan.figureScale + 160,
+						y : -1 * d.y * movan.figureScale + 160,
 						z : d.z * movan.figureScale
 					};
 				});
 				
-				//rootOffset[animIndex/skips] = currentFrame[0].x;
-				
 				//bones
 				svg.selectAll("line")
-				.data(skel.connections)
+				.data(mocap.connectivityMatrix)
 				.enter()
 				.append("line")
+				.attr("stroke", "grey")
+				.attr("stroke-width",5)			
 				.attr("stroke", "black")
-				.attr("stroke-width",6)
-				//.attr("x1",0).attr("x2",0)
-				//.transition().duration(1000).ease("elastic")
 				.attr("x1", function(d, j) {
-					return currentFrame[d.a].x;
+					return currentFrame[d[0].jointIndex].x;
 				})
 				.attr("x2", function(d, j) {
-					return currentFrame[d.b].x;
+					return currentFrame[d[1].jointIndex].x;
 				})
 				.attr("y1", function(d, j) {
-					return currentFrame[d.a].y;
+					return currentFrame[d[0].jointIndex].y;
 				})
 				.attr("y2", function(d, j) {
-					return currentFrame[d.b].y;
+					return currentFrame[d[1].jointIndex].y;
 				});
 				
 				
@@ -86,35 +72,31 @@ makeAnim: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 				});
 
 			
-				if (movan.selectedFeats.length > 0 ) {
-					//The line SVG Path we draw
-					svg.append("circle")
-					.attr("class","traj")
-		            .attr("cx", function(d) { 
-						return currentFrame[anim.trajJointIndex].x;
-					}).attr("cy", function(d) {
-						return currentFrame[anim.trajJointIndex].y;
-					}).attr("r", 5)
-					.attr("fill", function(d) {
-			var i = Math.floor(anim.animIndex/movan.frameSkip);
-			if (i>=movan.selectedFeats[anim.trajFeatIndex].data.length)
-				value = movan.selectedFeats[anim.trajFeatIndex].data[i-movan.frameSkip][2];
-			else
-				value = movan.selectedFeats[anim.trajFeatIndex].data[i][2];
-			return movan.selectedFeats[anim.trajFeatIndex].f.colormap(value);
-		});
-				}
-				
-				
-				
+		// 		if (movan.selectedFeats.length > 0 ) {
+		// 			//The line SVG Path we draw
+		// 			svg.append("circle")
+		// 			.attr("class","traj")
+		//             .attr("cx", function(d) { 
+		// 				return currentFrame[anim.trajJointIndex].x;
+		// 			}).attr("cy", function(d) {
+		// 				return currentFrame[anim.trajJointIndex].y;
+		// 			}).attr("r", 5)
+		// 			.attr("fill", function(d) {
+		// 	var i = Math.floor(anim.animIndex/movan.frameSkip);
+		// 	if (i>=movan.selectedFeats[anim.trajFeatIndex].data.length)
+		// 		value = movan.selectedFeats[anim.trajFeatIndex].data[i-movan.frameSkip][2];
+		// 	else
+		// 		value = movan.selectedFeats[anim.trajFeatIndex].data[i][2];
+		// 	return movan.selectedFeats[anim.trajFeatIndex].f.colormap(value);
+		// });
+		// 		}
 				
 				$("#featureList").scrollLeft(0);
 				
 				anim.animIndex++;
 				if (anim.animIndex >=frames.length)
 					anim.animIndex = 0;
-				
-				
+							
 				//playAnim=true;
 				return svg;
 				
@@ -122,34 +104,36 @@ makeAnim: function (parent,frames, skel, highlightJ, frameSkip, pad) {
 
 
 drawFigure: function() {
-	if (anim.playAnim==false) return false;
+	if (anim.playAnim==false || movan.dataTracks.length < 1) return false;
+
 	else {
 	svg = anim.animSVG;
 	//console.log(playAnim);
-	currentFrame = movan.gframes[anim.animIndex].map(function(d) {
+	mocap = movan.dataTracks[movan.dataTracks.length - 1].content;
+	currentFrame = mocap.getPositionsAt(anim.animIndex).map(function(d) {
 		return {
-			x : d.x * movan.figureScale + 400 ,
-			y : -1 * d.y * movan.figureScale + 90 + h / 2,
+			x : d.x * movan.figureScale + 160 ,
+			y : -1 * d.y * movan.figureScale + 160,
 			z : d.z * movan.figureScale
 		};
 	});
 	
 	
-	svg.append("circle")
-	.attr("class","traj")
-    .attr("cx", function(d) { 
-		return currentFrame[anim.trajJointIndex].x;
-	}).attr("cy", function(d) {
-		return currentFrame[anim.trajJointIndex].y;
-	}).attr("r", 5)
-	.attr("fill", function(d) {
-		var i = Math.floor(anim.animIndex/movan.frameSkip);
-		if (i>=movan.selectedFeats[anim.trajFeatIndex].data.length)
-			value = movan.selectedFeats[anim.trajFeatIndex].data[i-movan.frameSkip][2];
-		else
-			value = movan.selectedFeats[anim.trajFeatIndex].data[i][2];
-		return movan.selectedFeats[anim.trajFeatIndex].f.colormap(value);
-	});
+	// svg.append("circle")
+	// .attr("class","traj")
+ //    .attr("cx", function(d) { 
+	// 	return currentFrame[anim.trajJointIndex].x;
+	// }).attr("cy", function(d) {
+	// 	return currentFrame[anim.trajJointIndex].y;
+	// }).attr("r", 5)
+	// .attr("fill", function(d) {
+	// 	var i = Math.floor(anim.animIndex/movan.frameSkip);
+	// 	if (i>=movan.selectedFeats[anim.trajFeatIndex].data.length)
+	// 		value = movan.selectedFeats[anim.trajFeatIndex].data[i-movan.frameSkip][2];
+	// 	else
+	// 		value = movan.selectedFeats[anim.trajFeatIndex].data[i][2];
+	// 	return movan.selectedFeats[anim.trajFeatIndex].f.colormap(value);
+	// });
 	
 	//draw joints
 	svg.selectAll("circle")
@@ -177,20 +161,20 @@ drawFigure: function() {
 
 	//bones
 	svg.selectAll("line")
-	.data(movan.gskel.connections)
+	.data(mocap.connectivityMatrix)
 	//.transition()
 	.attr("stroke", "black")
 	.attr("x1", function(d, j) {
-		return currentFrame[d.a].x;
+		return currentFrame[d[0].jointIndex].x;
 	})
 	.attr("x2", function(d, j) {
-		return currentFrame[d.b].x;
+		return currentFrame[d[1].jointIndex].x;
 	})
 	.attr("y1", function(d, j) {
-		return currentFrame[d.a].y;
+		return currentFrame[d[0].jointIndex].y;
 	})
 	.attr("y2", function(d, j) {
-		return currentFrame[d.b].y;
+		return currentFrame[d[1].jointIndex].y;
 	});
 
 	
@@ -241,11 +225,11 @@ drawFigure: function() {
 
 	
 	//if (grootOffset[Math.floor((animIndex)/frameSkip)]-15 > currentFrame[0].x)		
-		$("#featureList").scrollLeft(movan.rootOffset[Math.floor((anim.animIndex)/movan.frameSkip)]-400);
+		$("#featureList").scrollLeft(movan.dataTracks[movan.dataTracks.length - 1].rootOffset[Math.floor((anim.animIndex)/movan.frameSkip)]-400);
 
 	
 	anim.animIndex+=anim.ds;
-	if (anim.animIndex >=movan.gframes.length) {
+	if (anim.animIndex >=mocap.frameCount) {
 			anim.animIndex =0;
 			anim.playAnim = false;
 			$( "#btnPlay" ).button('option', 'label', '&nbsp;Play&nbsp;&nbsp;');

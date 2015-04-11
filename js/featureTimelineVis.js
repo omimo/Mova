@@ -42,7 +42,7 @@ function mouseOverGroup2(feature,rootOffset,timeline) {
 	
 	d3.select("#rmFeat"+feature.id).style("display","block");
 	
-	d3.select("#figure").select("svg").selectAll(".figJointId"+feature.joint)
+	d3.select("#figure").select("svg").selectAll(".figJointId"+feature.joint.jointIndex)
 	.attr("fill","red")
 	.attr("r",4);
 	
@@ -167,7 +167,7 @@ var mouseOutGroup = function (timeline) {
 	//visualRoot.selectAll(".circle").remove()
 };
 
-function timeline(parent,rootOffset, feature, timel, findex)
+function timeline(parent, track, rootOffset, feature, timel, findex)
 {
 	
 	//svg=parent.append("svg").attr("width", w).attr("height", feat_h);;
@@ -220,7 +220,7 @@ function timeline(parent,rootOffset, feature, timel, findex)
 	
 	svg.append("text")
 	.attr("id","featLabel")
-	.text(""+movan.gskel.jointNames[feature.joint])
+	.text(""+feature.joint.title)
 	.attr("x",20)
 	.attr("y",28)
 	.attr("font-family", "sans-serif")
@@ -400,9 +400,10 @@ function timeline(parent,rootOffset, feature, timel, findex)
 	;
 }
 
-function drawFeatureList (parent,rootOffset, feats, padding)
+function drawFeatureList (parent, track, rootOffset, feats, padding)
 {
- 	w = (padding)*movan.gframes.length/movan.frameSkip+300;
+
+ 	w = (padding)*track.frameCount/movan.frameSkip+300;
  //	w = (padding)*rootOffset.length+300;
    	h = 200;
    	
@@ -445,7 +446,7 @@ function drawFeatureList (parent,rootOffset, feats, padding)
    		 		ff = feats[f];
 
    		 	
-   		 		timeline(fsvg,rootOffset,feats[f], timel,f);
+   		 		timeline(fsvg, track, rootOffset,feats[f], timel,f);
 
    		 		
    		 }

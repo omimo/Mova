@@ -111,6 +111,10 @@
 					$("#figure").scrollLeft($("#featureList").scrollLeft());
 				});
 
+				$("#figure").scroll(function() {
+					$("#featureList").scrollLeft($("#figure").scrollLeft());
+				});
+
 				$("#btnSave").button();
 				$("#btnSave").click(function(event) {
 
@@ -171,12 +175,20 @@
 					var sel = $("#featDropdown").val();
 					var joint = $("#jointDropdown").attr("selectedJoint");
 
+					track = movan.dataTracks[movan.dataTracks.length - 1].content;
+
+					posFrameArray = [];
+					for (f=0;f<track.frameCount;f++) {
+						posFrameArray[f] = track.getPositionsAt(f);
+					}
+
 					movan.selectedFeats[len] = [];
 					movan.selectedFeats[len].id = len;
 					movan.selectedFeats[len].featID = sel;
 					movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
-					movan.selectedFeats[len].data = movan.availableFeatures[sel][1](movan.gframes, movan.frameSkip, joint, 0);
-					movan.selectedFeats[len].joint = joint;
+					//movan.selectedFeats[len].data = movan.availableFeatures[sel][1](posFrameArray, movan.frameSkip, track.jointArray[joint], 0);
+					movan.selectedFeats[len].data = movan.availableFeatures[sel][1](posFrameArray, movan.frameSkip, joint, 0);
+					movan.selectedFeats[len].joint = track.jointArray[joint];
 
 					movan.reDrawFeat();
 				});
@@ -541,7 +553,7 @@
 		</div>
 
 		<script type="text/javascript">
-			d3.timer(anim.drawFigure, 15);
+			d3.timer(anim.drawFigure, 0.0083);
 			movan.loadFeatures();
 			//movan.loadNew();
 		
