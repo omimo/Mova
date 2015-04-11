@@ -18,7 +18,7 @@ var BVHReader = function () {
         var jointStack = [];
         var jointMap = {};
         var jointArray = [];
-        var connectivityMatrix = {};
+        var connectivityMatrix = [];
         var frameCount, frameTime, frameArray = [];
         var i = 0;
         //parse structure
@@ -86,15 +86,17 @@ var BVHReader = function () {
                 jointStack[jointStack.length - 1].children.push(child);
                 child.parent = jointStack[jointStack.length - 1];
 
-                if(!connectivityMatrix[child.name]){
-                    connectivityMatrix[child.name] = {}
-                }
-                connectivityMatrix[child.name][child.parent.name] = 1;
+                connectivityMatrix.push([child.parent, child])
 
-                if(!connectivityMatrix[child.parent.name]){
-                    connectivityMatrix[child.parent.name] = {}
-                }
-                connectivityMatrix[child.parent.name][child.name] = 1;
+                // if(!connectivityMatrix[child.name]){
+                //     connectivityMatrix[child.name] = {}
+                // }
+                // connectivityMatrix[child.name][child.parent.name] = 1;
+
+                // if(!connectivityMatrix[child.parent.name]){
+                //     connectivityMatrix[child.parent.name] = {}
+                // }
+                // connectivityMatrix[child.parent.name][child.name] = 1;
             }
         } else if (line.indexOf("MOTION") == 0) {
             return false;
