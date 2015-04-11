@@ -11,8 +11,8 @@
 		<link rel="stylesheet" type="text/css" href="styles/jqx.base.css">
 		<link href="css/style.css" rel="stylesheet"/>
 
-		<script type="text/javascript" src="d3/d3.v3.min.js"></script>
-		<script type="text/javascript" src="js/math.min.js"></script>
+		<script type="text/javascript" src="lib/d3.v3.min.js"></script>
+		<script type="text/javascript" src="lib/math.min.js"></script>
 
 
 		<script type="text/javascript" src="js/bvhReader.js"></script>
@@ -33,11 +33,11 @@
 		<script src="jq/jquery-ui-slider-pips.min.js"></script>
 		<script src="jq/jquery.selectric.js"></script>
 
-		<script type="text/javascript" src="js/math.min.js"></script>
-		<script type="text/javascript" src="js/jqx-all.js"></script>
+		<script type="text/javascript" src="lib/math.min.js"></script>
+		<script type="text/javascript" src="lib/jqx-all.js"></script>
 		<script type="text/javascript" src="js/annotation-track.js"></script>
 		<script type="text/javascript" src="js/annotation.js"></script>
-		<script type="text/javascript" src="js/video.js"></script>
+		<script type="text/javascript" src="lib/video.js"></script>
 
 		<script type="text/javascript" src="js/body.js"></script>
 
@@ -281,7 +281,7 @@
 				  			//add the nav pill for tab
 				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
 				  			//add the tab
-				  			$("<div id='"+tabId+"'><video id='mp4-video-'"+tabId+" controls width='640px'> \
+				  			$("<div id='"+tabId+"'><video id='mp4-video-'"+tabId+" width='640px'> \
 				  				<source type='video/mp4' src='"+asset_url+"'></video></div>").appendTo("#tabs-container");
 				  			$("#maintabs").tabs("refresh");
 				  		});
@@ -296,7 +296,7 @@
 				  			//add the nav pill for tab
 				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
 				  			//add the tab
-				  			$("<div id='"+tabId+"'><video id='mov-video-'"+tabId+" controls width='640px'> \
+				  			$("<div id='"+tabId+"'><video id='mov-video-'"+tabId+" width='640px'> \
 				  				<source type='video/mov' src='"+asset_url+"'></video></div>").appendTo("#tabs-container");
 				  			$("#maintabs").tabs("refresh");
 				  		});
@@ -334,7 +334,7 @@
 				  //   })
 				  // }
 				});
-
+			
 				// TODO need to move this function call to inside the apiCall callback
 				initAnnotation();
 			});
@@ -395,12 +395,12 @@
 					<li>
 						<a href="#anim">Animation</a>
 					</li>
-					<li>
+<!-- 					<li>
 						<a href="#mp4">MP4</a>
 					</li>
 					<li>
 						<a href="#mov">MOV</a>
-					</li>
+					</li> -->
 				</ul>
 	
 				<!-- tabs-container is used here to ensure that #featureList does not appear
@@ -415,7 +415,7 @@
 
 					</div>
 
-					<div id="mp4">
+<!-- 					<div id="mp4">
 						<video id="mp4-video" controls width="95%">
 					    </video>	
 					</div>
@@ -423,7 +423,7 @@
 					<div id="mov">
 						<video id="mov-video" controls>						    
 					    </video>	
-					</div>				
+					</div>		 -->		
 				</div>
 				
 

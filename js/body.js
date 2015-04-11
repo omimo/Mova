@@ -137,6 +137,7 @@ function initAnnotation(){
     }
   });
 
+  console.log("Adding annotation track")
   brushes.push(new AnnotationTrack(svgContainer, timeScale, {"x":25, "y": 50}));
   brushes.push(new AnnotationTrack(svgContainer, timeScale, {"x":25, "y": 100}));
   brushes.push(new AnnotationTrack(svgContainer, timeScale, {"x":25, "y": 150}));
@@ -211,16 +212,21 @@ function initAnnotation(){
   }
 
   function initPlayer(){
-    player = videojs('mp4-video',
-      { 
-        "width": "auto",
-        "height": "auto",
-        "preload": "auto"
-      },
-      function() {
-        this.on("ended", videoEnded);
-      }
-    );
+    try{
+      player = videojs('mp4-video',
+        { 
+          "width": "auto",
+          "height": "auto",
+          "preload": "auto"
+        },
+        function() {
+          this.on("ended", videoEnded);
+        }
+      );
+    }
+    catch(err){
+      console.log("Invalid id for videojs " + err);
+    }
   }
 
   /**
