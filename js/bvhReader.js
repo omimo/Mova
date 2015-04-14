@@ -1,9 +1,9 @@
-// By Ankit 
+// By Ankit
 var BVHReader = function () {
 
     this.load = function (url, callback) {
         $.get(url, function (str) {
-            var dataReturn = parse(str);            
+            var dataReturn = parse(str);
             var jointStack = dataReturn[0];
             var jointMap = dataReturn[1];
             var jointArray = dataReturn[2];
@@ -12,7 +12,7 @@ var BVHReader = function () {
                 callback(new BVHReader.BVH.Skeleton(jointStack[0], jointMap, jointArray, dataReturn[3], dataReturn[4], dataReturn[5], dataReturn[6]),'BVH');
         });
     };
-    
+
     function parse(str) {
         var lines = str.split('\n');
         var jointStack = [];
@@ -69,7 +69,7 @@ var BVHReader = function () {
                     joint.channelOffset = 0;
                 } else {
                     joint.channelOffset = jointArray[jointArray.length - 2].channelOffset + jointArray[jointArray.length - 2].channelLength;
-                }                
+                }
             }else{
                 //channelLength is 0 for end joints
                 joint.channelLength = 0;
@@ -125,7 +125,7 @@ BVHReader.BVH.Joint = function (name, index) {
     };
     this.rotationIndex = {};
     this.positionIndex = {};
-    
+
     this.getChannels = function () {
         var allChannels = [];
         for (i = 0; i < this.skeleton.frameArray.length; i++) {
@@ -168,7 +168,7 @@ BVHReader.BVH.Skeleton = function (root, map, arr, connectivityMatrix, frameCoun
     for (i = 0; i < this.jointArray.length; i++) {
         this.jointArray[i].skeleton = thisSkeleton;
     }
-    
+
     //all the structures are ready. let's calculate the positions
     for(j=0; j < this.jointArray.length; j++){
         var joint = this.jointArray[j];
@@ -196,13 +196,13 @@ BVHReader.BVH.Skeleton = function (root, map, arr, connectivityMatrix, frameCoun
     };
     this.getPositionsAt = function (frameNum) {
     	//for each joint, calculate its position in XYZ
-        //return an array of joints, each with .x, .y, and .z properties  
+        //return an array of joints, each with .x, .y, and .z properties
     	posFrame = [];
-    	
+
     	for (j=0;j<this.jointArray.length;j++) {
     		posFrame.push(this.jointArray[j].positions[frameNum]);
     	}
-    	
+
     	posFrame = posFrame.map(function(d) {
 			return {
 				x : d[0],
@@ -210,13 +210,22 @@ BVHReader.BVH.Skeleton = function (root, map, arr, connectivityMatrix, frameCoun
 				z : d[2],
 			};
 		});
-    	
+
         return posFrame;
     };
     this.getTPose = function () {
     	// This function is basically the same as the getPositionsAt except that all the rotations will be 0
         console.log("Not yet implemented");
     };
+
+    function updatePositions(rootOffset, removeRoot, orientation, camera) {
+      //TODO: compelte the specification of this
+
+      for(j=0; j < this.jointArray.length; j++){
+          var joint = this.jointArray[j];
+          updateWithPositions(joint);
+      }
+    }
 
     function updateWithPositions(joint){
         var channelNames = joint.channelNames;
@@ -232,16 +241,16 @@ BVHReader.BVH.Skeleton = function (root, map, arr, connectivityMatrix, frameCoun
             yangle =  deg2rad(channel[joint.rotationIndex.y] || 0),
             zangle= deg2rad(channel[joint.rotationIndex.z] || 0);
 
-            var rotMatrix = math.transpose(getRotationMatrix(xangle, yangle, zangle, "xyz"));
-            //var rotMatrix = getRotationMatrix1(xangle, yangle, zangle, "xyz"); //this also works
+            // var rotMatrix = math.transpose(getRotationMatrix(xangle, yangle, zangle, "xyz"));
+            var rotMatrix = getRotationMatrix1(xangle, yangle, zangle, "xyz"); //this also works
             var posMatrix = [xpos, ypos, zpos];
 
             if(joint.parent){
-            	posMatrix = [0,0,0];
-            	
+            	  posMatrix = [0,0,0];  //At least for the bvhs that we have, this should be set to 0
+
                 var t = vectorAdd(joint.offset, posMatrix);
                 var u = matrixMultiply(t, joint.parent.rotations[i]);
-                
+
                 joint.positions[i] = vectorAdd(u, joint.parent.positions[i]);
                 joint.rotations[i] = matrixMultiply( rotMatrix, joint.parent.rotations[i]);
 
@@ -251,18 +260,16 @@ BVHReader.BVH.Skeleton = function (root, map, arr, connectivityMatrix, frameCoun
                     console.log(joint.rotations[i]);
                     console.log(t);
                     console.log(u);
-                    
+
                     console.log("x: "+xangle + "y: "+yangle + "z: "+zangle );
                     console.log(posMatrix);
-                    
-                    
                     */
                 }
 
             }else{
                 //its the root
                 joint.rotations[i] = rotMatrix;
-                joint.positions[i] = posMatrix;//vectorAdd(joint.offset , posMatrix); 
+                joint.positions[i] = posMatrix;//vectorAdd(joint.offset , posMatrix);
                 // ^ we can safely ignore the root's offset
             }
         }
@@ -274,35 +281,35 @@ BVHReader.BVH.Skeleton = function (root, map, arr, connectivityMatrix, frameCoun
 
 
     function getRotationMatrix(alpha, beta, gamma) {
-    	
+
     //inputs are the intrinsic rotation angles in RADIANTS
     var ca = Math.cos(alpha),
     	sa = Math.sin(alpha),
-    	
+
     	cb = Math.cos(beta),
     	sb = Math.sin(beta),
-    	
+
     	cg = Math.cos(gamma),
     	sg = Math.sin(gamma),
-    	
+
     Rx = [[1, 0, 0], [0, ca, -sa], [0, sa, ca]];
-    
+
     Ry = [[cb, 0, sb], [0, 1, 0], [-sb, 0, cb]];
-    
+
     Rz = [[cg, -sg, 0], [sg, cg, 0], [0,    0,   1]];
-    
-    
-  
-    
+
+
+
+
     var Rzm = math.matrix(Rz);
     var Rym = math.matrix(Ry);
     var Rxm = math.matrix(Rx);
-    
+
     var tt = math.multiply(Rzm, Rym);
-    
+
     return  math.multiply(tt,Rxm).toArray();
     //rotationMatrix = math. //Rz*Ry*Rx;
-    
+
     //     R = Rx*Ry*Rz;
 	}
 
