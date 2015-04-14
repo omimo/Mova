@@ -3,6 +3,12 @@ body {
 	overflow: hidden;
 }
 
+.video-js {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+}
+
 div.bar {
 	display: inline-block;
 	width: 20px;

@@ -293,7 +293,7 @@
 			state = {
 				currentTime: 0,
 				maxTime: 0,
-				tickTime: 1000,
+				tickTime: 250,
 				tickListeners: [],
 				tick: function(){
 					this.currentTime = +this.currentTime + +this.tickTime;
@@ -515,7 +515,7 @@
 				  			// TODO uncomment following lines for creating new tab for bvh after fixing in Omid's code
 				  			// for now assume that there just a single bvh that gets loaded in the default bvh tab
 				  			// remove this line and uncomment next; commented for dev purpose only
-				  			fileHandler.loadDataTrack(asset_url,movan.callbackForData);
+				  			// fileHandler.loadDataTrack(asset_url,movan.callbackForData);
 
 				  			state.tickListeners.push({
 				  				tick: function(){
@@ -541,14 +541,20 @@
 				  			//add the nav pill for tab
 				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
 				  			//add the tab
-				  			$("<div id='"+tabId+"'><video id='mp4-video-"+tabId+"' width='640px'> \
-				  				<source type='video/mp4' src='"+asset_url+"'></video></div>").appendTo("#tabs-container");
+				  			$("<div id='"+tabId+"'><video id='mp4-video-"+tabId+"' width='640'> \
+				  				<source type='video/mp4' src='"+asset_url+"' width='640'></video></div>").appendTo("#tabs-container");
 				  			$("#maintabs").tabs("refresh");
 
 				  			var player = videojs('mp4-video-'+tabId);
 
 				  			state.tickListeners.push({
 				  				tick: function(){
+				  					//TODO: this line should be called only once
+				  					$('video').attr("width", 640);
+
+				  					//TODO the controls should be hidden when initiating the player.
+				  					$('div.vjs-control-bar').hide();
+
 				  					var playerCurrentTime = player.currentTime();
 				  					var newTime = state.currentTime/ 1000;
 				  					if(Math.abs(playerCurrentTime - newTime) > 1){
@@ -582,7 +588,7 @@
 				});
 
 				//find a way to calculate the maxTime
-				state.maxTime = 10000; // number of milliseconds
+				state.maxTime = 45000; // number of milliseconds
 
 				// TODO need to move this function call to inside the apiCall callback
 				initAnnotation();

@@ -171,6 +171,7 @@ function initAnnotation(){
   }
 
   function addPlayerScrubber(){
+
     var slider = d3.svg.brush()
                   .x(timeScale).clamp(true);
 
@@ -196,7 +197,7 @@ function initAnnotation(){
       if (d3.event.sourceEvent) { // not a programmatic event
         value = timeScale.invert(d3.mouse(this)[0]);
         slider.extent([value, value]);
-        player.currentTime(value);
+        state.currentTime = value;
       }
 
       scrubHandle.attr("cx", timeScale(value));
@@ -211,7 +212,13 @@ function initAnnotation(){
         "x2": timeScale(0),
         "y2": 500,
         "stroke": "#ccc"
-      })
+    })
+
+    state.tickListeners.push({
+      tick: function(){
+        syncSliderPosition();
+      }
+    })
   }
 
   function initPlayer(){
@@ -283,9 +290,9 @@ function initAnnotation(){
 
 
   function syncSliderPosition(){
-    var time = player.currentTime();
+    var time = state.currentTime;
     var position = timeScale(time);
-    // console.log(time)
+    
     scrubHandle.attr("cx", position);
     scrubLine.attr({
       "x1": position,
