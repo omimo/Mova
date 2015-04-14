@@ -1,6 +1,4 @@
 Movement Analytics and Annotation Platform
 =======
 
-Mova extracts visualizes a set of features from motion capture sequences
-
-
+Mova extracts and visualizes a set of movement features from movement data sequences
