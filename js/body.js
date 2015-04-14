@@ -107,11 +107,14 @@ function initAnnotation(){
 
   brushes = [];
 
-  var svgContainer = d3.select("#svg-container");
+  width = $("#maintabs").width();
 
-  var timeScale = d3.scale.linear()
-                  .domain([0,4])
-                  .range([25, 475])
+  var svgContainer = d3.select("#svg-container").attr("width", width);
+
+
+  timeScale = d3.scale.linear()
+                  .domain([0, state.maxTime])
+                  .range([25, width - 25])
                   .clamp(true);
 
   var trackCounter = 0;
@@ -236,23 +239,29 @@ function initAnnotation(){
     clearInterval(intervalId)
   }
 
+  function updateState(){
+    state.tick();
+  }
+
 
   function registerControls(){
     $("#play-btn").on("click", function(){
       // this lines helps get the duration of the video before playing it
-      if(typeof intervalId !== 'undefined'){
-        clearInterval(intervalId);
-      }
+      // if(typeof intervalId !== 'undefined'){
+      //   clearInterval(intervalId);
+      // }
 
-      // player.currentTime(0)
-      videoDuration = player.duration();
+      // // player.currentTime(0)
+      // videoDuration = player.duration();
 
-      //setup the scrubber
-      timeScale.domain([0, player.duration()]);
+      // //setup the scrubber
+      // timeScale.domain([0, player.duration()]);
 
-      intervalId = setInterval(syncSliderPosition, 15)
+      // intervalId = setInterval(syncSliderPosition, 15)
 
-      player.play()
+      // player.play()
+
+      timeController = setInterval(updateState, state.tickTime);
     });
 
     $("#pause-btn").on("click", function(){

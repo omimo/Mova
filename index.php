@@ -58,299 +58,7 @@
 			ga('send', 'pageview');
 
 		</script>
-		<script>
-			//this is an array of the controllers for tabs; one controller per tab
-			tabControllers = [];
 
-			//this is an array of all the resources
-			remoteResourceMapByType = {};
-			$(document).ready(function() {
-
-				$("#maintabs").tabs().click(function(event, ui) {
-					$("#featureList").scrollLeft(0);
-				});
-
-				// $("#tabs").click(function(event, ui){
-				// console.log(event);
-				// if (event.options.selected == 0)
-				// playAnim = false;
-				// else if (event.options.selected == 1)
-				// {playAnim = true;console.log("heee");}
-				// }
-				// );
-
-				$("#btnPlay").button();
-				$("#btnPlay").click(function(event) {
-					anim.playAnim = true;
-					$("#btnPlay").button('option', 'label', 'Pause');
-				});
-
-				$("#sideAcaccordion").accordion({
-					heightStyle : "content"
-				});
-
-				$("#sidebar").draggable().tabs({
-					collapsible : true,
-					active : false
-				});
-
-				var setSizes = function() {
-
-					$("#canCont").height($(document).height() - 150 - $("#footer").height());
-					$("#featureList").height($("#canCont").height() - 490);
-
-					$("#maintabs").width($(document).width() - $("#legends").width() - 60);
-					$("#legends").height($("#canCont").height());
-				};
-
-				setSizes();
-
-				$(window).resize(setSizes);
-
-				$("#featureList").scroll(function() {
-					$("#figure").scrollLeft($("#featureList").scrollLeft());
-				});
-
-				$("#figure").scroll(function() {
-					$("#featureList").scrollLeft($("#figure").scrollLeft());
-				});
-
-				$("#btnSave").button();
-				$("#btnSave").click(function(event) {
-
-				});
-
-				$("#jointDropdown").click(function(event) {
-					if ($("#jointChooser").css("display") == "none")
-						$("#jointChooser").css("display", "");
-					else
-						$("#jointChooser").css("display", "none");
-
-					var t = $("#jointDropdown").position().top + $("#jointDropdown").height() + 6;
-
-					$("#jointChooser").css("top", t);
-				});
-
-				$("#sldPad2").slider({
-					animate : true,
-					min : 10,
-					max : 70,
-					step : 1,
-					value : 25,
-					change : function(event, ui) {
-						movan.reDraw();
-
-					}
-				}).slider('pips', {
-
-					first : "label",
-					last : "label",
-					rest : false,
-					suffix : "px",
-					//labels: false,
-				});
-
-				$("#sldSkip2").slider({
-					animate : true,
-					min : 5,
-					max : 50,
-					step : 1,
-					value : 5,
-					change : function(event, ui) {
-						movan.reDraw();
-					}
-				}).slider('pips', {
-
-					first : "label",
-					last : "label",
-					rest : false,
-					suffix : "",
-					//labels: false,
-				});
-
-				$("#featDropdown").selectric();
-
-				$("#btnAddFeat").button().click(function(event) {
-					var len = movan.selectedFeats.length;
-					var sel = $("#featDropdown").val();
-					var joint = $("#jointDropdown").attr("selectedJoint");
-
-					track = movan.dataTracks[movan.dataTracks.length - 1].content;
-
-					posFrameArray = [];
-					for (f=0;f<track.frameCount;f++) {
-						posFrameArray[f] = track.getPositionsAt(f);
-					}
-
-					movan.selectedFeats[len] = [];
-					movan.selectedFeats[len].id = len;
-					movan.selectedFeats[len].featID = sel;
-					movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
-					//movan.selectedFeats[len].data = movan.availableFeatures[sel][1](posFrameArray, movan.frameSkip, track.jointArray[joint], 0);
-					movan.selectedFeats[len].data = movan.availableFeatures[sel][1](posFrameArray, movan.frameSkip, joint, 0);
-					movan.selectedFeats[len].joint = track.jointArray[joint];
-
-					movan.reDrawFeat();
-				});
-
-				/**
-				 * Source : http://stackoverflow.com/questions/814613/how-to-read-get-data-from-a-url-using-javascript
-				 */
-				function parseURLParams(url) {
-			        var queryStart = url.indexOf("?") + 1,
-			            queryEnd   = url.indexOf("#") + 1 || url.length + 1,
-			            query = url.slice(queryStart, queryEnd - 1),
-			            pairs = query.replace(/\+/g, " ").split("&"),
-			            parms = {}, i, n, v, nv;
-
-			        if (query === url || query === "") {
-			            return;
-			        }
-
-			        for (i = 0; i < pairs.length; i++) {
-			            nv = pairs[i].split("=");
-			            n = decodeURIComponent(nv[0]);
-			            v = decodeURIComponent(nv[1]);
-
-			            if (!parms.hasOwnProperty(n)) {
-			                parms[n] = [];
-			            }
-
-			            parms[n].push(nv.length === 2 ? v : null);
-			        }
-			        return parms;
-		    	}
-
-			    function apiCall(url, cbk){
-			      $.ajax({
-			         type: "GET",
-			         url: url,
-			         success: cbk
-			      });
-			    }
-
-				var params = parseURLParams(document.URL);
-
-				var take_id = params["take_id"][0];
-				var url = "/takes/"+take_id+".json";
-
-				apiCall(url, function(data){
-				  var data_tracks = data.data_tracks;
-
-				  var bvhFiles = [];
-				  var c3dFiles = [];
-				  var movFiles = [];
-				  var mp4Files = [];
-				  data_tracks.forEach(function(d){
-
-				  	var resourceURL = d.data_track_url;
-				  	var lastIndexOfHyphen = resourceURL.lastIndexOf("-");
-				  	var resourceType = resourceURL.substring(lastIndexOfHyphen + 1, resourceURL.lastIndexOf("."));
-
-				  	if(!remoteResourceMapByType[resourceType]){
-				  		remoteResourceMapByType[resourceType] = [];
-				  	}
-		  			remoteResourceMapByType[resourceType].push(resourceURL);
-				  })
-
-				  //add a bvh tab for each
-				  for(var type in remoteResourceMapByType){
-				  	var resources = remoteResourceMapByType[type];
-				  	for(var i in resources){
-				  		var resource = resources[i];
-				  		showResource(type, resource);
-				  	}
-				  }
-
-
-				  function showResource(type, resource){
-				  	console.log("#showResource " + type + " " + resource)
-				  	switch(type){
-				  		case "bvh":
-				  		apiCall(resource, function(data){
-				  			var asset_url = data.asset_url;
-				  			console.log("asset " + asset_url)
-
-				  			// TODO uncomment following lines for creating new tab for bvh after fixing in Omid's code
-				  			// for now assume that there just a single bvh that gets loaded in the default bvh tab
-				  			fileHandler.loadDataTrack(asset_url,movan.callbackForData);
-
-				  			// var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
-				  			// //add the nav pill for tab
-				  			// $("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
-				  			// //add the tab
-				  			// $("<div id='"+tabId+"'></div>").appendTo("#tabs-container");
-				  			// $("#maintabs").tabs("refresh");
-				  		})
-				  		break;
-
-				  		case "mp4":
-				  		//TODO create new tab and load the video
-		  				apiCall(resource, function(data){
-				  			var asset_url = data.asset_url;
-
-				  			var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
-				  			//add the nav pill for tab
-				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
-				  			//add the tab
-				  			$("<div id='"+tabId+"'><video id='mp4-video-'"+tabId+" width='640px'> \
-				  				<source type='video/mp4' src='"+asset_url+"'></video></div>").appendTo("#tabs-container");
-				  			$("#maintabs").tabs("refresh");
-				  		});
-				  		break;
-
-				  		case "mov":
-				  		//TODO create new tab and load the video
-				  		apiCall(resource, function(data){
-				  			var asset_url = data.asset_url;
-
-				  			var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
-				  			//add the nav pill for tab
-				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
-				  			//add the tab
-				  			$("<div id='"+tabId+"'><video id='mov-video-'"+tabId+" width='640px'> \
-				  				<source type='video/mov' src='"+asset_url+"'></video></div>").appendTo("#tabs-container");
-				  			$("#maintabs").tabs("refresh");
-				  		});
-				  		break;
-
-				  	}
-				  }
-
-				  // if(bvhFiles.length > 0){
-				  //   //for now do it just for the first one
-				  //   apiCall(bvhFiles[0], function(data){
-				  //     var asset_url = data.asset_url;
-				  //     fileHandler.loadDataTrack(asset_url,movan.callbackForData);
-				  //   })
-				  // }
-
-				  // if(movFiles.length > 0){
-				  //   //for now do it just for the first one
-				  //   apiCall(movFiles[0], function(data){
-				  //     var asset_url = data.asset_url;
-				  //     console.log("Setting mov video: " + asset_url)
-				  //     video = $("#mov-video")[0];
-				  //     video.innerHTML = '<source type="video/mov" src="'+asset_url+'">';
-				  //   })
-				  // }
-
-
-				  // if(mp4Files.length > 0){
-				  //   //for now do it just for the first one
-				  //   apiCall(mp4Files[0], function(data){
-				  //     var asset_url = data.asset_url;
-				  //     console.log("Setting mp4 video: " + asset_url)
-				  //     video = $("#mp4-video")[0];
-				  //     video.innerHTML = '<source type="video/mp4" src="'+asset_url+'">';
-				  //   })
-				  // }
-				});
-
-				// TODO need to move this function call to inside the apiCall callback
-				initAnnotation();
-			});
-		</script>
 
 		<style>
 	    .track{
@@ -580,5 +288,305 @@
 		<div id="footer" style="clear:both;text-align:center;padding-top:20px;">
 			<small>(C) Omid Alemi - Fall 2013</small>
 		</div>
+
+				<script>
+			state = {
+				currentTime: 0,
+				maxTime: 0,
+				tickTime: 1000,
+				tickListeners: [],
+				tick: function(){
+					this.currentTime = +this.currentTime + +this.tickTime;
+					for(var i in this.tickListeners){
+						var listener = this.tickListeners[i];
+						listener.tick();
+					}
+				}
+			}
+
+			//this is an array of all the resources
+			remoteResourceMapByType = {};
+			$(document).ready(function() {
+
+				$("#maintabs").tabs().click(function(event, ui) {
+					$("#featureList").scrollLeft(0);
+				});
+
+				// $("#tabs").click(function(event, ui){
+				// console.log(event);
+				// if (event.options.selected == 0)
+				// playAnim = false;
+				// else if (event.options.selected == 1)
+				// {playAnim = true;console.log("heee");}
+				// }
+				// );
+
+				$("#btnPlay").button();
+				$("#btnPlay").click(function(event) {
+					anim.playAnim = true;
+					$("#btnPlay").button('option', 'label', 'Pause');
+				});
+
+				$("#sideAcaccordion").accordion({
+					heightStyle : "content"
+				});
+
+				$("#sidebar").draggable().tabs({
+					collapsible : true,
+					active : false
+				});
+
+				var setSizes = function() {
+
+					$("#canCont").height($(document).height() - 150 - $("#footer").height());
+					$("#featureList").height($("#canCont").height() - 490);
+
+					$("#maintabs").width($(document).width() - $("#legends").width() - 60);
+					$("#legends").height($("#canCont").height());
+				};
+
+				setSizes();
+
+				$(window).resize(setSizes);
+
+				$("#featureList").scroll(function() {
+					$("#figure").scrollLeft($("#featureList").scrollLeft());
+				});
+
+				$("#figure").scroll(function() {
+					$("#featureList").scrollLeft($("#figure").scrollLeft());
+				});
+
+				$("#btnSave").button();
+				$("#btnSave").click(function(event) {
+
+				});
+
+				$("#jointDropdown").click(function(event) {
+					if ($("#jointChooser").css("display") == "none")
+						$("#jointChooser").css("display", "");
+					else
+						$("#jointChooser").css("display", "none");
+
+					var t = $("#jointDropdown").position().top + $("#jointDropdown").height() + 6;
+
+					$("#jointChooser").css("top", t);
+				});
+
+				$("#sldPad2").slider({
+					animate : true,
+					min : 10,
+					max : 70,
+					step : 1,
+					value : 25,
+					change : function(event, ui) {
+						movan.reDraw();
+
+					}
+				}).slider('pips', {
+
+					first : "label",
+					last : "label",
+					rest : false,
+					suffix : "px",
+					//labels: false,
+				});
+
+				$("#sldSkip2").slider({
+					animate : true,
+					min : 5,
+					max : 50,
+					step : 1,
+					value : 5,
+					change : function(event, ui) {
+						movan.reDraw();
+					}
+				}).slider('pips', {
+
+					first : "label",
+					last : "label",
+					rest : false,
+					suffix : "",
+					//labels: false,
+				});
+
+				$("#featDropdown").selectric();
+
+				$("#btnAddFeat").button().click(function(event) {
+					var len = movan.selectedFeats.length;
+					var sel = $("#featDropdown").val();
+					var joint = $("#jointDropdown").attr("selectedJoint");
+
+					track = movan.dataTracks[movan.dataTracks.length - 1].content;
+
+					posFrameArray = [];
+					for (f=0;f<track.frameCount;f++) {
+						posFrameArray[f] = track.getPositionsAt(f);
+					}
+
+					movan.selectedFeats[len] = [];
+					movan.selectedFeats[len].id = len;
+					movan.selectedFeats[len].featID = sel;
+					movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
+					//movan.selectedFeats[len].data = movan.availableFeatures[sel][1](posFrameArray, movan.frameSkip, track.jointArray[joint], 0);
+					movan.selectedFeats[len].data = movan.availableFeatures[sel][1](posFrameArray, movan.frameSkip, joint, 0);
+					movan.selectedFeats[len].joint = track.jointArray[joint];
+
+					movan.reDrawFeat();
+				});
+
+				/**
+				 * Source : http://stackoverflow.com/questions/814613/how-to-read-get-data-from-a-url-using-javascript
+				 */
+				function parseURLParams(url) {
+			        var queryStart = url.indexOf("?") + 1,
+			            queryEnd   = url.indexOf("#") + 1 || url.length + 1,
+			            query = url.slice(queryStart, queryEnd - 1),
+			            pairs = query.replace(/\+/g, " ").split("&"),
+			            parms = {}, i, n, v, nv;
+
+			        if (query === url || query === "") {
+			            return;
+			        }
+
+			        for (i = 0; i < pairs.length; i++) {
+			            nv = pairs[i].split("=");
+			            n = decodeURIComponent(nv[0]);
+			            v = decodeURIComponent(nv[1]);
+
+			            if (!parms.hasOwnProperty(n)) {
+			                parms[n] = [];
+			            }
+
+			            parms[n].push(nv.length === 2 ? v : null);
+			        }
+			        return parms;
+		    	}
+
+			    function apiCall(url, cbk){
+			      $.ajax({
+			         type: "GET",
+			         url: url,
+			         success: cbk
+			      });
+			    }
+
+				var params = parseURLParams(document.URL);
+
+				var take_id = params["take_id"][0];
+				var url = "/takes/"+take_id+".json";
+
+				apiCall(url, function(data){
+				  var data_tracks = data.data_tracks;
+
+				  var bvhFiles = [];
+				  var c3dFiles = [];
+				  var movFiles = [];
+				  var mp4Files = [];
+				  data_tracks.forEach(function(d){
+
+				  	var resourceURL = d.data_track_url;
+				  	var lastIndexOfHyphen = resourceURL.lastIndexOf("-");
+				  	var resourceType = resourceURL.substring(lastIndexOfHyphen + 1, resourceURL.lastIndexOf("."));
+
+				  	if(!remoteResourceMapByType[resourceType]){
+				  		remoteResourceMapByType[resourceType] = [];
+				  	}
+		  			remoteResourceMapByType[resourceType].push(resourceURL);
+				  })
+
+				  //add a bvh tab for each
+				  for(var type in remoteResourceMapByType){
+				  	var resources = remoteResourceMapByType[type];
+				  	for(var i in resources){
+				  		var resource = resources[i];
+				  		showResource(type, resource);
+				  	}
+				  }
+
+
+				  function showResource(type, resource){
+				  	console.log("#showResource " + type + " " + resource)
+				  	switch(type){
+				  		case "bvh":
+				  		apiCall(resource, function(data){
+				  			var asset_url = data.asset_url;
+
+				  			// TODO uncomment following lines for creating new tab for bvh after fixing in Omid's code
+				  			// for now assume that there just a single bvh that gets loaded in the default bvh tab
+				  			// remove this line and uncomment next; commented for dev purpose only
+				  			fileHandler.loadDataTrack(asset_url,movan.callbackForData);
+
+				  			state.tickListeners.push({
+				  				tick: function(){
+				  					
+				  				}
+				  			});
+
+				  			// var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
+				  			// //add the nav pill for tab
+				  			// $("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
+				  			// //add the tab
+				  			// $("<div id='"+tabId+"'></div>").appendTo("#tabs-container");
+				  			// $("#maintabs").tabs("refresh");
+				  		})
+				  		break;
+
+				  		case "mp4":
+				  		//TODO create new tab and load the video
+		  				apiCall(resource, function(data){
+				  			var asset_url = data.asset_url;
+
+				  			var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
+				  			//add the nav pill for tab
+				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
+				  			//add the tab
+				  			$("<div id='"+tabId+"'><video id='mp4-video-"+tabId+"' width='640px'> \
+				  				<source type='video/mp4' src='"+asset_url+"'></video></div>").appendTo("#tabs-container");
+				  			$("#maintabs").tabs("refresh");
+
+				  			var player = videojs('mp4-video-'+tabId);
+
+				  			state.tickListeners.push({
+				  				tick: function(){
+				  					var playerCurrentTime = player.currentTime();
+				  					var newTime = state.currentTime/ 1000;
+				  					if(Math.abs(playerCurrentTime - newTime) > 1){
+				  						player.currentTime(newTime)
+				  					}else{
+				  						player.play();	
+				  					}
+				  					
+				  				}
+				  			});
+				  		});
+				  		break;
+
+				  		case "mov":
+				  		//TODO create new tab and load the video
+				  		apiCall(resource, function(data){
+				  			var asset_url = data.asset_url;
+
+				  			var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
+				  			//add the nav pill for tab
+				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
+				  			//add the tab
+				  			$("<div id='"+tabId+"'><video id='mov-video-'"+tabId+" width='640px'> \
+				  				<source type='video/mov' src='"+asset_url+"'></video></div>").appendTo("#tabs-container");
+				  			$("#maintabs").tabs("refresh");
+				  		});
+				  		break;
+
+				  	}
+				  }
+				});
+
+				//find a way to calculate the maxTime
+				state.maxTime = 10000; // number of milliseconds
+
+				// TODO need to move this function call to inside the apiCall callback
+				initAnnotation();
+			});
+		</script>
  </body>
 </html>
