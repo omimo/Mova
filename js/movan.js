@@ -1,6 +1,8 @@
 var movan = {
 
-	 		 dataTracks : [], // this only keeps the loaded tracks
+			sidebyside : 1,
+
+			dataTracks : [], // this only keeps the loaded tracks
 	 		 allTracks : [],  // this keeps all the tracks that exist in a take
 
 
@@ -288,6 +290,7 @@ var movan = {
 				//movan.makeFeats();
 				movan.calcFeats();
 				movan.reDrawFeat();
+				setSizes();
 			},
 
 

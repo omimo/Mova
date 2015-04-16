@@ -97,14 +97,14 @@
 		</style>
 	</head>
 	<body>
-
+	<script type="text/javascript" src="js/ui.js"></script>
 		<div id="header" style="clear:both;">
 			<h1 style="float: left;">Mova: Movement Analytics Platform</h1>
 			<h4 style="float: right;">Version 0.7  |   <a href="Mova_Intro.mov" target="_blank">Video Intro</a></h4>
 		</div>
 
 		<div id="canCont">
-			<div id="maintabs">
+			<div id="lefttabs">
 				<ul>
 <!-- 					<li>
 						<a href="#annotation-area">annotation</a>
@@ -153,6 +153,30 @@
 
 
 			</div>
+			<div id="divider">
+			</div>
+			
+			<div id="righttabs">
+				<ul>
+									<li>
+										<a href="#mp4">MP4</a>
+									</li>
+									<li>
+										<a href="#mov">MOV</a>
+									</li>
+								</ul>
+
+														<div id="mp4">
+															<video id="mp4-video" controls width="95%">
+														    </video>
+														</div>
+
+														<div id="mov">
+															<video id="mov-video" controls>
+														    </video>
+														</div>
+			</div>
+
 			<div id="legends">
 				<div style="font-family: Verdana, Arial, sans-serif;font-weight: bold;font-size: 11.5pt;padding-bottom: 5px;">
 					Legends:
@@ -306,135 +330,9 @@
 
 			//this is an array of all the resources
 			remoteResourceMapByType = {};
-			$(document).ready(function() {
 
-				$("#maintabs").tabs().click(function(event, ui) {
-					$("#featureList").scrollLeft(0);
-				});
 
-				// $("#tabs").click(function(event, ui){
-				// console.log(event);
-				// if (event.options.selected == 0)
-				// playAnim = false;
-				// else if (event.options.selected == 1)
-				// {playAnim = true;console.log("heee");}
-				// }
-				// );
-
-				$("#btnPlay").button();
-				$("#btnPlay").click(function(event) {
-					anim.playAnim = true;
-					$("#btnPlay").button('option', 'label', 'Pause');
-				});
-
-				$("#sideAcaccordion").accordion({
-					heightStyle : "content"
-				});
-
-				$("#sidebar").draggable().tabs({
-					collapsible : true,
-					active : false
-				});
-
-				var setSizes = function() {
-
-					$("#canCont").height($(document).height() - 150 - $("#footer").height());
-					$("#featureList").height($("#canCont").height() - 490);
-
-					$("#maintabs").width($(document).width() - $("#legends").width() - 60);
-					$("#legends").height($("#canCont").height());
-				};
-
-				setSizes();
-
-				$(window).resize(setSizes);
-
-				$("#featureList").scroll(function() {
-					$("#figure").scrollLeft($("#featureList").scrollLeft());
-				});
-
-				$("#figure").scroll(function() {
-					$("#featureList").scrollLeft($("#figure").scrollLeft());
-				});
-
-				$("#btnSave").button();
-				$("#btnSave").click(function(event) {
-
-				});
-
-				$("#jointDropdown").click(function(event) {
-					if ($("#jointChooser").css("display") == "none")
-						$("#jointChooser").css("display", "");
-					else
-						$("#jointChooser").css("display", "none");
-
-					var t = $("#jointDropdown").position().top + $("#jointDropdown").height() + 6;
-
-					$("#jointChooser").css("top", t);
-				});
-
-				$("#sldPad2").slider({
-					animate : true,
-					min : 10,
-					max : 70,
-					step : 1,
-					value : 25,
-					change : function(event, ui) {
-						movan.reDraw();
-
-					}
-				}).slider('pips', {
-
-					first : "label",
-					last : "label",
-					rest : false,
-					suffix : "px",
-					//labels: false,
-				});
-
-				$("#sldSkip2").slider({
-					animate : true,
-					min : 5,
-					max : 50,
-					step : 1,
-					value : 5,
-					change : function(event, ui) {
-						movan.reDraw();
-					}
-				}).slider('pips', {
-
-					first : "label",
-					last : "label",
-					rest : false,
-					suffix : "",
-					//labels: false,
-				});
-
-				$("#featDropdown").selectric();
-
-				$("#btnAddFeat").button().click(function(event) {
-					var len = movan.selectedFeats.length;
-					var sel = $("#featDropdown").val();
-					var joint = $("#jointDropdown").attr("selectedJoint");
-
-					track = movan.dataTracks[movan.dataTracks.length - 1].content;
-
-					posFrameArray = [];
-					for (f=0;f<track.frameCount;f++) {
-						posFrameArray[f] = track.getPositionsAt(f);
-					}
-
-					movan.selectedFeats[len] = [];
-					movan.selectedFeats[len].id = len;
-					movan.selectedFeats[len].featID = sel;
-					movan.selectedFeats[len].f = movan.availableFeatures[sel][0];
-					//movan.selectedFeats[len].data = movan.availableFeatures[sel][1](posFrameArray, movan.frameSkip, track.jointArray[joint], 0);
-					movan.selectedFeats[len].data = movan.availableFeatures[sel][1](posFrameArray, movan.frameSkip, joint, 0);
-					movan.selectedFeats[len].joint = track.jointArray[joint];
-
-					movan.reDrawFeat();
-				});
-
+				$(document).ready(function() {
 				/**
 				 * Source : http://stackoverflow.com/questions/814613/how-to-read-get-data-from-a-url-using-javascript
 				 */
@@ -519,7 +417,7 @@
 
 				  			state.tickListeners.push({
 				  				tick: function(){
-				  					
+
 				  				}
 				  			});
 
@@ -539,11 +437,11 @@
 
 				  			var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
 				  			//add the nav pill for tab
-				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
+				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#lefttabs ul")
 				  			//add the tab
 				  			$("<div id='"+tabId+"'><video id='mp4-video-"+tabId+"' width='640'> \
 				  				<source type='video/mp4' src='"+asset_url+"' width='640'></video></div>").appendTo("#tabs-container");
-				  			$("#maintabs").tabs("refresh");
+				  			$("#lefttabs").tabs("refresh");
 
 				  			var player = videojs('mp4-video-'+tabId);
 
@@ -560,9 +458,9 @@
 				  					if(Math.abs(playerCurrentTime - newTime) > 1){
 				  						player.currentTime(newTime)
 				  					}else{
-				  						player.play();	
+				  						player.play();
 				  					}
-				  					
+
 				  				}
 				  			});
 				  		});
@@ -575,11 +473,11 @@
 
 				  			var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
 				  			//add the nav pill for tab
-				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
+				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#lefttabs ul")
 				  			//add the tab
 				  			$("<div id='"+tabId+"'><video id='mov-video-'"+tabId+" width='640px'> \
 				  				<source type='video/mov' src='"+asset_url+"'></video></div>").appendTo("#tabs-container");
-				  			$("#maintabs").tabs("refresh");
+				  			$("#lefttabs").tabs("refresh");
 				  		});
 				  		break;
 

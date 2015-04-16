@@ -75,7 +75,7 @@ div.over2 {
 	float: right;
 	overflow-x:hidden;
 	overflow-y:auto;
-	
+
 	border-bottom-color: rgb(170, 170, 170);
 	border-bottom-left-radius: 4px;
 	border-bottom-right-radius: 4px;
@@ -114,12 +114,26 @@ div.over2 {
 #featureList {
 	overflow-x: auto;
 	overflow-y: auto;
-	padding-bottom: 20px;
+	padding-bottom: 0px;
 }
 
-#maintabs {
+#lefttabs {
 	padding-bottom: 10px;
 	float: left;
+}
+
+#righttabs {
+	padding-bottom: 10px;
+	float: left;
+	margin-left: 0px;
+}
+
+#divider {
+	width: 8px;
+	cursor: pointer; cursor: hand;
+	background-color: #f6f6f6;
+	float: left;
+	padding-bottom: 10px;
 }
 
 #annotation-area {
@@ -191,21 +205,21 @@ div.over2 {
 	 background-color: #8e8d8d !important;
 }
 
-.ui-slider-handle2 {  
-        position: absolute;  
-        z-index: 2;  
-        width: 25px;  
-        height: 25px;  
-        cursor: pointer;  
-        background2: url('../images/handle.png') no-repeat 50% 50%;  
+.ui-slider-handle2 {
+        position: absolute;
+        z-index: 2;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        background2: url('../images/handle.png') no-repeat 50% 50%;
         background-color: #8e8d8d !important;
         background-image: none !important;
-        font-weight: bold;  
-        color: #1C94C4;  
-        outline: none;  
-        top: -7px;  
-        margin-left: -12px;  
-    }  
+        font-weight: bold;
+        color: #1C94C4;
+        outline: none;
+        top: -7px;
+        margin-left: -12px;
+    }
 
 #jointChooser {
 	background-color: white;
@@ -233,7 +247,7 @@ line-height: 1.5;
 color: rgb(68, 68, 68);
 float: left;
 
-/*padding-left:1em;margin-top:0.5em;font-size: 0.9em;float:left"*/	
+/*padding-left:1em;margin-top:0.5em;font-size: 0.9em;float:left"*/
 }
 
 #jointDropDownArrow {
@@ -249,7 +263,7 @@ font: 18px/30px sans-serif}
 .ui-slider { height: 7px; background: #FFF; position: relative; border: 1px solid #DDD; box-shadow: inset 0 1px 3px 0 #EEE; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; margin: 5px 0; }
 .ui-slider .ui-slider-handle { width: 14px; height: 14px; margin: -5px 0 0 -7px; box-shadow: 1px 1px 2px 0px #DDD; background: #FFF; border: 1px solid #CCC; display: block; -webkit-border-radius: 50%; -moz-border-radius: 50%; border-radius: 50%; cursor: default; position: absolute; z-index: 2; }
 .ui-slider-handle {top: -0.1em !important; cursor:pointer !important;}
-.ui-slider-horizontal {height:0.6em !important; cursor:pointer !important;} 
+.ui-slider-horizontal {height:0.6em !important; cursor:pointer !important;}
 
 
 
