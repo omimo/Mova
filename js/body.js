@@ -107,7 +107,7 @@ function initAnnotation(){
 
   brushes = [];
 
-  width = $("#maintabs").width();
+  width = $("#annotation-area").width() - 20;
 
   var svgContainer = d3.select("#svg-container").attr("width", width);
 
@@ -217,6 +217,12 @@ function initAnnotation(){
     state.tickListeners.push({
       tick: function(){
         syncSliderPosition();
+      },
+      play: function(){
+
+      },
+      pause: function(){
+        
       }
     })
   }
@@ -267,12 +273,19 @@ function initAnnotation(){
       // intervalId = setInterval(syncSliderPosition, 15)
 
       // player.play()
-
-      timeController = setInterval(updateState, state.tickTime);
+      $("#play-btn").hide();
+      $("#pause-btn").show();
+      state.setPlaying(true);
+      //initialize only once
+      if(typeof timeController == 'undefined'){
+        timeController = setInterval(updateState, state.tickTime);
+      }
     });
 
     $("#pause-btn").on("click", function(){
-      player.pause();
+      $("#play-btn").show();
+      $("#pause-btn").hide();
+      state.setPlaying(false);
     })
 
     $("#download-btn").on("click", function(){

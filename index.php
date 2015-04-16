@@ -106,26 +106,17 @@
 		<div id="canCont">
 			<div id="lefttabs">
 				<ul>
-<!-- 					<li>
-						<a href="#annotation-area">annotation</a>
-					</li> -->
 					<li>
 						<a href="#figure">Figure Sketch</a>
 					</li>
 					<li>
 						<a href="#anim">Animation</a>
 					</li>
-<!-- 					<li>
-						<a href="#mp4">MP4</a>
-					</li>
-					<li>
-						<a href="#mov">MOV</a>
-					</li> -->
 				</ul>
 
 				<!-- tabs-container is used here to ensure that #featureList does not appear
 					before the content of dynamically added tabs -->
-				<div id="tabs-container">
+				<div id="left-tabs-container">
 					<div id="anim">
 						<button id="btnPlay">
 							&nbsp;Play&nbsp;&nbsp;
@@ -134,47 +125,27 @@
 					<div id="figure">
 
 					</div>
-
-<!-- 					<div id="mp4">
-						<video id="mp4-video" controls width="95%">
-					    </video>
-					</div>
-
-					<div id="mov">
-						<video id="mov-video" controls>
-					    </video>
-					</div>		 -->
 				</div>
 
 
 				<div id="featureList">
 
 				</div>
-
-
 			</div>
-			<div id="divider">
+
+			<div id="divider" style="vertical-align: middle;">
+			<!-- Use font-awesome for left and right arrow here -->
+				<span id="divider-btn"><i class="fa fa-play fa-sm"></i></span>
 			</div>
 			
 			<div id="righttabs">
 				<ul>
-									<li>
-										<a href="#mp4">MP4</a>
-									</li>
-									<li>
-										<a href="#mov">MOV</a>
-									</li>
-								</ul>
 
-														<div id="mp4">
-															<video id="mp4-video" controls width="95%">
-														    </video>
-														</div>
+				</ul>
 
-														<div id="mov">
-															<video id="mov-video" controls>
-														    </video>
-														</div>
+				<div id="right-tabs-container">
+
+				</div>
 			</div>
 
 			<div id="legends">
@@ -182,14 +153,14 @@
 					Legends:
 				</div>
 			</div>
-				<div id="annotation-area">
-					<div id="controls-wrapper">
-						<span id="play-btn"><i class="fa fa-play fa-sm"></i></span> &nbsp;&nbsp;&nbsp;
-						<span id="pause-btn"><i class="fa fa-pause fa-sm"></i></span> &nbsp;&nbsp;&nbsp;
-						<span id="download-btn"><i class="fa fa-save fa-sm"></i></span> &nbsp;&nbsp;&nbsp;
+				<div id="annotation-area" >
+					<div id="controls-wrapper" style="display: table; margin: 0 auto;">
+						<span id="play-btn"><i class="fa fa-play fa-3x"></i></span>
+						<span id="pause-btn"><i class="fa fa-pause fa-3x"></i></span>
+						<span id="download-btn"><i class="fa fa-save fa-3x"></i></span>
 						<span id="link"></span>
 					</div>
-				    <svg id="svg-container" width="900" height="300"></svg>
+				    <svg id="svg-container" width="900" height="300" style="margin-left: 10px;"></svg>
 				    <div id="annotation-graph-dialog">
 				        <div id='jqxTree'>
 				        </div>
@@ -315,15 +286,30 @@
 
 				<script>
 			state = {
+				playing: false,
 				currentTime: 0,
 				maxTime: 0,
 				tickTime: 250,
 				tickListeners: [],
 				tick: function(){
-					this.currentTime = +this.currentTime + +this.tickTime;
+					if(this.playing){
+						this.currentTime = +this.currentTime + +this.tickTime;
+						for(var i in this.tickListeners){
+							var listener = this.tickListeners[i];
+							listener.tick();
+						}
+					}
+				},
+				setPlaying: function(play){
+					this.playing = play;
 					for(var i in this.tickListeners){
 						var listener = this.tickListeners[i];
-						listener.tick();
+						if(play){
+							listener.play();
+						}else{
+							listener.pause();
+						}
+						
 					}
 				}
 			}
@@ -413,10 +399,16 @@
 				  			// TODO uncomment following lines for creating new tab for bvh after fixing in Omid's code
 				  			// for now assume that there just a single bvh that gets loaded in the default bvh tab
 				  			// remove this line and uncomment next; commented for dev purpose only
-				  			fileHandler.loadDataTrack(asset_url,movan.callbackForData);
+				  			// fileHandler.loadDataTrack(asset_url,movan.callbackForData);
 
 				  			state.tickListeners.push({
 				  				tick: function(){
+
+				  				},
+				  				play: function(){
+
+				  				},
+				  				pause: function(){
 
 				  				}
 				  			});
@@ -440,8 +432,19 @@
 				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#lefttabs ul")
 				  			//add the tab
 				  			$("<div id='"+tabId+"'><video id='mp4-video-"+tabId+"' width='640'> \
-				  				<source type='video/mp4' src='"+asset_url+"' width='640'></video></div>").appendTo("#tabs-container");
+				  				<source type='video/mp4' src='"+asset_url+"' width='640'></video></div>").appendTo("#left-tabs-container");
 				  			$("#lefttabs").tabs("refresh");
+
+
+				  			var tabId_1 = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?")) + "_1";
+				  			//add the nav pill for tab
+				  			$("<li><a href='#"+tabId_1+"'>"+tabId_1+"</a></li>").appendTo("#righttabs ul");
+				  			//add the tab
+				  			$("<div id='"+tabId_1+"'><video id='mp4-video-"+tabId_1+"' width='640'> \
+				  				<source type='video/mp4' src='"+asset_url+"' width='640'></video></div>").appendTo("#right-tabs-container");
+				  			$("#righttabs").tabs("refresh");
+
+
 
 				  			var player = videojs('mp4-video-'+tabId);
 
@@ -452,15 +455,47 @@
 
 				  					//TODO the controls should be hidden when initiating the player.
 				  					$('div.vjs-control-bar').hide();
+				  						console.log("Playing")
+					  					var playerCurrentTime = player.currentTime();
+					  					var newTime = state.currentTime/ 1000;
+					  					if(Math.abs(playerCurrentTime - newTime) > 1){
+					  						player.currentTime(newTime)
+					  					}else{
+					  						player.play();
+					  					}
+			  					},
+				  				play: function(){
+				  					player.play();
+				  				},
+				  				pause: function(){
+				  					player.pause();
+				  				}
+				  			});
 
-				  					var playerCurrentTime = player.currentTime();
+				  			var player_1 = videojs('mp4-video-'+tabId_1);
+
+				  			state.tickListeners.push({
+				  				tick: function(){
+				  					//TODO: this line should be called only once
+				  					$('video').attr("width", 640);
+
+				  					//TODO the controls should be hidden when initiating the player.
+				  					$('div.vjs-control-bar').hide();
+
+				  					var player1CurrentTime = player_1.currentTime();
 				  					var newTime = state.currentTime/ 1000;
-				  					if(Math.abs(playerCurrentTime - newTime) > 1){
-				  						player.currentTime(newTime)
+				  					if(Math.abs(player1CurrentTime - newTime) > 1){
+				  						player_1.currentTime(newTime)
 				  					}else{
-				  						player.play();
+				  						player_1.play();
 				  					}
 
+				  				},
+				  				play: function(){
+				  					player_1.play();
+				  				},
+				  				pause: function(){
+				  					player_1.pause();
 				  				}
 				  			});
 				  		});
@@ -489,6 +524,7 @@
 				state.maxTime = 45000; // number of milliseconds
 
 				// TODO need to move this function call to inside the apiCall callback
+				$("#annotation-area").width($("#canCont").width() - $("#legends").width() - 25);
 				initAnnotation();
 			});
 		</script>
