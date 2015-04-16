@@ -3,7 +3,7 @@ var setSizes = function() {
 
   //TODO: subtract the size of the annotation track below
   $("#canCont").height($(document).height() - 150 - $("#footer").height());
-  $("#featureList").height($("#canCont").height() - 490);
+
 
   if (movan.sidebyside == 1) {
     $("#lefttabs").width(($(document).width() - $("#legends").width() - 60)/2 - 10);
@@ -15,6 +15,8 @@ var setSizes = function() {
     $("#righttabs").hide();
   }
 
+  $("#lefttabs").height($("#canCont").height() - $("#annotation-area").height());
+  $("#featureList").height($("#lefttabs").height() - $("#tabs-container").height() - 30);
   $("#divider").height($("#lefttabs").height());
   $("#righttabs").height($("#lefttabs").height());
   $("#legends").height($("#canCont").height());
