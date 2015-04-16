@@ -1,7 +1,7 @@
 var anim = {
 
 animIndex : 0,  // Current frame duing animation
-playAnim : false,  
+playAnim : false,
 animSVG : [],  // SVG DOM element for the animation
 ds : 4,  // Down-sampling rate
 
@@ -10,15 +10,18 @@ trajFeatIndex: 0,
 
 makeAnim: function (parent,mocap, highlightJ, frameSkip, pad) {
 
+				h = 200;
+				w = 600;
+				
 				var svg = parent.append("svg")
 					.attr("width", w)
 					.attr("height", h)
 					.attr("overflow","scroll")
 					.style("display","inline-block");
 
-				
+
 				anim.animIndex = 0;
-				
+
 				currentFrame = mocap.getPositionsAt(anim.animIndex).map(function(d) {
 					return {
 						x : d.x * movan.figureScale + 160,
@@ -26,14 +29,14 @@ makeAnim: function (parent,mocap, highlightJ, frameSkip, pad) {
 						z : d.z * movan.figureScale
 					};
 				});
-				
+
 				//bones
 				svg.selectAll("line")
 				.data(mocap.connectivityMatrix)
 				.enter()
 				.append("line")
 				.attr("stroke", "grey")
-				.attr("stroke-width",5)			
+				.attr("stroke-width",5)
 				.attr("stroke", "black")
 				.attr("x1", function(d, j) {
 					return currentFrame[d[0].jointIndex].x;
@@ -47,8 +50,8 @@ makeAnim: function (parent,mocap, highlightJ, frameSkip, pad) {
 				.attr("y2", function(d, j) {
 					return currentFrame[d[1].jointIndex].y;
 				});
-				
-				
+
+
 				svg.selectAll("circle")
 				.data(currentFrame)
 				.enter()
@@ -71,12 +74,12 @@ makeAnim: function (parent,mocap, highlightJ, frameSkip, pad) {
 						return 'black';
 				});
 
-			
+
 		// 		if (movan.selectedFeats.length > 0 ) {
 		// 			//The line SVG Path we draw
 		// 			svg.append("circle")
 		// 			.attr("class","traj")
-		//             .attr("cx", function(d) { 
+		//             .attr("cx", function(d) {
 		// 				return currentFrame[anim.trajJointIndex].x;
 		// 			}).attr("cy", function(d) {
 		// 				return currentFrame[anim.trajJointIndex].y;
@@ -90,16 +93,16 @@ makeAnim: function (parent,mocap, highlightJ, frameSkip, pad) {
 		// 	return movan.selectedFeats[anim.trajFeatIndex].f.colormap(value);
 		// });
 		// 		}
-				
+
 				$("#featureList").scrollLeft(0);
-				
+
 				anim.animIndex++;
 				if (anim.animIndex >=frames.length)
 					anim.animIndex = 0;
-							
+
 				//playAnim=true;
 				return svg;
-				
+
 },
 
 
@@ -117,11 +120,11 @@ drawFigure: function() {
 			z : d.z * movan.figureScale
 		};
 	});
-	
-	
+
+
 	// svg.append("circle")
 	// .attr("class","traj")
- //    .attr("cx", function(d) { 
+ //    .attr("cx", function(d) {
 	// 	return currentFrame[anim.trajJointIndex].x;
 	// }).attr("cy", function(d) {
 	// 	return currentFrame[anim.trajJointIndex].y;
@@ -134,7 +137,7 @@ drawFigure: function() {
 	// 		value = movan.selectedFeats[anim.trajFeatIndex].data[i][2];
 	// 	return movan.selectedFeats[anim.trajFeatIndex].f.colormap(value);
 	// });
-	
+
 	//draw joints
 	svg.selectAll("circle")
 	.data(currentFrame)
@@ -177,25 +180,25 @@ drawFigure: function() {
 		return currentFrame[d[1].jointIndex].y;
 	});
 
-	
-	
+
+
 	// highlight the feature box
 	feat = d3.select("#featureList");//.selectAll("rect#featbox"+Math.floor((animIndex-1)/frameSkip));
 //	if (old != null) {
 //		console.log(Math.floor((animIndex)/frameSkip));
-//		
+//
 //		old.attr("fill", old.attr("orgfill"));
 //	}
-	
+
 //	d3.select("body").selectAll("rect#featbox"+Math.floor(animIndex/frameSkip))
-//	.attr("fill", "blue");	
-	
+//	.attr("fill", "blue");
+
 //	feat.select("#pointline").remove();
 //	feat.insert("div",":first-child")
 //	.attr("id","pointline")
 //	.style("position", "absolute")
 //	.style("left", function(d) {
-////		if (grootOffset[Math.floor((animIndex)/frameSkip)]-15 > currentFrame[0].x+200)	
+////		if (grootOffset[Math.floor((animIndex)/frameSkip)]-15 > currentFrame[0].x+200)
 ////			return currentFrame[0].x+200+"px";
 ////		else
 //			return 	grootOffset[Math.floor((animIndex)/frameSkip)]-15+"px";
@@ -206,8 +209,8 @@ drawFigure: function() {
 //	.style("border","1px solid steelblue")
 //	//.style("background-color", "steelblue")
 //	;
-	
-	
+
+
 	if (anim.animIndex>0)
 		d3.selectAll("#featbox"+Math.floor((anim.animIndex)/movan.frameSkip-1))
 		.transition().ease("bounce")
@@ -217,17 +220,17 @@ drawFigure: function() {
 		.attr("y",function(d){
 			return d3.select(this).attr("orgtop");
 		});
-	
+
 	d3.selectAll("#featbox"+Math.floor((anim.animIndex)/movan.frameSkip)).attr("height",40);
 	d3.selectAll("#featbox"+Math.floor((anim.animIndex)/movan.frameSkip)).attr("y",function(d) {
 		return d3.select(this).attr("orgtop")-20;
 	});
 
-	
-	//if (grootOffset[Math.floor((animIndex)/frameSkip)]-15 > currentFrame[0].x)		
+
+	//if (grootOffset[Math.floor((animIndex)/frameSkip)]-15 > currentFrame[0].x)
 		$("#featureList").scrollLeft(movan.dataTracks[movan.dataTracks.length - 1].rootOffset[Math.floor((anim.animIndex)/movan.frameSkip)]-400);
 
-	
+
 	anim.animIndex+=anim.ds;
 	if (anim.animIndex >=mocap.frameCount) {
 			anim.animIndex =0;
@@ -236,9 +239,9 @@ drawFigure: function() {
 			feat.select("#pointline").remove();
 			$("#featureList").scrollLeft(0);
 		}
-	
+
 	//d3.timer(drawFigure(animSVG,gframes,gskel, selectedJoint,frameSkip,padding), 300);
-	
+
 	return false;
 	}
 }
