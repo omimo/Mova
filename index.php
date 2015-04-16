@@ -311,6 +311,10 @@
 						}
 						
 					}
+				},
+				setMaxTime: function(time){
+					console.log("Setting max time to " + time);
+					timeScale.domain([0, time])
 				}
 			}
 
@@ -403,7 +407,7 @@
 									// TODO uncomment following lines for creating new tab for bvh after fixing in Omid's code
 									// for now assume that there just a single bvh that gets loaded in the default bvh tab
 									// remove this line and uncomment next; commented for dev purpose only
-									// fileHandler.loadDataTrack(asset_url,movan.callbackForData);
+									fileHandler.loadDataTrack(asset_url,movan.callbackForData);
 
 									state.tickListeners.push({
 										tick: function(){
@@ -525,9 +529,6 @@
 						});
 
 				}
-
-				//find a way to calculate the maxTime
-				state.maxTime = 45000; // number of milliseconds
 
 				// TODO need to move this function call to inside the apiCall callback
 				$("#annotation-area").width($("#canCont").width() - $("#legends").width() - 25);
