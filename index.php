@@ -155,8 +155,8 @@
 			</div>
 				<div id="annotation-area" >
 					<div id="controls-wrapper" style="display: table; margin: 0 auto;">
-						<span id="play-btn"><i class="fa fa-play fa-3x"></i></span>
-						<span id="pause-btn"><i class="fa fa-pause fa-3x"></i></span>
+						<span id="play-btn"><i class="fa fa-play fa-3x"></i>&nbsp;</span>
+						<span id="pause-btn"><i class="fa fa-pause fa-3x"></i>&nbsp;</span>
 						<span id="download-btn"><i class="fa fa-save fa-3x"></i></span>
 						<span id="link"></span>
 					</div>
@@ -357,174 +357,181 @@
 
 				var params = parseURLParams(document.URL);
 
-				var take_id = params["take_id"][0];
-				var url = "/takes/"+take_id+".json";
+				var take_id, url;
+				if(typeof params != 'undefined'){
+					take_id = params["take_id"][0];
+					url = "/takes/"+take_id+".json";
+				}
 
-				apiCall(url, function(data){
-				  var data_tracks = data.data_tracks;
+				if(url != undefined){
+					apiCall(url, function(data){
+						var data_tracks = data.data_tracks;
 
-				  var bvhFiles = [];
-				  var c3dFiles = [];
-				  var movFiles = [];
-				  var mp4Files = [];
-				  data_tracks.forEach(function(d){
+						var bvhFiles = [];
+						var c3dFiles = [];
+						var movFiles = [];
+						var mp4Files = [];
+						data_tracks.forEach(function(d){
 
-				  	var resourceURL = d.data_track_url;
-				  	var lastIndexOfHyphen = resourceURL.lastIndexOf("-");
-				  	var resourceType = resourceURL.substring(lastIndexOfHyphen + 1, resourceURL.lastIndexOf("."));
+							var resourceURL = d.data_track_url;
+							var lastIndexOfHyphen = resourceURL.lastIndexOf("-");
+							var resourceType = resourceURL.substring(lastIndexOfHyphen + 1, resourceURL.lastIndexOf("."));
 
-				  	if(!remoteResourceMapByType[resourceType]){
-				  		remoteResourceMapByType[resourceType] = [];
-				  	}
-		  			remoteResourceMapByType[resourceType].push(resourceURL);
-				  })
+							if(!remoteResourceMapByType[resourceType]){
+								remoteResourceMapByType[resourceType] = [];
+							}
+							remoteResourceMapByType[resourceType].push(resourceURL);
+						})
 
-				  //add a bvh tab for each
-				  for(var type in remoteResourceMapByType){
-				  	var resources = remoteResourceMapByType[type];
-				  	for(var i in resources){
-				  		var resource = resources[i];
-				  		showResource(type, resource);
-				  	}
-				  }
-
-
-				  function showResource(type, resource){
-				  	console.log("#showResource " + type + " " + resource)
-				  	switch(type){
-				  		case "bvh":
-				  		apiCall(resource, function(data){
-				  			var asset_url = data.asset_url;
-
-				  			// TODO uncomment following lines for creating new tab for bvh after fixing in Omid's code
-				  			// for now assume that there just a single bvh that gets loaded in the default bvh tab
-				  			// remove this line and uncomment next; commented for dev purpose only
-				  			// fileHandler.loadDataTrack(asset_url,movan.callbackForData);
-
-				  			state.tickListeners.push({
-				  				tick: function(){
-
-				  				},
-				  				play: function(){
-
-				  				},
-				  				pause: function(){
-
-				  				}
-				  			});
-
-				  			// var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
-				  			// //add the nav pill for tab
-				  			// $("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
-				  			// //add the tab
-				  			// $("<div id='"+tabId+"'></div>").appendTo("#tabs-container");
-				  			// $("#maintabs").tabs("refresh");
-				  		})
-				  		break;
-
-				  		case "mp4":
-				  		//TODO create new tab and load the video
-		  				apiCall(resource, function(data){
-				  			var asset_url = data.asset_url;
-
-				  			var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
-				  			//add the nav pill for tab
-				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#lefttabs ul")
-				  			//add the tab
-				  			$("<div id='"+tabId+"'><video id='mp4-video-"+tabId+"' width='640'> \
-				  				<source type='video/mp4' src='"+asset_url+"' width='640'></video></div>").appendTo("#left-tabs-container");
-				  			$("#lefttabs").tabs("refresh");
+						//add a bvh tab for each
+						for(var type in remoteResourceMapByType){
+							var resources = remoteResourceMapByType[type];
+							for(var i in resources){
+								var resource = resources[i];
+								showResource(type, resource);
+							}
+						}
 
 
-				  			var tabId_1 = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?")) + "_1";
-				  			//add the nav pill for tab
-				  			$("<li><a href='#"+tabId_1+"'>"+tabId_1+"</a></li>").appendTo("#righttabs ul");
-				  			//add the tab
-				  			$("<div id='"+tabId_1+"'><video id='mp4-video-"+tabId_1+"' width='640'> \
-				  				<source type='video/mp4' src='"+asset_url+"' width='640'></video></div>").appendTo("#right-tabs-container");
-				  			$("#righttabs").tabs("refresh");
+						function showResource(type, resource){
+							console.log("#showResource " + type + " " + resource)
+							switch(type){
+								case "bvh":
+								apiCall(resource, function(data){
+									var asset_url = data.asset_url;
+
+									// TODO uncomment following lines for creating new tab for bvh after fixing in Omid's code
+									// for now assume that there just a single bvh that gets loaded in the default bvh tab
+									// remove this line and uncomment next; commented for dev purpose only
+									// fileHandler.loadDataTrack(asset_url,movan.callbackForData);
+
+									state.tickListeners.push({
+										tick: function(){
+
+										},
+										play: function(){
+
+										},
+										pause: function(){
+
+										}
+									});
+
+									// var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
+									// //add the nav pill for tab
+									// $("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
+									// //add the tab
+									// $("<div id='"+tabId+"'></div>").appendTo("#tabs-container");
+									// $("#maintabs").tabs("refresh");
+								})
+								break;
+
+								case "mp4":
+								//TODO create new tab and load the video
+								apiCall(resource, function(data){
+									var asset_url = data.asset_url;
+
+									var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
+									//add the nav pill for tab
+									$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#lefttabs ul")
+									//add the tab
+									$("<div id='"+tabId+"'><video id='mp4-video-"+tabId+"' width='640'> \
+										<source type='video/mp4' src='"+asset_url+"' width='640'></video></div>").appendTo("#left-tabs-container");
+									$("#lefttabs").tabs("refresh");
+
+
+									var tabId_1 = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?")) + "_1";
+									//add the nav pill for tab
+									$("<li><a href='#"+tabId_1+"'>"+tabId_1+"</a></li>").appendTo("#righttabs ul");
+									//add the tab
+									$("<div id='"+tabId_1+"'><video id='mp4-video-"+tabId_1+"' width='640'> \
+										<source type='video/mp4' src='"+asset_url+"' width='640'></video></div>").appendTo("#right-tabs-container");
+									$("#righttabs").tabs("refresh");
 
 
 
-				  			var player = videojs('mp4-video-'+tabId);
+									var player = videojs('mp4-video-'+tabId);
 
-				  			state.tickListeners.push({
-				  				tick: function(){
-				  					//TODO: this line should be called only once
-				  					$('video').attr("width", 640);
+									state.tickListeners.push({
+										tick: function(){
+											//TODO: this line should be called only once
+											$('video').attr("width", 640);
 
-				  					//TODO the controls should be hidden when initiating the player.
-				  					$('div.vjs-control-bar').hide();
-				  						console.log("Playing")
-					  					var playerCurrentTime = player.currentTime();
-					  					var newTime = state.currentTime/ 1000;
-					  					if(Math.abs(playerCurrentTime - newTime) > 1){
-					  						player.currentTime(newTime)
-					  					}else{
-					  						player.play();
-					  					}
-			  					},
-				  				play: function(){
-				  					player.play();
-				  				},
-				  				pause: function(){
-				  					player.pause();
-				  				}
-				  			});
+											//TODO the controls should be hidden when initiating the player.
+											$('div.vjs-control-bar').hide();
+												console.log("Playing")
+						  					var playerCurrentTime = player.currentTime();
+						  					var newTime = state.currentTime/ 1000;
+						  					if(Math.abs(playerCurrentTime - newTime) > 1){
+						  						player.currentTime(newTime)
+						  					}else{
+						  						player.play();
+						  					}
+										},
+										play: function(){
+											player.play();
+										},
+										pause: function(){
+											player.pause();
+										}
+									});
 
-				  			var player_1 = videojs('mp4-video-'+tabId_1);
+									var player_1 = videojs('mp4-video-'+tabId_1);
 
-				  			state.tickListeners.push({
-				  				tick: function(){
-				  					//TODO: this line should be called only once
-				  					$('video').attr("width", 640);
+									state.tickListeners.push({
+										tick: function(){
+											//TODO: this line should be called only once
+											$('video').attr("width", 640);
 
-				  					//TODO the controls should be hidden when initiating the player.
-				  					$('div.vjs-control-bar').hide();
+											//TODO the controls should be hidden when initiating the player.
+											$('div.vjs-control-bar').hide();
 
-				  					var player1CurrentTime = player_1.currentTime();
-				  					var newTime = state.currentTime/ 1000;
-				  					if(Math.abs(player1CurrentTime - newTime) > 1){
-				  						player_1.currentTime(newTime)
-				  					}else{
-				  						player_1.play();
-				  					}
+											var player1CurrentTime = player_1.currentTime();
+											var newTime = state.currentTime/ 1000;
+											if(Math.abs(player1CurrentTime - newTime) > 1){
+												player_1.currentTime(newTime)
+											}else{
+												player_1.play();
+											}
 
-				  				},
-				  				play: function(){
-				  					player_1.play();
-				  				},
-				  				pause: function(){
-				  					player_1.pause();
-				  				}
-				  			});
-				  		});
-				  		break;
+										},
+										play: function(){
+											player_1.play();
+										},
+										pause: function(){
+											player_1.pause();
+										}
+									});
+								});
+								break;
 
-				  		case "mov":
-				  		//TODO create new tab and load the video
-				  		apiCall(resource, function(data){
-				  			var asset_url = data.asset_url;
+								case "mov":
+								//TODO create new tab and load the video
+								apiCall(resource, function(data){
+									var asset_url = data.asset_url;
 
-				  			var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
-				  			//add the nav pill for tab
-				  			$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#lefttabs ul")
-				  			//add the tab
-				  			$("<div id='"+tabId+"'><video id='mov-video-'"+tabId+" width='640px'> \
-				  				<source type='video/mov' src='"+asset_url+"'></video></div>").appendTo("#tabs-container");
-				  			$("#lefttabs").tabs("refresh");
-				  		});
-				  		break;
+									var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
+									//add the nav pill for tab
+									$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#lefttabs ul")
+									//add the tab
+									$("<div id='"+tabId+"'><video id='mov-video-'"+tabId+" width='640px'> \
+										<source type='video/mov' src='"+asset_url+"'></video></div>").appendTo("#tabs-container");
+									$("#lefttabs").tabs("refresh");
+								});
+								break;
 
-				  	}
-				  }
-				});
+							}
+						}
+						});
+
+				}
 
 				//find a way to calculate the maxTime
 				state.maxTime = 45000; // number of milliseconds
 
 				// TODO need to move this function call to inside the apiCall callback
 				$("#annotation-area").width($("#canCont").width() - $("#legends").width() - 25);
+				$("#pause-btn").hide();
 				initAnnotation();
 			});
 		</script>

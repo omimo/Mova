@@ -20,6 +20,8 @@ var setSizes = function() {
   $("#divider").height($("#lefttabs").height());
   $("#righttabs").height($("#lefttabs").height());
   $("#legends").height($("#canCont").height());
+
+  $("#annotation-area").width($("#canCont").width() - $("#legends").width() - 25);
 };
 
 $(document).ready(function() {
