@@ -105,7 +105,9 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 			return d.id;
 		})
 
-		gEnter.append("rect").attr("class", "segment");
+		gEnter.append("text").attr("class", "annotation-label");
+
+		gEnter.append("rect").attr("class", "segment");		
 		
 		g.select("rect.segment")
 		.attr("fill", "yellow")
@@ -117,6 +119,17 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		})
 		.classed({"selected": function(d){return d.selected}})
 		.call(segmentDrag)
+
+		g.select("text.annotation-label")
+		.attr({
+			"x": function(d){return d.x + 3},
+			"width": function(d){return d.width},
+			"height": 30,
+			"y": thiz.topleft.y + 20
+		})
+		.text(function(d){
+			return d.annotation;
+		})
 
 		g.exit().remove();
 

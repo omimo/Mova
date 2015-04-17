@@ -175,6 +175,7 @@ function initAnnotation(){
           var annotation = $("#jqxTree").jqxTree('getSelectedItem').label;
           brushes[b].annotateSelected(annotation);
           $("#annotation-graph-dialog").dialog("close");
+          brushes[b].redraw();
         }
       }
     }

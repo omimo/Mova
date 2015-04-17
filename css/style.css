@@ -265,6 +265,10 @@ font: 18px/30px sans-serif}
 .ui-slider-handle {top: -0.1em !important; cursor:pointer !important;}
 .ui-slider-horizontal {height:0.6em !important; cursor:pointer !important;}
 
+text.annotation-label{
+	font-size: 12px;
+	font-weight: bold;
+}
 
 
 .removeFeatButton {
