@@ -1,4 +1,4 @@
-AnnotationTrack = function(svg, scale, topleft){
+AnnotationTrack = function(svg, scale, topleft, listener){
 	var thiz = this;
 
 	thiz.selected = null;
@@ -7,6 +7,7 @@ AnnotationTrack = function(svg, scale, topleft){
 	this.scale = scale;
 	this.segmentData = [];
 	this.topleft = topleft;
+	this.listener = listener;
 
 	this.annotateSelected = function(annotation){
 		for(var i in thiz.segmentData){
@@ -14,6 +15,24 @@ AnnotationTrack = function(svg, scale, topleft){
 				thiz.segmentData[i].annotation = annotation;
 			}
 		}
+	}
+
+	this.getSelected= function(){
+		for(var i in this.segmentData){
+			var d = this.segmentData[i];
+			if(d.selected){
+				return d;
+			}
+		}
+		return undefined;
+	}
+
+	this.deselectAll = function(){
+		for(var i in this.segmentData){
+			var d = this.segmentData[i];
+			d.selected = false;
+		}
+		this.redraw();
 	}
 
 	thiz.getAnnotationData = function(){
@@ -179,14 +198,21 @@ AnnotationTrack = function(svg, scale, topleft){
 		thiz.redraw();
 	})
 	.on("dragend", function(){
-		console.log("segment dragend")
 		var pos = d3.mouse(this);
 		if(arrayEquals(pos, currentSegStartPos)){
+			if(listener){
+				listener('select', thiz);
+			}
+
 			var id = d3.select(this).node().parentNode.id;
+
 			for(var i in thiz.segmentData){
 				var d = thiz.segmentData[i];
+
 				if(d.id == id){
-					if(d.selected == true){
+					var currentSelected = d.selected;
+					thiz.deselectAll();
+					if(currentSelected == true){
 						d.selected = false;
 					}else{
 						d.selected = true;

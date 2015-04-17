@@ -135,15 +135,29 @@ function initAnnotation(){
         brushes[i].removeSelected();
       }
     }else if(d3.event.keyCode == 65){
-      var selected = 
-      showAnnotationSelectionUI();
+      //check if there is any of the segments selected
+      for(var i in brushes){
+        var brush = brushes[i];
+        if(brush.getSelected() != undefined){
+          showAnnotationSelectionUI();  
+          break;
+        }        
+      }      
     }
   });
 
   console.log("Adding annotation track")
-  brushes.push(new AnnotationTrack(svgContainer, timeScale, {"x":25, "y": 50}));
-  brushes.push(new AnnotationTrack(svgContainer, timeScale, {"x":25, "y": 100}));
-  brushes.push(new AnnotationTrack(svgContainer, timeScale, {"x":25, "y": 150}));
+  var listener = function(event, source){
+    for(var i in brushes){
+      var b = brushes[i];
+      if(b != source){
+        b.deselectAll();
+      }
+    }
+  }
+  brushes.push(new AnnotationTrack(svgContainer, timeScale, {"x":25, "y": 50}, listener));
+  brushes.push(new AnnotationTrack(svgContainer, timeScale, {"x":25, "y": 100}, listener));
+  brushes.push(new AnnotationTrack(svgContainer, timeScale, {"x":25, "y": 150}, listener));
 
   $(document).on("contextmenu", ".extent", function(event){
     console.log(this);
@@ -298,6 +312,7 @@ function initAnnotation(){
       console.log(data);
       $("#link").html("");
       $('<a href="data:' + data + '" download="data.json">Download Annotations</a>').appendTo('#link');
+      $("#link a")[0].click();
     })
   }
 

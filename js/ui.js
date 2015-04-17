@@ -34,13 +34,18 @@ $(document).ready(function() {
 
   $("#divider").click(function(event) {
     if (movan.sidebyside == 0) {
+      $("#divider-btn-close").show();
+      $("#divider-btn-open").hide();
+      
       movan.sidebyside=1;
-
     }
-    else
+    else{
+      $("#divider-btn-close").hide();
+      $("#divider-btn-open").show();
       movan.sidebyside=0;
+    }
 
-      setSizes();
+    setSizes();
   });
 
   // $("#tabs").click(function(event, ui){

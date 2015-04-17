@@ -133,9 +133,9 @@
 				</div>
 			</div>
 
-			<div id="divider" style="vertical-align: middle;">
-			<!-- Use font-awesome for left and right arrow here -->
-				<span id="divider-btn"><i class="fa fa-play fa-sm"></i></span>
+			<div id="divider">
+				<span id="divider-btn-close"><i class="fa fa-caret-right fa-sm"></i></span>
+				<span id="divider-btn-open"><i class="fa fa-caret-left fa-sm"></i></span>
 			</div>
 			
 			<div id="righttabs">
@@ -157,7 +157,7 @@
 					<div id="controls-wrapper" style="display: table; margin: 0 auto;">
 						<span id="play-btn"><i class="fa fa-play fa-3x"></i>&nbsp;</span>
 						<span id="pause-btn"><i class="fa fa-pause fa-3x"></i>&nbsp;</span>
-						<span id="download-btn"><i class="fa fa-save fa-3x"></i></span>
+						<span id="download-btn"><i class="fa fa-download fa-3x"></i></span>
 						<span id="link"></span>
 					</div>
 				    <svg id="svg-container" width="900" height="300" style="margin-left: 10px;"></svg>
@@ -407,7 +407,7 @@
 									// TODO uncomment following lines for creating new tab for bvh after fixing in Omid's code
 									// for now assume that there just a single bvh that gets loaded in the default bvh tab
 									// remove this line and uncomment next; commented for dev purpose only
-									fileHandler.loadDataTrack(asset_url,movan.callbackForData);
+									// fileHandler.loadDataTrack(asset_url,movan.callbackForData);
 
 									state.tickListeners.push({
 										tick: function(){
@@ -533,6 +533,8 @@
 				// TODO need to move this function call to inside the apiCall callback
 				$("#annotation-area").width($("#canCont").width() - $("#legends").width() - 25);
 				$("#pause-btn").hide();
+				$("#link").hide();
+				$("#divider-btn-open").hide();
 				initAnnotation();
 			});
 		</script>
