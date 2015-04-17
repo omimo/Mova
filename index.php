@@ -313,8 +313,8 @@
 					}
 				},
 				setMaxTime: function(time){
-					console.log("Setting max time to " + time);
 					timeScale.domain([0, time])
+					this.maxTime = time;
 				}
 			}
 
