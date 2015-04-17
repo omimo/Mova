@@ -109,6 +109,12 @@ div.over2 {
 #figure {
 	overflow-x: scroll;
 	padding-left: 0px;
+	height: 200px;
+}
+
+#anim {
+	padding-left: 0px;
+	height: 200px;
 }
 
 #featureList {
