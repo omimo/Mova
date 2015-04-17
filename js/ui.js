@@ -16,7 +16,7 @@ var setSizes = function() {
   }
 
   $("#lefttabs").height($("#canCont").height() - $("#annotation-area").height());
-  $("#featureList").height($("#lefttabs").height() - $("#tabs-container").height() - 30);
+  $("#featureList").height($("#lefttabs").height() - $("#left-tabs-container").height() - 40);
   $("#divider").height($("#lefttabs").height());
   $("#righttabs").height($("#lefttabs").height());
   $("#legends").height($("#canCont").height());
@@ -36,7 +36,7 @@ $(document).ready(function() {
     if (movan.sidebyside == 0) {
       $("#divider-btn-close").show();
       $("#divider-btn-open").hide();
-      
+
       movan.sidebyside=1;
     }
     else{
