@@ -160,7 +160,7 @@
 						<span id="download-btn"><i class="fa fa-download fa-3x"></i></span>
 						<span id="link"></span>
 					</div>
-				    <svg id="svg-container" width="900" height="300" style="margin-left: 10px;"></svg>
+				    <svg id="svg-container" width="900" height="200" style="margin-left: 10px;"></svg>
 				    <div id="annotation-graph-dialog">
 				        <div id='jqxTree'>
 				        </div>
