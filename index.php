@@ -134,9 +134,9 @@
 					before the content of dynamically added tabs -->
 				<div id="left-tabs-container">
 					<div id="anim">
-						<button id="btnPlay">
+						<!-- <button id="btnPlay">
 							&nbsp;Play&nbsp;&nbsp;
-						</button>
+						</button> -->
 					</div>
 					<div id="figure">
 
@@ -153,7 +153,7 @@
 				<span id="divider-btn-close"><i class="fa fa-caret-right fa-sm"></i></span>
 				<span id="divider-btn-open"><i class="fa fa-caret-left fa-sm"></i></span>
 			</div>
-			
+
 			<div id="righttabs">
 				<ul>
 
@@ -325,7 +325,7 @@
 						}else{
 							listener.pause();
 						}
-						
+
 					}
 				},
 				setMaxTime: function(time){
@@ -427,13 +427,16 @@
 
 									state.tickListeners.push({
 										tick: function(){
+											var playerCurrentTime = player.currentTime();
+											var newTime = state.currentTime/ 1000;
+
 
 										},
 										play: function(){
-
+											anim.playAnim = true;
 										},
 										pause: function(){
-
+											anim.playAnim = false;
 										}
 									});
 

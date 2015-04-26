@@ -57,11 +57,11 @@ $(document).ready(function() {
   // }
   // );
 
-  $("#btnPlay").button();
-  $("#btnPlay").click(function(event) {
-    anim.playAnim = true;
-    $("#btnPlay").button('option', 'label', 'Pause');
-  });
+  // $("#btnPlay").button();
+  // $("#btnPlay").click(function(event) {
+  //   anim.playAnim = true;
+  //   $("#btnPlay").button('option', 'label', 'Pause');
+  // });
 
   $("#sideAcaccordion").accordion({
     heightStyle : "content"
