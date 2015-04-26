@@ -94,6 +94,22 @@
 	    rect.selected-ex{
 	      fill: orange;
 	    }
+
+	    .axis path,
+		.axis line {
+		    fill: none;
+		    stroke: black;
+		    shape-rendering: crispEdges;
+		}
+
+		.axis path {
+			stroke-width: 3px;
+		}
+
+		.axis text {
+		    font-family: sans-serif;
+		    font-size: 11px;
+		}
 		</style>
 	</head>
 	<body>
@@ -313,8 +329,8 @@
 					}
 				},
 				setMaxTime: function(time){
-					timeScale.domain([0, time])
 					this.maxTime = time;
+					updateTimeScale(0, time)
 				}
 			}
 

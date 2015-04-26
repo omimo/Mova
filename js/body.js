@@ -190,9 +190,21 @@ function initAnnotation(){
     var slider = d3.svg.brush()
                   .x(timeScale).clamp(true);
 
+    axis = d3.svg.axis().scale(timeScale)
+    .tickFormat(function(d){
+        var prefix = d3.formatPrefix(d);
+        return prefix.scale(d);
+    });
+
+
     var gSlider = svgContainer.append("g")
         .attr("class", "slider")
         .call(slider);
+
+    scrubberAxis = gSlider.append("g")
+    .attr("transform", "translate(0, "+(sliderHeight/2)+")")
+    .attr("class", "axis")
+    .call(axis)
 
     gSlider.selectAll("rect")
     .attr({
@@ -200,10 +212,12 @@ function initAnnotation(){
       "y": 0,
       "visibility": "hidden"
     })
+
     scrubHandle = gSlider.append("circle")
         .attr("class", "handle")
         .attr("cx", timeScale(0))
         .attr("cy", sliderHeight/2)
+        .attr("opacity", 0.6)
         .attr("r", 9);
 
     slider.on("brush", function() {
@@ -339,4 +353,10 @@ function initAnnotation(){
     $("#jqxTree").jqxTree('collapseAll');
     $("#jqxTree").jqxTree('expandItem', selectedItem);
   });
+
+  window.updateTimeScale = function(min, max){
+    timeScale.domain([min, max]);
+    axis.ticks(max/1000);
+    scrubberAxis.call(axis);
+  }
 }
