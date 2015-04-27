@@ -460,7 +460,7 @@
 									//add the nav pill for tab
 									$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#lefttabs ul")
 									//add the tab
-									$("<div id='"+tabId+"'><video id='mp4-video-"+tabId+"'> \
+									$("<div id='"+tabId+"' width='100%'><video id='mp4-video-"+tabId+"' width='100%'> \
 										<source type='video/mp4' src='"+asset_url+"'/></video></div>").appendTo("#left-tabs-container");
 									$("#lefttabs").tabs("refresh");
 
@@ -469,7 +469,7 @@
 									//add the nav pill for tab
 									$("<li><a href='#"+tabId_1+"'>"+tabId_1+"</a></li>").appendTo("#righttabs ul");
 									//add the tab
-									$("<div id='"+tabId_1+"'><video id='mp4-video-"+tabId_1+"' > \
+									$("<div id='"+tabId_1+"'><video id='mp4-video-"+tabId_1+"'  width='100%'> \
 										<source type='video/mp4' src='"+asset_url+"'/></video></div>").appendTo("#right-tabs-container");
 									$("#righttabs").tabs("refresh");
 
