@@ -239,6 +239,7 @@ drawFigure: function() {
 			//$( "#btnPlay" ).button('option', 'label', '&nbsp;Play&nbsp;&nbsp;');
 			feat.select("#pointline").remove();
 			$("#featureList").scrollLeft(0);
+			$("#figure").scrollLeft(0);
 		}
 
 	//d3.timer(drawFigure(animSVG,gframes,gskel, selectedJoint,frameSkip,padding), 300);

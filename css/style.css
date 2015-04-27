@@ -288,6 +288,11 @@ text.annotation-label{
 	cursor: pointer; cursor: hand;
 }
 
+video {
+  width: 100%    !important;
+  height: auto   !important;
+}
+
 /*======================================================================
 	Selectric
 ======================================================================*/

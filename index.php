@@ -460,8 +460,8 @@
 									//add the nav pill for tab
 									$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#lefttabs ul")
 									//add the tab
-									$("<div id='"+tabId+"'><video id='mp4-video-"+tabId+"' width='640'> \
-										<source type='video/mp4' src='"+asset_url+"' width='640'></video></div>").appendTo("#left-tabs-container");
+									$("<div id='"+tabId+"'><video id='mp4-video-"+tabId+"'> \
+										<source type='video/mp4' src='"+asset_url+"'/></video></div>").appendTo("#left-tabs-container");
 									$("#lefttabs").tabs("refresh");
 
 
@@ -469,8 +469,8 @@
 									//add the nav pill for tab
 									$("<li><a href='#"+tabId_1+"'>"+tabId_1+"</a></li>").appendTo("#righttabs ul");
 									//add the tab
-									$("<div id='"+tabId_1+"'><video id='mp4-video-"+tabId_1+"' width='640'> \
-										<source type='video/mp4' src='"+asset_url+"' width='640'></video></div>").appendTo("#right-tabs-container");
+									$("<div id='"+tabId_1+"'><video id='mp4-video-"+tabId_1+"' > \
+										<source type='video/mp4' src='"+asset_url+"'/></video></div>").appendTo("#right-tabs-container");
 									$("#righttabs").tabs("refresh");
 
 
@@ -480,7 +480,7 @@
 									state.tickListeners.push({
 										tick: function(){
 											//TODO: this line should be called only once
-											$('video').attr("width", 640);
+											//$('video').attr("width", "100%");
 
 											//TODO the controls should be hidden when initiating the player.
 											$('div.vjs-control-bar').hide();
@@ -506,7 +506,7 @@
 									state.tickListeners.push({
 										tick: function(){
 											//TODO: this line should be called only once
-											$('video').attr("width", 640);
+											//$('video').attr("width", "100%");
 
 											//TODO the controls should be hidden when initiating the player.
 											$('div.vjs-control-bar').hide();
@@ -539,7 +539,7 @@
 									//add the nav pill for tab
 									$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#lefttabs ul")
 									//add the tab
-									$("<div id='"+tabId+"'><video id='mov-video-'"+tabId+" width='640px'> \
+									$("<div id='"+tabId+"'><video id='mov-video-'"+tabId+" width='100%'> \
 										<source type='video/mov' src='"+asset_url+"'></video></div>").appendTo("#tabs-container");
 									$("#lefttabs").tabs("refresh");
 								});
