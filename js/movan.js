@@ -203,10 +203,11 @@ var movan = {
 
 				movan.fillDefaultFeatures();
 
-				console.log(t)
+				//console.log(state.tickTime);
 				if(t == "BVH"){
 					var time = dataTrack.frameTime * dataTrack.frameCount * 1000;
 					state.setMaxTime(time);
+				//	state.tickTime = dataTrack.frameTime;
 				}
 
 				// console.log(movan.dataTracks[thisTrackIndex].content.getPositionsAt(0)[0]);

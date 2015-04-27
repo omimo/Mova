@@ -12,7 +12,7 @@ makeAnim: function (parent,mocap, highlightJ, frameSkip, pad) {
 
 				h = 200;
 				w = 600;
-				
+
 				var svg = parent.append("svg")
 					.attr("width", w)
 					.attr("height", h)
@@ -25,7 +25,7 @@ makeAnim: function (parent,mocap, highlightJ, frameSkip, pad) {
 				currentFrame = mocap.getPositionsAt(anim.animIndex).map(function(d) {
 					return {
 						x : d.x * movan.figureScale + 160,
-						y : -1 * d.y * movan.figureScale + 160,
+						y : -1 * d.y * movan.figureScale + 180,
 						z : d.z * movan.figureScale
 					};
 				});
@@ -116,7 +116,7 @@ drawFigure: function() {
 	currentFrame = mocap.getPositionsAt(anim.animIndex).map(function(d) {
 		return {
 			x : d.x * movan.figureScale + 160 ,
-			y : -1 * d.y * movan.figureScale + 160,
+			y : -1 * d.y * movan.figureScale + 180,
 			z : d.z * movan.figureScale
 		};
 	});
@@ -228,14 +228,15 @@ drawFigure: function() {
 
 
 	//if (grootOffset[Math.floor((animIndex)/frameSkip)]-15 > currentFrame[0].x)
-		$("#featureList").scrollLeft(movan.dataTracks[movan.dataTracks.length - 1].rootOffset[Math.floor((anim.animIndex)/movan.frameSkip)]-400);
+	var offset = movan.dataTracks[movan.dataTracks.length - 1].rootOffset[Math.floor((anim.animIndex)/movan.frameSkip)]-400;
+		$("#featureList").scrollLeft(offset);
+		$("#figure").scrollLeft(offset);
 
-
-	anim.animIndex+=anim.ds;
+	//anim.animIndex+=anim.ds;
 	if (anim.animIndex >=mocap.frameCount) {
 			anim.animIndex =0;
 			anim.playAnim = false;
-			$( "#btnPlay" ).button('option', 'label', '&nbsp;Play&nbsp;&nbsp;');
+			//$( "#btnPlay" ).button('option', 'label', '&nbsp;Play&nbsp;&nbsp;');
 			feat.select("#pointline").remove();
 			$("#featureList").scrollLeft(0);
 		}

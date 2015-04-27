@@ -276,7 +276,7 @@
 		</div>
 
 		<script type="text/javascript">
-			d3.timer(anim.drawFigure, 0.0083);
+		//d3.timer(anim.drawFigure, 0.0083);
 			movan.loadFeatures();
 			//movan.loadNew();
 
@@ -305,7 +305,7 @@
 				playing: false,
 				currentTime: 0,
 				maxTime: 0,
-				tickTime: 250,
+				tickTime: 33.333, //250,
 				tickListeners: [],
 				tick: function(){
 					if(this.playing){
@@ -425,12 +425,14 @@
 									// remove this line and uncomment next; commented for dev purpose only
 									fileHandler.loadDataTrack(asset_url,movan.callbackForData);
 
+
 									state.tickListeners.push({
 										tick: function(){
-											var playerCurrentTime = player.currentTime();
-											var newTime = state.currentTime/ 1000;
+											var track = movan.dataTracks[movan.dataTracks.length - 1].content;
+											var newFrame = math.floor((state.currentTime/1000) / track.frameTime);
 
-
+											anim.animIndex = newFrame;
+											anim.drawFigure();
 										},
 										play: function(){
 											anim.playAnim = true;
@@ -482,7 +484,7 @@
 
 											//TODO the controls should be hidden when initiating the player.
 											$('div.vjs-control-bar').hide();
-												console.log("Playing")
+												//console.log("Playing")
 						  					var playerCurrentTime = player.currentTime();
 						  					var newTime = state.currentTime/ 1000;
 						  					if(Math.abs(playerCurrentTime - newTime) > 1){
