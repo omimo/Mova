@@ -70,6 +70,14 @@
 	      opacity: .3
 	    }
 
+	    .resize-left{
+	    	cursor: w-resize;
+	    }
+
+	    .resize-right{
+	    	cursor: e-resize;	
+	    }
+
 	    rect.selected{
 	      fill: red;
 	    }

@@ -84,6 +84,7 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 
 	var trackDrag = d3.behavior.drag();
 	var segmentDrag = d3.behavior.drag();
+	var resizeDrag = d3.behavior.drag();
 
 	var currentStartPos = undefined;
 	// TODO make this variables local
@@ -107,8 +108,13 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 
 		gEnter.append("text").attr("class", "annotation-label");
 
-		gEnter.append("rect").attr("class", "segment");		
-		
+		gEnter.append("rect").attr("class", "segment");
+
+		gEnter.append("rect").attr("class", "resize-left");
+
+		gEnter.append("rect").attr("class", "resize-right");
+
+
 		g.select("rect.segment")
 		.attr("fill", "yellow")
 		.attr({
@@ -119,6 +125,24 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		})
 		.classed({"selected": function(d){return d.selected}})
 		.call(segmentDrag)
+
+		g.select("rect.resize-left")
+		.attr({
+			"x": function(d){return d.x},
+			"width": 5,
+			"height": 30,
+			"y": thiz.topleft.y
+		})
+		.call(resizeDrag);
+
+		g.select("rect.resize-right")
+		.attr({
+			"x": function(d){return d.x + d.width - 5},
+			"width": 5,
+			"height": 30,
+			"y": thiz.topleft.y
+		})
+		.call(resizeDrag);
 
 		g.select("text.annotation-label")
 		.attr({
@@ -136,58 +160,60 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 	}
 
 	trackDrag.on("dragstart", function(){
-			currentStartPos = d3.mouse(this);
-			if(currentStartPos && noOverlap(currentStartPos[0])){
-				var nid = nextId();
-				lastSegData = {"id": nid, "x": currentStartPos[0], "width": 0, "selected": false};
-				thiz.segmentData.push(lastSegData);
-				thiz.redraw();
-			}
-		})
-		.on("drag", function(){
-			var pos = d3.mouse(this);
-
-			//if out of bounds
-			var lx = thiz.topleft.x;
-			if(pos[0] < lx || (pos[0] > (+track.select("rect.track").attr("width") + lx)) ){
-				return;
-			}
-
-			//update only if there is no overlap
-			var t_width = pos[0] - currentStartPos[0];
-			var oldX = lastSegData.x;
-
-			if(t_width < 0){
-				//currently the mouse is on left of the starting point
-				lastSegData.x = pos[0];
-			}else{
-				lastSegData.x = currentStartPos[0];
-			}
-		
-			lastSegData.width = Math.abs(t_width);
-
-			if(!noOverlap(lastSegData.x, lastSegData)){
-				console.log("overlap");
-			}
-			
+		console.log("trackDrag");
+		currentStartPos = d3.mouse(this);
+		if(currentStartPos && noOverlap(currentStartPos[0])){
+			var nid = nextId();
+			lastSegData = {"id": nid, "x": currentStartPos[0], "width": 0, "selected": false};
+			thiz.segmentData.push(lastSegData);
 			thiz.redraw();
-		})
-		.on("dragend", function(){
-			var pos = d3.mouse(this);
+		}
+	})
+	.on("drag", function(){
+		var pos = d3.mouse(this);
 
-			if(pos && noOverlap(pos[0])){
+		//if out of bounds
+		var lx = thiz.topleft.x;
+		if(pos[0] < lx || (pos[0] > (+track.select("rect.track").attr("width") + lx)) ){
+			return;
+		}
 
-			}
+		//update only if there is no overlap
+		var t_width = pos[0] - currentStartPos[0];
+		var oldX = lastSegData.x;
 
-			if(arrayEquals(pos, currentStartPos)){
-				thiz.segmentData.splice(thiz.segmentData.length-1,1);
-				thiz.redraw();
-			}else{
+		if(t_width < 0){
+			//currently the mouse is on left of the starting point
+			lastSegData.x = pos[0];
+		}else{
+			lastSegData.x = currentStartPos[0];
+		}
+	
+		lastSegData.width = Math.abs(t_width);
 
-			}
-		})
+		if(!noOverlap(lastSegData.x, lastSegData)){
+			console.log("overlap");
+		}
+		
+		thiz.redraw();
+	})
+	.on("dragend", function(){
+		var pos = d3.mouse(this);
+
+		if(pos && noOverlap(pos[0])){
+
+		}
+
+		if(arrayEquals(pos, currentStartPos)){
+			thiz.segmentData.splice(thiz.segmentData.length-1,1);
+			thiz.redraw();
+		}else{
+
+		}
+	})
 
 	segmentDrag.on("dragstart", function(event){
+		console.log("segmentDrag");
 		currentSegStartPos = d3.mouse(this);
 		d3.event.sourceEvent.stopPropagation();
 		return false;
@@ -237,7 +263,17 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		}
 	})
 
-	track.call(trackDrag);
+	resizeDrag.on("dragstart", function(){
+
+	})
+	.on("drag", function(){
+		
+	})
+	.on("dragend", function(){
+
+	})
+
+	track.select("rect.track").call(trackDrag);
 
 	track.on("contextmenu", function(){
 		d3.event.preventDefault();
