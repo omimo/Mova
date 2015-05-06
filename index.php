@@ -489,7 +489,7 @@
 									$("#righttabs").tabs("refresh");
 
 
-
+									console.log('mp4-video-'+tabId);
 									var player = videojs('mp4-video-'+tabId);
 
 									state.tickListeners.push({
@@ -554,9 +554,71 @@
 									//add the nav pill for tab
 									$("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#lefttabs ul")
 									//add the tab
-									$("<div id='"+tabId+"'><video id='mov-video-'"+tabId+" width='100%'> \
-										<source type='video/mov' src='"+asset_url+"'></video></div>").appendTo("#tabs-container");
+									$("<div id='"+tabId+"'><video id='mov-video-"+tabId+"' width='100%'> \
+										<source type='video/mov' src='"+asset_url+"'></video></div>").appendTo("#left-tabs-container");
 									$("#lefttabs").tabs("refresh");
+
+									var tabId_1 = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?")) + "_1";
+									//add the nav pill for tab
+									$("<li><a href='#"+tabId_1+"'>"+tabId_1+"</a></li>").appendTo("#righttabs ul");
+									//add the tab
+									$("<div id='"+tabId_1+"'><video id='mov-video-"+tabId_1+"'  width='100%'> \
+										<source type='video/mov' src='"+asset_url+"'/></video></div>").appendTo("#right-tabs-container");
+									$("#righttabs").tabs("refresh");									
+
+									console.log('mov-video-'+tabId);
+									var player = videojs('mov-video-'+tabId);
+
+									state.tickListeners.push({
+										tick: function(){
+											//TODO: this line should be called only once
+											//$('video').attr("width", "100%");
+
+											//TODO the controls should be hidden when initiating the player.
+											$('div.vjs-control-bar').hide();
+												//console.log("Playing")
+						  					var playerCurrentTime = player.currentTime();
+						  					var newTime = state.currentTime/ 1000;
+						  					if(Math.abs(playerCurrentTime - newTime) > 1){
+						  						player.currentTime(newTime)
+						  					}else{
+						  						player.play();
+						  					}
+										},
+										play: function(){
+											player.play();
+										},
+										pause: function(){
+											player.pause();
+										}
+									});
+
+									var player_1 = videojs('mov-video-'+tabId_1);
+
+									state.tickListeners.push({
+										tick: function(){
+											//TODO: this line should be called only once
+											//$('video').attr("width", "100%");
+
+											//TODO the controls should be hidden when initiating the player.
+											$('div.vjs-control-bar').hide();
+
+											var player1CurrentTime = player_1.currentTime();
+											var newTime = state.currentTime/ 1000;
+											if(Math.abs(player1CurrentTime - newTime) > 1){
+												player_1.currentTime(newTime)
+											}else{
+												player_1.play();
+											}
+
+										},
+										play: function(){
+											player_1.play();
+										},
+										pause: function(){
+											player_1.pause();
+										}
+									});									
 								});
 								break;
 
