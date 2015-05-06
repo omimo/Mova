@@ -317,11 +317,18 @@
 				tickListeners: [],
 				tick: function(){
 					if(this.playing){
-						this.currentTime = +this.currentTime + +this.tickTime;
-						for(var i in this.tickListeners){
-							var listener = this.tickListeners[i];
-							listener.tick();
-						}
+						if(this.currentTime < this.maxTime){
+							this.currentTime = +this.currentTime + +this.tickTime;
+							for(var i in this.tickListeners){
+								var listener = this.tickListeners[i];
+								listener.tick();
+							}
+						}else{
+							this.playing = false;
+							this.currentTime = 0;
+							$("#pause-btn").hide();
+      						$("#play-btn").show();
+						}			
 					}
 				},
 				setPlaying: function(play){
