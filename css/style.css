@@ -9,6 +9,11 @@ body {
     height: auto !important;
 }
 
+/*This rule removes the error div for incompatible videos to ensure that the tabs are still active */
+.vjs-error-display, .vjs-control-bar {
+	display: none !important;
+}
+
 div.bar {
 	display: inline-block;
 	width: 20px;

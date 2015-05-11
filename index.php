@@ -545,6 +545,7 @@
 								});
 								break;
 
+								/*
 								case "mov":
 								//TODO create new tab and load the video
 								apiCall(resource, function(data){
@@ -621,6 +622,7 @@
 									});									
 								});
 								break;
+								*/
 
 							}
 						}
