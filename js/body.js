@@ -452,8 +452,11 @@ var categoryData = [
 
     axis = d3.svg.axis().scale(timeScale)
     .tickFormat(function(d){
-        var prefix = d3.formatPrefix(d);
-        return prefix.scale(d);
+        // var prefix = d3.formatPrefix(d);
+        // return prefix.scale(d);
+        var numberOfMinutes = d/60000;
+        var numberOfSeconds = (d % 60000)/1000;
+        return sprintf("%02d:%02d", numberOfMinutes, numberOfSeconds);
     });
 
 

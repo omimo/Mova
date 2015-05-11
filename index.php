@@ -39,6 +39,8 @@
 		<script type="text/javascript" src="js/annotation.js"></script>
 		<script type="text/javascript" src="lib/video.js"></script>
 
+		<script type="text/javascript" src="lib/sprintf.min.js"></script>
+
 		<script type="text/javascript" src="js/body.js"></script>
 
 		<script>
