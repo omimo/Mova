@@ -40,13 +40,14 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		var startOffset = scale.range()[0];
 		for(var i in thiz.segmentData){
 			var d = thiz.segmentData[i];
-			var _t = {
-				"start"		: scale.invert(thiz.segmentData[i].x + startOffset),
-				"end"		: scale.invert(thiz.segmentData[i].x + thiz.segmentData[i].width + startOffset),
-				"annotation": thiz.segmentData[i].annotation
-			}
 
-			annotations.push(_t);
+			// var _t = {
+			// 	"start"		: scale.invert(thiz.segmentData[i].x + startOffset),
+			// 	"end"		: scale.invert(thiz.segmentData[i].x + thiz.segmentData[i].width + startOffset),
+			// 	"annotation": thiz.segmentData[i].annotation
+			// }
+
+			annotations.push(d);
 		}
 		return annotations;
 	}
@@ -122,8 +123,8 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		g.select("rect.segment")
 		.attr("fill", "yellow")
 		.attr({
-			"x": function(d){return d.x},
-			"width": function(d){return d.width},
+			"x": function(d){return timeScale(d.start)},
+			"width": function(d){return (timeScale(d.end) - timeScale(d.start)) },
 			"height": 30,
 			"y": thiz.topleft.y
 		})
@@ -132,7 +133,7 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 
 		g.select("rect.resize-left")
 		.attr({
-			"x": function(d){return d.x},
+			"x": function(d){return timeScale(d.start)},
 			"width": 5,
 			"height": 30,
 			"y": thiz.topleft.y
@@ -141,7 +142,7 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 
 		g.select("rect.resize-right")
 		.attr({
-			"x": function(d){return d.x + d.width - 5},
+			"x": function(d){return timeScale(d.end) - 5},
 			"width": 5,
 			"height": 30,
 			"y": thiz.topleft.y
@@ -150,8 +151,8 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 
 		g.select("text.annotation-label")
 		.attr({
-			"x": function(d){return d.x + 3},
-			"width": function(d){return d.width},
+			"x": function(d){return timeScale(d.start) + 3},
+			"width": function(d){return timeScale(d.end) - timeScale(d.start)},
 			"height": 30,
 			"y": thiz.topleft.y + 20
 		})
@@ -164,11 +165,12 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 	}
 
 	trackDrag.on("dragstart", function(){
-		console.log("trackDrag");
 		currentStartPos = d3.mouse(this);
-		if(currentStartPos && noOverlap(currentStartPos[0])){
+		currentStartTime = timeScale.invert(currentStartPos[0]);
+		if ( currentStartTime && noOverlap(currentStartTime) ) {
 			var nid = nextId();
-			lastSegData = {"id": nid, "x": currentStartPos[0], "width": 0, "selected": false};
+			// lastSegData = {"id": nid, "x": currentStartPos[0], "width": 0, "selected": false};
+			lastSegData = {"id": nid, "start": currentStartTime, "end": currentStartTime, "selected": false};
 			thiz.segmentData.push(lastSegData);
 			thiz.redraw();
 		}
@@ -177,42 +179,46 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		var pos = d3.mouse(this);
 
 		//if out of bounds
-		var lx = thiz.topleft.x;
-		if(pos[0] < lx || (pos[0] > (+track.select("rect.track").attr("width") + lx)) ){
+		// var lx = thiz.topleft.x;
+		// if(pos[0] < lx || (pos[0] > (+track.select("rect.track").attr("width") + lx)) ){
+		// 	return;
+		// }
+		var instant = timeScale.invert(pos[0]);
+		var minTime = timeScale.domain()[0];
+		var maxTime = timeScale.domain()[1];
+		if( instant < minTime ||  instant > maxTime ) {
 			return;
 		}
 
-		//update only if there is no overlap
-		var t_width = pos[0] - currentStartPos[0];
-		var oldX = lastSegData.x;
 
-		if(t_width < 0){
+		//update only if there is no overlap
+		// var t_width = pos[0] - currentStartPos[0];
+		// var oldX = lastSegData.x;
+
+		var difference = instant - currentStartTime;
+		console.log(difference);
+		if(difference < 0){
 			//currently the mouse is on left of the starting point
-			lastSegData.x = pos[0];
+			// lastSegData.x = pos[0];
+			lastSegData.start = instant;
+			lastSegData.end = currentStartTime;
 		}else{
-			lastSegData.x = currentStartPos[0];
+			// lastSegData.x = currentStartPos[0];
+			lastSegData.start = currentStartTime;
+			lastSegData.end = instant;
 		}
 	
-		lastSegData.width = Math.abs(t_width);
+		// lastSegData.width = Math.abs(t_width);
 
-		if(!noOverlap(lastSegData.x, lastSegData)){
-			console.log("overlap");
-		}
-		
 		thiz.redraw();
 	})
 	.on("dragend", function(){
 		var pos = d3.mouse(this);
-
-		if(pos && noOverlap(pos[0])){
-
-		}
-
-		if(arrayEquals(pos, currentStartPos)){
+		var instant = timeScale.invert(pos[0]);
+		// if start and end are same, remove the segment added last
+		if(currentStartTime == instant){
 			thiz.segmentData.splice(thiz.segmentData.length-1,1);
 			thiz.redraw();
-		}else{
-
 		}
 	})
 
@@ -296,16 +302,21 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		return true;
 	}
 
-	function noOverlap(xPos, ignore){
-		for(i in thiz.segmentData){
-			var seg = thiz.segmentData[i];
-			if(seg == ignore){} 
-			else if( xPos >= seg.x && xPos <= (seg.x + seg.width)) {
-				return false;
-			}
-		}
+	function noOverlap(currentTime){
 		return true;
 	}
+
+	// commented while converting segment data to be time based
+	// function noOverlap(xPos, ignore){
+	// 	for(i in thiz.segmentData){
+	// 		var seg = thiz.segmentData[i];
+	// 		if(seg == ignore){} 
+	// 		else if( xPos >= seg.x && xPos <= (seg.x + seg.width)) {
+	// 			return false;
+	// 		}
+	// 	}
+	// 	return true;
+	// }
 
 	function nextId(){
 		return "seg" + segmentCounter++;
