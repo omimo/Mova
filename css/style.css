@@ -157,6 +157,10 @@ div.over2 {
 	float: left;
 }
 
+#svg-container-div{
+	overflow: scroll;
+}
+
 #features {
 	overflow-x: hidden;
 	padding-bottom:0.5em;

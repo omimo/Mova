@@ -95,6 +95,10 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 	//Whenever you make change to the view model, i.e. segmentData, calling this method will redraw the extents
 	this.redraw = function(){
 		//remove any existing children
+
+		//redraw background
+		backgroundRect.attr("width", Math.abs(scale.range()[0] - scale.range()[1]))
+
 		var g = track.selectAll("g")
 		.data(thiz.segmentData, function(d){
 			return d.id;
