@@ -40,19 +40,13 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		var startOffset = scale.range()[0];
 		for(var i in thiz.segmentData){
 			var d = thiz.segmentData[i];
-
-			// var _t = {
-			// 	"start"		: scale.invert(thiz.segmentData[i].x + startOffset),
-			// 	"end"		: scale.invert(thiz.segmentData[i].x + thiz.segmentData[i].width + startOffset),
-			// 	"annotation": thiz.segmentData[i].annotation
-			// }
-
 			annotations.push(d);
 		}
 		return annotations;
 	}
 
 	this.segments = function(){
+		console.log("annotation track # segments ; yet to be converted to time based segment data");
 		//use the scale and segment data to create extents
 		var _segments = [];
 		var startOffset = scale.range()[0];
@@ -223,31 +217,46 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 	})
 
 	segmentDrag.on("dragstart", function(event){
-		console.log("segmentDrag");
 		currentSegStartPos = d3.mouse(this);
 		d3.event.sourceEvent.stopPropagation();
 		return false;
 	})
 	.on("drag", function(){
-		
-		var newX = (+d3.select(this).attr("x")) + (+d3.event.dx);
+		// find the segment data
 
-		if(newX < thiz.topleft.x || (newX + +d3.select(this).attr("width")) > (+track.select("rect.track").attr("width") + thiz.topleft.x)){
-			return;
-		}
-
-		//update the x position in segmentData
+		//update the start and end in segmentData
 		var segmentId = d3.select(this).node().parentNode.id;
+		var segmentData = null;
 		for(var i in thiz.segmentData){
 			if(thiz.segmentData[i].id == segmentId){
-				thiz.segmentData[i].x = newX
+				// thiz.segmentData[i].x = newX
+				segmentData = thiz.segmentData[i];
 				break;
 			}
 		}
+
+		if(segmentData != null){
+			console.log("d3.event.dx " + d3.event.dx);
+			// var newX = (+d3.select(this).attr("x")) + (+d3.event.dx);
+			var newStart = timeScale.invert( timeScale(segmentData.start) + d3.event.dx );
+			var newEnd = timeScale.invert( timeScale(segmentData.end) + d3.event.dx );
+			var minTime = timeScale.domain()[0];
+			var maxTime = timeScale.domain()[1];
+
+			if(newStart < minTime || newEnd > maxTime){
+				return;
+			}else{
+				segmentData.start = newStart;
+				segmentData.end = newEnd;
+			}
+		}
+		
 		thiz.redraw();
 	})
 	.on("dragend", function(){
 		var pos = d3.mouse(this);
+
+		//if start and end are same, then select the segment
 		if(arrayEquals(pos, currentSegStartPos)){
 			if(listener){
 				listener('select', thiz);

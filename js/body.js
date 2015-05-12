@@ -98,7 +98,7 @@ function initAnnotation(){
   timeScale = d3.scale.linear()
                   .domain([0, state.maxTime])
                   .range([25, svgContainerWidth - 25])
-                  .clamp(true);
+                  // .clamp(true); //do not clamp as the segment drag relies on timeScale generating out of range values
 
   var trackCounter = 0;
 
