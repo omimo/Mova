@@ -44,10 +44,13 @@ $(function(){
     redrawAnnotationArea();
   });
 
+  $(window).resize(redrawAnnotationArea);
+
 });
 
 function redrawAnnotationArea(){
   //update width of SVG
+  var width = $("#annotation-area").width();
   svgContainerWidth = (width /  timeZoomRatio) - 20;
   d3.select("#svg-container").attr("width", svgContainerWidth);
 
@@ -90,7 +93,7 @@ function initAnnotation(){
   brushes = [];
 
   timeZoomRatio = 1;
-  width = $("#annotation-area").width();
+  var width = $("#annotation-area").width();
   svgContainerWidth = (width /  timeZoomRatio) - 20;
 
   var svgContainer = d3.select("#svg-container").attr("width", svgContainerWidth);
