@@ -79,7 +79,8 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 
 	var trackDrag = d3.behavior.drag();
 	var segmentDrag = d3.behavior.drag();
-	var resizeDrag = d3.behavior.drag();
+	var leftResizeDrag = d3.behavior.drag();
+	var rightResizeDrag = d3.behavior.drag();
 
 	var currentStartPos = undefined;
 	// TODO make this variables local
@@ -132,7 +133,7 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 			"height": 30,
 			"y": thiz.topleft.y
 		})
-		.call(resizeDrag);
+		.call(leftResizeDrag);
 
 		g.select("rect.resize-right")
 		.attr({
@@ -141,7 +142,7 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 			"height": 30,
 			"y": thiz.topleft.y
 		})
-		.call(resizeDrag);
+		.call(rightResizeDrag);
 
 		g.select("text.annotation-label")
 		.attr({
@@ -190,7 +191,6 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		// var oldX = lastSegData.x;
 
 		var difference = instant - currentStartTime;
-		console.log(difference);
 		if(difference < 0){
 			//currently the mouse is on left of the starting point
 			// lastSegData.x = pos[0];
@@ -236,7 +236,6 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		}
 
 		if(segmentData != null){
-			console.log("d3.event.dx " + d3.event.dx);
 			// var newX = (+d3.select(this).attr("x")) + (+d3.event.dx);
 			var newStart = timeScale.invert( timeScale(segmentData.start) + d3.event.dx );
 			var newEnd = timeScale.invert( timeScale(segmentData.end) + d3.event.dx );
@@ -282,15 +281,25 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		}
 	})
 
-	resizeDrag.on("dragstart", function(){
+	leftResizeDrag.on("drag", function(d){
+		var newStart = timeScale.invert(timeScale(d.start) + d3.event.dx);
+		var minTime = timeScale.domain()[0];
+		if(newStart < d.end && newStart > minTime){
+			d.start = newStart;
+		}
+		thiz.redraw();
+	});
 
+	rightResizeDrag.on("drag", function(d){
+		var newEnd = timeScale.invert(timeScale(d.end) + d3.event.dx);
+		var maxTime = timeScale.domain()[1];
+		if(newEnd > d.start && newEnd < maxTime){
+			d.end = newEnd;
+		}
+		thiz.redraw();
 	})
-	.on("drag", function(){
-		
-	})
-	.on("dragend", function(){
 
-	})
+
 
 	track.select("rect.track").call(trackDrag);
 
