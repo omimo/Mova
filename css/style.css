@@ -3,6 +3,10 @@ body {
 	overflow: hidden;
 }
 
+.search-result{
+	background: yellow;
+}
+
 .video-js {
     position: relative !important;
     width: 100% !important;

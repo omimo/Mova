@@ -1,3 +1,36 @@
+$(function(){
+  $("#add-category-btn").on("click", function(){
+    var newCategory = $("#annotation-search-field").val().trim();
+    if(newCategory != ""){
+      $("#jqxTree").jqxTree('addTo', {label: newCategory});
+    }
+    $("#annotation-search-field").val("");
+  })
+
+  $("#annotation-search-field").on("keyup", function(event){
+    // preventing event propagating as pressing the 'd' key will delete the segment
+    event.stopPropagation();
+
+    var text2Search = $("#annotation-search-field").val().trim();
+    if(text2Search == ""){
+      text2Search = "!!!";
+      $("#jqxTree").jqxTree('selectItem', null);
+      $("#jqxTree").jqxTree('collapseAll');
+    }
+    var items = $("#jqxTree").jqxTree('getItems');
+    for(var i in items){
+      var item = items[i];
+      if(item.label.indexOf(text2Search) > -1){
+        $("#jqxTree").jqxTree('selectItem', item.element);
+        $(item.element).addClass("search-result");
+      }else{
+        $(item.element).removeClass("search-result");
+      }
+    }
+  })
+
+})
+
 function initAnnotation(){
 var categoryData = [
                 {

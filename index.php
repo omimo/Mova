@@ -183,11 +183,16 @@
 					<div id="controls-wrapper" style="display: table; margin: 0 auto;">
 						<span id="play-btn"><i class="fa fa-play fa-3x"></i>&nbsp;</span>
 						<span id="pause-btn"><i class="fa fa-pause fa-3x"></i>&nbsp;</span>
-						<span id="download-btn"><i class="fa fa-download fa-3x"></i></span>
+						<span id="download-btn"><i class="fa fa-download fa-3x"></i>&nbsp;</span>
+						<span id="upload-btn"><i class="fa fa-cloud-upload fa-3x"></i></span>
 						<span id="link"></span>
 					</div>
 				    <svg id="svg-container" width="900" height="200" style="margin-left: 10px;"></svg>
 				    <div id="annotation-graph-dialog">
+				    	<div>
+				    		<input type="text" id="annotation-search-field">
+				    		<i class="fa fa-plus-square" id="add-category-btn"></i>
+				    	</div>
 				        <div id='jqxTree'>
 				        </div>
 				    </div>
