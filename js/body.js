@@ -240,13 +240,17 @@ function initAnnotation(){
       
       if (d3.event.sourceEvent) { // not a programmatic event
         value = timeScale.invert(d3.mouse(this)[0]);
-        slider.extent([value, value]);
-        state.currentTime = value;
+        if(value >= timeScale.domain()[0] && value <= timeScale.domain()[1]){
+          slider.extent([value, value]);
+          state.currentTime = value;
+        }
       }
 
-      scrubHandle.attr("cx", timeScale(value));
-      scrubLine.attr("x1", timeScale(value));
-      scrubLine.attr("x2", timeScale(value));
+      if(value >= timeScale.domain()[0] && value <= timeScale.domain()[1]){
+        scrubHandle.attr("cx", timeScale(value));
+        scrubLine.attr("x1", timeScale(value));
+        scrubLine.attr("x2", timeScale(value));
+      }
     })
 
     scrubLine = svgContainer.append("line")
