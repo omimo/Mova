@@ -500,7 +500,9 @@
 
 
 									console.log('mp4-video-'+tabId);
-									var player = videojs('mp4-video-'+tabId);
+									var player = videojs('mp4-video-'+tabId, {
+										"preload": "auto"
+									});
 
 									state.tickListeners.push({
 										tick: function(){
@@ -524,7 +526,9 @@
 										}
 									});
 
-									var player_1 = videojs('mp4-video-'+tabId_1);
+									var player_1 = videojs('mp4-video-'+tabId_1, {
+										"preload": "auto"
+									});
 
 									state.tickListeners.push({
 										tick: function(){
