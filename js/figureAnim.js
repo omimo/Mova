@@ -107,9 +107,9 @@ makeAnim: function (parent,mocap, highlightJ, frameSkip, pad) {
 
 
 drawFigure: function() {
-	if (anim.playAnim==false || movan.dataTracks.length < 1) return false;
+	// if (anim.playAnim==false || movan.dataTracks.length < 1) return false;
 
-	else {
+	// else {
 	svg = anim.animSVG;
 	//console.log(playAnim);
 	mocap = movan.dataTracks[movan.dataTracks.length - 1].content;
@@ -245,7 +245,7 @@ drawFigure: function() {
 	//d3.timer(drawFigure(animSVG,gframes,gskel, selectedJoint,frameSkip,padding), 300);
 
 	return false;
-	}
+	// }
 }
 
 };

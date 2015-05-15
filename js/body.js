@@ -321,10 +321,12 @@ function initAnnotation(){
       $("#pause-btn").show();
       state.setPlaying(true);
       //initialize only once
-      if(typeof timeController == 'undefined'){
-        timeController = setInterval(updateState, state.tickTime);
-      }
     });
+
+    // start ticking the state.
+    if(typeof timeController == 'undefined'){
+      timeController = setInterval(updateState, state.tickTime);
+    }
 
     $("#pause-btn").on("click", function(){
       $("#play-btn").show();

@@ -473,13 +473,6 @@
 											anim.playAnim = false;
 										}
 									});
-
-									// var tabId = asset_url.substring(asset_url.lastIndexOf("/")+1, asset_url.lastIndexOf("?"));
-									// //add the nav pill for tab
-									// $("<li><a href='#"+tabId+"'>"+tabId+"</a></li>").appendTo("#maintabs ul")
-									// //add the tab
-									// $("<div id='"+tabId+"'></div>").appendTo("#tabs-container");
-									// $("#maintabs").tabs("refresh");
 								})
 								break;
 
