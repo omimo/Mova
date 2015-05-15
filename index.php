@@ -331,9 +331,11 @@
 				tickTime: 33.333, //250,
 				tickListeners: [],
 				tick: function(){
-					if(this.playing){
+					// if(this.playing){
 						if(this.currentTime < this.maxTime){
-							this.currentTime = +this.currentTime + +this.tickTime;
+							if(this.playing){
+								this.currentTime = +this.currentTime + +this.tickTime;
+							}
 							for(var i in this.tickListeners){
 								var listener = this.tickListeners[i];
 								listener.tick();
@@ -344,7 +346,7 @@
 							$("#pause-btn").hide();
       						$("#play-btn").show();
 						}			
-					}
+					// }
 				},
 				setPlaying: function(play){
 					this.playing = play;
@@ -519,8 +521,6 @@
 						  					var newTime = state.currentTime/ 1000;
 						  					if(Math.abs(playerCurrentTime - newTime) > 1){
 						  						player.currentTime(newTime)
-						  					}else{
-						  						player.play();
 						  					}
 										},
 										play: function(){
@@ -545,10 +545,7 @@
 											var newTime = state.currentTime/ 1000;
 											if(Math.abs(player1CurrentTime - newTime) > 1){
 												player_1.currentTime(newTime)
-											}else{
-												player_1.play();
 											}
-
 										},
 										play: function(){
 											player_1.play();
