@@ -2,6 +2,15 @@ $(function(){
   $("#add-category-btn").on("click", function(){
     var newCategory = $("#annotation-search-field").val().trim();
     if(newCategory != ""){
+      // check if the label exists already
+      var items = $("#jqxTree").jqxTree('getItems');
+      for(var i in items){
+        var item = items[i];
+        if(item.label.toLowerCase() == newCategory){
+          alert("Cannot add "+ newCategory + ". It already exists.");
+          return;
+        }
+      }
       $("#jqxTree").jqxTree('addTo', {label: newCategory});
     }
     $("#annotation-search-field").val("");
@@ -17,15 +26,32 @@ $(function(){
       $("#jqxTree").jqxTree('selectItem', null);
       $("#jqxTree").jqxTree('collapseAll');
     }
+    $("#jqxTree").jqxTree('collapseAll');
     var items = $("#jqxTree").jqxTree('getItems');
     for(var i in items){
       var item = items[i];
-      if(item.label.indexOf(text2Search) > -1){
-        $("#jqxTree").jqxTree('selectItem', item.element);
-        $(item.element).addClass("search-result");
+      if(item.label.toLowerCase().indexOf(text2Search.toLowerCase()) > -1){
+        $("#jqxTree").jqxTree('expandItem', item.element);
+        $(item.element).find("div:first").addClass("search-result");
       }else{
-        $(item.element).removeClass("search-result");
+        $(item.element).find("div:first").removeClass("search-result");
       }
+    }
+  });
+
+  $("#jqxTree").on('select', function(event){
+    // remove hierarchy from all Elements
+    var items = $('#jqxTree').jqxTree('getItems');
+    for(var i in items){
+      var item = items[i];
+      $(item.element).find("div:first").removeClass("jqx-fill-state-pressed");
+    }
+
+    var current = $('#jqxTree').jqxTree('getItem', event.args.element);
+    while(current != null){
+      console.log(current);
+      $(current.element).find("div:first").addClass("jqx-fill-state-pressed");
+      current = $('#jqxTree').jqxTree('getItem', current.parentElement);
     }
   });
 

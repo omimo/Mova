@@ -3,6 +3,11 @@ body {
 	overflow: hidden;
 }
 
+.selected-hierarchy{
+	font-weight: bold;
+	font-size: 120%;
+}
+
 .search-result{
 	background: yellow;
 }
