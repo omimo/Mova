@@ -329,7 +329,8 @@
 			<small>(C) Omid Alemi - Fall 2013</small>
 		</div>
 
-				<script>
+			<script>
+			var rightPlayers = [];
 			state = {
 				playing: false,
 				currentTime: 0,
@@ -535,6 +536,7 @@
 									var player_1 = videojs('mp4-video-'+tabId_1, {
 										"preload": "auto"
 									});
+									rightPlayers.push(player_1);
 
 									state.tickListeners.push({
 										tick: function(){

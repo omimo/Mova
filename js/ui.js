@@ -42,11 +42,20 @@ $(document).ready(function() {
       $("#divider-btn-close").show();
       $("#divider-btn-open").hide();
 
+      for(var r in rightPlayers){
+        rightPlayers[r].muted(false);
+      }
+
       movan.sidebyside=1;
     }
     else{
       $("#divider-btn-close").hide();
       $("#divider-btn-open").show();
+
+      for(var r in rightPlayers){
+        rightPlayers[r].muted(true);
+      }
+
       movan.sidebyside=0;
     }
 
