@@ -8,6 +8,10 @@ body {
 	font-size: 120%;
 }
 
+#divider-btn-open{
+	cursor: pointer;
+}
+
 .search-result{
 	background: yellow;
 }

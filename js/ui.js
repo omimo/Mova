@@ -1,6 +1,11 @@
 
 var setSizes = function() {
 
+  var closeBtnHeight = $("#divider-btn-close i").height();
+  if(closeBtnHeight !== 0){
+    $("#divider-btn-open img").height(closeBtnHeight);
+  }
+
   //TODO: subtract the size of the annotation track below
   $("#canCont").height($(document).height() - 150 - $("#footer").height());
 
@@ -32,7 +37,7 @@ $(document).ready(function() {
 
   $("#righttabs").tabs();
 
-  $("#divider").click(function(event) {
+  $("#open-close").click(function(event) {
     if (movan.sidebyside == 0) {
       $("#divider-btn-close").show();
       $("#divider-btn-open").hide();

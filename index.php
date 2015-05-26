@@ -162,8 +162,8 @@
 			</div>
 
 			<div id="divider">
-				<span id="divider-btn-close"><i class="fa fa-caret-right fa-sm"></i></span>
-				<span id="divider-btn-open"><i class="fa fa-caret-left fa-sm"></i></span>
+				<!-- <span id="divider-btn-close"><i class="fa fa-caret-right fa-sm"></i></span>
+				<span id="divider-btn-open"><i class="fa fa-caret-left fa-sm"></i></span> -->
 			</div>
 
 			<div id="righttabs">
@@ -185,8 +185,14 @@
 			<div id="annotation-area">
 				<div id="controls-wrapper" style="display: table; margin: 0 auto; padding-top: 15px">
 					<div>
+						<div style="display: inline-block;" id="open-close">
+						<span id="divider-btn-close"><i class="fa fa-desktop fa-3x"></i></span>
+						<span id="divider-btn-open"><img class="fa fa-3x" src="img/dual-desktop.png"></img></span>
+						</div>
+						
 						<span id="play-btn"><i class="fa fa-play fa-3x"></i>&nbsp;</span>
 						<span id="pause-btn"><i class="fa fa-pause fa-3x"></i>&nbsp;</span>
+						
 						<span id="download-btn"><i class="fa fa-download fa-3x"></i>&nbsp;</span>
 						<span id="upload-btn"><i class="fa fa-cloud-upload fa-3x"></i></span>
 						<span id="link"></span>
