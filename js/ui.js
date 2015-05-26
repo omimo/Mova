@@ -62,20 +62,42 @@ $(document).ready(function() {
     setSizes();
   });
 
-  // $("#tabs").click(function(event, ui){
-  // console.log(event);
-  // if (event.options.selected == 0)
-  // playAnim = false;
-  // else if (event.options.selected == 1)
-  // {playAnim = true;console.log("heee");}
-  // }
-  // );
 
-  // $("#btnPlay").button();
-  // $("#btnPlay").click(function(event) {
-  //   anim.playAnim = true;
-  //   $("#btnPlay").button('option', 'label', 'Pause');
-  // });
+  $('#lefttabs').on('tabsactivate', function(event, ui) {
+    var containedVideo = $(ui.newPanel).find("video");
+    var maxWidth = $("#lefttabs").width() - 20;
+    var maxHeight = $("#lefttabs").height() - $("#lefttabs ul").height() - 20;
+    if ( containedVideo.length === 1) {
+      console.log("maxs " + maxWidth + "  " + maxHeight);
+      while(true){
+        console.log($(containedVideo).width() + " " + $(containedVideo).height() );
+        $(containedVideo).css("width", maxWidth + "px");
+        var currentHeight = $(containedVideo).height();
+        if(currentHeight < maxHeight){
+          break;
+        }
+        maxWidth = maxWidth - 20;
+      }
+    }
+  });
+
+  $('#righttabs').on('tabsactivate', function(event, ui) {
+    var containedVideo = $(ui.newPanel).find("video");
+    var maxWidth = $("#righttabs").width() - 20;
+    var maxHeight = $("#righttabs").height() - $("#righttabs ul").height() - 20;
+    if ( containedVideo.length === 1) {
+      console.log("maxs " + maxWidth + "  " + maxHeight);
+      while(true){
+        console.log($(containedVideo).width() + " " + $(containedVideo).height() );
+        $(containedVideo).css("width", maxWidth + "px");
+        var currentHeight = $(containedVideo).height();
+        if(currentHeight < maxHeight){
+          break;
+        }
+        maxWidth = maxWidth - 20;
+      }
+    }
+  });
 
   $("#sideAcaccordion").accordion({
     heightStyle : "content"

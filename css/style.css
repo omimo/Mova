@@ -310,10 +310,10 @@ text.annotation-label{
 	cursor: pointer; cursor: hand;
 }
 
-video {
+/*video {
   width: 100%    !important;
   height: auto   !important;
-}
+}*/
 
 /*======================================================================
 	Selectric
