@@ -347,7 +347,7 @@ function initAnnotation(){
       var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(annotations));
       console.log(data);
       $("#link").html("");
-      $('<a href="data:' + data + '" download="data.json">Download Annotations</a>').appendTo('#link');
+      $('<a href="data:' + data + '" download="data_'+ Math.floor(Date.now()/1000)+'.json ">Download Annotations</a>').appendTo('#link');
       $("#link a")[0].click();
     })
   }
