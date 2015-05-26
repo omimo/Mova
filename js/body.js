@@ -362,6 +362,8 @@ function initAnnotation(){
       "x1": position,
       "x2": position
     })
+
+    $("#svg-container-div").scrollLeft(position - ( $("#svg-container-div").width() / 2 ));
   }
 
   registerControls();
