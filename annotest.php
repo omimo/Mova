@@ -81,26 +81,24 @@
 <body>
 
 	<script type="text/javascript">
-	$.ajax({
-		url: "http://localhost:3000/movement_annotations.json",
+   	$.ajax({
+		url: "http://moda.movingstories.ca/movement_annotations/",
 		contentType: "multipart/form-data",
-		dataType: "application/json",
-		method: "post",
+		dataType: "json",
+		type: "POST",
 		data: {
-			"movement_annotation" : {
-				"asset_file": {
-					"original_filename": "test.json",
-					"public": 1,
-					"file": JSON.stringify({"hello": "world"})
+			"movement_annotation": {
+				"asset_file" : {
+					"original_filename":"foo1.json",
+					"file":"e3ZhbHVlOidmb28nfQ==",
+					"content_type":"application/json"
 				},
-				"attached_id": 1,
-				"public": 1,
-				"attached_type": "Take",
-				"description": "barbar",
-
-
-			}
-		},
+				"attached_id":"368",
+				"attached_type":"Take",
+				"description":"barbarbar",
+				"name":"foofoofoo"
+			}	
+		}
 	});
 
 	</script>
