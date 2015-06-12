@@ -310,6 +310,10 @@ text.annotation-label{
 	cursor: pointer; cursor: hand;
 }
 
+#divider-btn-open {
+	display: none;
+}
+
 /*video {
   width: 100%    !important;
   height: auto   !important;
