@@ -18,6 +18,7 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 				console.log("Cannot " + newStart);
 			}else{
 				segment.start = newStart;	
+				state.currentTime = newStart;
 				this.redraw();
 			}
 		}
@@ -32,6 +33,7 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 				console.log("Cannot " + newEnd);
 			}else{
 				segment.end = newEnd;	
+				state.currentTime = newEnd;
 				this.redraw();
 			}
 		}
