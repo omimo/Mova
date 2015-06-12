@@ -286,6 +286,7 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		var minTime = timeScale.domain()[0];
 		if(newStart < d.end && newStart > minTime){
 			d.start = newStart;
+			state.currentTime = newStart;
 		}
 		thiz.redraw();
 	});
@@ -295,6 +296,7 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		var maxTime = timeScale.domain()[1];
 		if(newEnd > d.start && newEnd < maxTime){
 			d.end = newEnd;
+			state.currentTime = newEnd;
 		}
 		thiz.redraw();
 	})

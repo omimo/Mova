@@ -365,7 +365,13 @@ function initAnnotation() {
       $("#link a")[0].click();
     });
 
-    $("upload-btn").on("click", function() {
+    $("#upload-btn").on("click", function() {
+      var annotations = []
+      for (var b in brushes) {
+        annotations.push(brushes[b].getAnnotationData());
+      }
+      var data = btoa(JSON.stringify(annotations));
+
       $.ajax({
         url: "http://moda.movingstories.ca/movement_annotations/",
         contentType: "multipart/form-data",
@@ -374,11 +380,11 @@ function initAnnotation() {
         data: {
           "movement_annotation": {
             "asset_file": {
-              "original_filename": "foo1.json",
-              "file": "e3ZhbHVlOidmb28nfQ==",
+              "original_filename": (new Date().getTime())+".json",
+              "file": data,
               "content_type": "application/json"
             },
-            "attached_id": "368",
+            "attached_id": take_id,
             "attached_type": "Take",
             "description": "barbarbar",
             "name": "foofoofoo"
