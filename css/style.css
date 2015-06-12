@@ -310,6 +310,18 @@ text.annotation-label{
 	cursor: pointer; cursor: hand;
 }
 
+#divider-btn-open {
+	display: none;
+}
+
+.jqx-slider-right .jqx-icon-arrow-right, .jqx-slider-right .jqx-icon-arrow-right-selected, .jqx-slider-right .jqx-icon-arrow-right-hover {
+	background-image: url('../styles/images/my_minus.png');
+}
+
+.jqx-slider-left .jqx-icon-arrow-left, .jqx-slider-left .jqx-icon-arrow-left-selected, .jqx-slider-left .jqx-icon-arrow-left-hover {
+	background-image: url('../styles/images/my_plus.png');
+}
+
 /*video {
   width: 100%    !important;
   height: auto   !important;
