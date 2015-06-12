@@ -314,6 +314,14 @@ text.annotation-label{
 	display: none;
 }
 
+.jqx-icon-arrow-right, .jqx-icon-arrow-right-selected, .jqx-icon-arrow-right-hover {
+	background-image: url('../styles/images/my_minus.png');
+}
+
+.jqx-icon-arrow-left, .jqx-icon-arrow-left-selected, .jqx-icon-arrow-left-hover {
+	background-image: url('../styles/images/my_plus.png');
+}
+
 /*video {
   width: 100%    !important;
   height: auto   !important;
