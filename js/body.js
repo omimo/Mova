@@ -208,8 +208,19 @@ function initAnnotation() {
 
       d3.event.preventDefault();
       d3.event.stopPropagation();
-      return false;
     });
+
+  d3.select("body").on("keydown", function(){
+    var keyCode = d3.event.keyCode;
+    switch(keyCode){
+      case 37:
+      case 38:
+      case 39:
+      case 40:
+      d3.event.preventDefault();
+      break;
+    }
+  });
 
   console.log("Adding annotation track")
   var listener = function(event, source) {
