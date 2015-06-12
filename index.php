@@ -462,9 +462,9 @@
 									// TODO uncomment following lines for creating new tab for bvh after fixing in Omid's code
 									// for now assume that there just a single bvh that gets loaded in the default bvh tab
 									// remove this line and uncomment next; commented for dev purpose only
-									state.setMaxTime(25000);
+									// state.setMaxTime(25000);
 
-									/*
+									
 									fileHandler.loadDataTrack(asset_url,movan.callbackForData);
 
 									state.tickListeners.push({
@@ -482,7 +482,7 @@
 											anim.playAnim = false;
 										}
 									});
-									*/
+									
 								})
 								break;
 
