@@ -9,6 +9,67 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 	this.topleft = topleft;
 	this.listener = listener;
 
+	this.extendLeft = function(){
+		var segment = this.getSelected();
+		if(segment != undefined){
+			var newStart = segment.start - 250;
+			if(newStart < scale.domain()[0] || newStart > scale.domain()[1]){
+				//do nothing
+				console.log("Cannot " + newStart);
+			}else{
+				segment.start = newStart;	
+				this.redraw();
+			}
+		}
+	};
+
+	this.extendRight = function(){
+		var segment = this.getSelected();
+		if(segment != undefined){
+			var newEnd = segment.end + 250;
+			if(newEnd < scale.domain()[0] || newEnd > scale.domain()[1]){
+				//do nothing
+				console.log("Cannot " + newEnd);
+			}else{
+				segment.end = newEnd;	
+				this.redraw();
+			}
+		}
+	};
+
+	this.moveSegmentRight = function(){
+		var segment = this.getSelected();
+		if(segment != undefined){
+			var newEnd = segment.end + 250;
+			var newStart = segment.start + 250;
+			if( (newEnd < scale.domain()[0] || newEnd > scale.domain()[1]) || (newStart < scale.domain()[0] || newStart > scale.domain()[1]) ){
+				//do nothing
+				console.log("Cannot " + newEnd);
+			}else{
+				segment.end = newEnd;
+				segment.start = newStart;
+				this.redraw();
+			}
+		}
+	};
+
+	this.moveSegmentLeft = function(){
+		var segment = this.getSelected();
+		if(segment != undefined){
+			var newEnd = segment.end - 250;
+			var newStart = segment.start - 250;
+			if( (newEnd < scale.domain()[0] || newEnd > scale.domain()[1]) || (newStart < scale.domain()[0] || newStart > scale.domain()[1]) ){
+				//do nothing
+				console.log("Cannot " + newEnd);
+			}else{
+				segment.end = newEnd;
+				segment.start = newStart;
+				this.redraw();
+			}
+		}
+	};
+
+
 	this.annotateSelected = function(annotation){
 		for(var i in thiz.segmentData){
 			if(thiz.segmentData[i].selected){

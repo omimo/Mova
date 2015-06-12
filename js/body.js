@@ -149,12 +149,16 @@ function initAnnotation() {
 
   d3.select("body")
     .on("keyup", function() {
-      if (d3.event.keyCode == 68) {
+      var keyCode = d3.event.keyCode;
+
+      switch(keyCode) {
+        case 68:
         for (i in brushes) {
           brushes[i].removeSelected();
         }
-      } else if (d3.event.keyCode == 65) {
-        //check if there is any of the segments selected
+        break;
+
+        case 65:
         for (var i in brushes) {
           var brush = brushes[i];
           if (brush.getSelected() != undefined) {
@@ -162,7 +166,49 @@ function initAnnotation() {
             break;
           }
         }
+        break;
+
+        //left arrow
+        case 37:
+        for (var i in brushes) {
+          var brush = brushes[i];
+          if (brush.getSelected() != undefined){
+            brush.extendLeft();
+          }
+        }
+        break;
+
+        case 39:
+        for (var i in brushes) {
+          var brush = brushes[i];
+          if (brush.getSelected() != undefined){
+            brush.extendRight();
+          }
+        }
+        break;
+
+        case 38:
+        for (var i in brushes) {
+          var brush = brushes[i];
+          if (brush.getSelected() != undefined){
+            brush.moveSegmentRight();
+          }
+        }
+        break;
+
+        case 40:
+        for (var i in brushes) {
+          var brush = brushes[i];
+          if (brush.getSelected() != undefined){
+            brush.moveSegmentLeft();
+          }
+        }
+        break;
       }
+
+      d3.event.preventDefault();
+      d3.event.stopPropagation();
+      return false;
     });
 
   console.log("Adding annotation track")
