@@ -1,6 +1,8 @@
 AnnotationTrack = function(svg, scale, topleft, listener){
 	var thiz = this;
 
+	var trackHeight = 20;
+
 	thiz.selected = null;
 
 	this.svg = svg;
@@ -135,7 +137,7 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 
 	var backgroundRect = track.append("rect")
 		.attr("width", Math.abs(scale.range()[0] - scale.range()[1]))
-		.attr("height", 30)
+		.attr("height", trackHeight)
 		.attr("class", "track")
 		.attr("x", thiz.topleft.x)
 		.attr("y", thiz.topleft.y);
@@ -183,7 +185,7 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		.attr({
 			"x": function(d){return timeScale(d.start)},
 			"width": function(d){return (timeScale(d.end) - timeScale(d.start)) },
-			"height": 30,
+			"height": trackHeight,
 			"y": thiz.topleft.y
 		})
 		.classed({"selected": function(d){return d.selected}})
@@ -193,7 +195,7 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		.attr({
 			"x": function(d){return timeScale(d.start)},
 			"width": 5,
-			"height": 30,
+			"height": trackHeight,
 			"y": thiz.topleft.y
 		})
 		.call(leftResizeDrag);
@@ -202,7 +204,7 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		.attr({
 			"x": function(d){return timeScale(d.end) - 5},
 			"width": 5,
-			"height": 30,
+			"height": trackHeight,
 			"y": thiz.topleft.y
 		})
 		.call(rightResizeDrag);
@@ -211,8 +213,8 @@ AnnotationTrack = function(svg, scale, topleft, listener){
 		.attr({
 			"x": function(d){return timeScale(d.start) + 3},
 			"width": function(d){return timeScale(d.end) - timeScale(d.start)},
-			"height": 30,
-			"y": thiz.topleft.y + 20
+			"height": trackHeight,
+			"y": thiz.topleft.y + trackHeight/2
 		})
 		.text(function(d){
 			return d.annotation;

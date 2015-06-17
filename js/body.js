@@ -237,11 +237,11 @@ function initAnnotation() {
   }, listener));
   brushes.push(new AnnotationTrack(svgContainer, timeScale, {
     "x": 25,
-    "y": 100
+    "y": 80
   }, listener));
   brushes.push(new AnnotationTrack(svgContainer, timeScale, {
     "x": 25,
-    "y": 150
+    "y": 110
   }, listener));
 
   $(document).on("contextmenu", ".extent", function(event) {

@@ -36,7 +36,7 @@
 		<script type="text/javascript" src="lib/math.min.js"></script>
 		<script type="text/javascript" src="lib/jqx-all.js"></script>
 		<script type="text/javascript" src="js/annotation-track.js"></script>
-		<script type="text/javascript" src="js/annotation.js"></script>
+		
 		<script type="text/javascript" src="lib/video.js"></script>
 
 		<script type="text/javascript" src="lib/sprintf.min.js"></script>

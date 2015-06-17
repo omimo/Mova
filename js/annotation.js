@@ -113,8 +113,6 @@ function initAnnotation(){
 
   //Main Starts here
 
-  brushes = [];
-
   var svgContainer = d3.select("#svg-container");
 
   var timeScale = d3.scale.linear()
@@ -143,9 +141,6 @@ function initAnnotation(){
     }
   });
 
-  brushes.push(new AnnotationTrack(svgContainer, timeScale, {"x":25, "y": 50}));
-  brushes.push(new AnnotationTrack(svgContainer, timeScale, {"x":25, "y": 100}));
-  brushes.push(new AnnotationTrack(svgContainer, timeScale, {"x":25, "y": 150}));
 
   $(document).on("contextmenu", ".extent", function(event){
     console.log(this);
