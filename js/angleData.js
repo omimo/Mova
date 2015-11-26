@@ -1,19 +1,19 @@
 var angleData = {
-	var spineJoint = {
+	spineJoint : {
 		0,
 		0,
 		0
-	};
-	var anchorJoint = {
+	},
+	anchorJoint: {
 		0,
 		0,
 		0
-	};
-	var partJoint = {
+	},
+	partJoint: {
 		0,
 		0,
 		0
-	};
+	},
 	spineJoint -= anchorJoint;
 	partJoint -= anchorJoint;
 	var spine_axis = findAxis_spine(spineJoint, anchorJoint);
@@ -63,7 +63,7 @@ var angleData = {
 			spine_vector[2] / spine_length
 		};
 		return spine_axis;
-	}
+	},
 	findAxis_width : function(spineJoint, partJoint) {
 		var ref_point = dotproduct(partJoint, spine_axis) * spine_axis;
 		var side_vector = {
@@ -78,7 +78,7 @@ var angleData = {
 			side_vector[2] / side_length
 		};
 		return side_axis;
-	}
+	},
 	findAxis_depth : function(spine_axis, side_axis) {
 		var depth_vector = crossproduct(spine_axis, side_axis);
 		var depth_length = Math.sqrt(Math.pow(depth_vector[0], 2) + Math.pow(depth_vector[1], 2) + Math.pow(depth_vector[2], 2));
@@ -88,11 +88,11 @@ var angleData = {
 			depth_vector[2] / depth_length
 		};
 		return depth_axis;
-	}
+	},
 	project : function(point, planeNormal){
 		var proj_point = (point - (dotproduct(point, planeNormal)) * planeNormal);
 		return proj_point;
-	}
+	},
 	vectorAngle : function(firstNode, secondNode) {
 		var v = {
 			secondNode[0] - firstNode[0],
@@ -101,14 +101,14 @@ var angleData = {
 		};
 		var alpha = Math.atan2(dotproduct(spine_axis, v), dotproduct(side_axis, v)) * 2 * PI;
 		var beta = Math.atan2(dotproduct(spine_axis, v), dotproduct(depth_axis, v)) * 2 * PI;
-	}
+	},
 	dotproduct : function(a,b) {
 		var n = 0, lim = Math.min(a.length,b.length);
 		for (var i = 0; i < lim; i++) {
 			n += a[i] * b[i];
 		}
 		return n;
-	}
+	},
 	crossproduct : function(a,b) {
 		var c = new Array(3);
 		c[0] =   ((a[1] * b[2]) - (a[2] * b[1]));
