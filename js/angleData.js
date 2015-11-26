@@ -1,3 +1,29 @@
+// input: 
+// Take1Position[
+// 	jointArray1[{x:0, y:0, z:0},{},{},...],
+// 	jointArray2[{x:0, y:0, z:0},{},{},...],
+// 	jointArray3[{x:0, y:0, z:0},{},{},...],
+// 	jointArray4[{x:0, y:0, z:0},{},{},...]
+// ]
+// Take2Position[
+// 	jointArray1[{x:0, y:0, z:0},{},{},...],
+// 	jointArray2[{x:0, y:0, z:0},{},{},...],
+// 	jointArray3[{x:0, y:0, z:0},{},{},...],
+// 	jointArray4[{x:0, y:0, z:0},{},{},...]
+// ]
+
+// output:
+// Take1Angle[
+// 	jointArray1[{alpha:0, beta:0},{},...],
+// 	jointArray2[{alpha:0, beta:0},{},...],
+// 	jointArray3[{alpha:0, beta:0},{},...]
+// ]
+// Take2Angle[
+// 	jointArray1[{alpha:0, beta:0},{},...],
+// 	jointArray2[{alpha:0, beta:0},{},...],
+// 	jointArray3[{alpha:0, beta:0},{},...]
+// ]
+
 var angleData = {
 	spineJoint : {
 		0,
