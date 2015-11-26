@@ -5,7 +5,6 @@ var movan = {
 			dataTracks : [], // this only keeps the loaded tracks
 	 		 allTracks : [],  // this keeps all the tracks that exist in a take
 
-
 			 //gframes : [],
 			 //gskel : [],
 			 grootOffset : [],

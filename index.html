@@ -122,6 +122,22 @@
 		    font-family: sans-serif;
 		    font-size: 11px;
 		}
+
+		#comparison select{
+			margin: 10px;
+			margin-left: 0;
+			display: block;
+		}
+
+		#comparison .takeStartTime{
+			width: 60px;
+		}
+
+		#comparison button{
+			display: block;
+			margin-top: 20px;
+		}
+
 		</style>
 	</head>
 	<body>
@@ -241,7 +257,7 @@
 					 <option value="movs/MS2_8Walk_M_nopos.bvh" selected="selected">MS2_8Walk_M_nopos.bvh</option>
 						<option value="movs/Slash_x4_0001KAREN.bvh">Slash_x4_0001KAREN.bvh</option>
 						<option value="movs/MS2_8Walk_M.bvh">MS2_8Walk_M.bvh</option>
-						<option value="Dab1.csv">Dab1.bvh</option>
+						<option value="movs/Dab1.csv">Dab1.bvh</option>
 						<option value="Flick1.csv">Flick1.bvh</option>
 						<option value="Slash4.csv">Slash4.bvh</option>
 						<option value="Glide3.csv">Glide3.bvh</option>
@@ -272,7 +288,8 @@
 						Select a feature:
 					</div>
 
-					<select id="featDropdown"></select>
+					<div class="selectricWrapper selectricOpen">
+					</div>
 
 					<button type="button" id="btnAddFeat">
 						Add
@@ -300,6 +317,44 @@
 					<button id="btnSave">
 						Save as SVG
 					</button>
+				</div>
+
+				<h2>Movement Comparison</h2>
+				<div id="comparison" class="sidetab">
+					<div class="sidetabtitle">Take A</div>
+					<select>
+						<option value="movs/Slash_x4_0001KAREN.bvh">Slash_x4_0001KAREN.bvh</option>
+						<option value="movs/MS2_8Walk_M.bvh">MS2_8Walk_M.bvh</option>
+						<option value="movs/Dab1.csv">Dab1.bvh</option>
+					</select>
+					<input class="takeStartTime" id="takeStartTimeA" type="text" placeholder="0">
+					<label>ms</label>
+
+					<div class="sidetabtitle">Take B</div>
+					<select>
+						<option value="movs/Slash_x4_0001KAREN.bvh">Slash_x4_0001KAREN.bvh</option>
+						<option value="movs/MS2_8Walk_M.bvh">MS2_8Walk_M.bvh</option>
+						<option value="movs/Dab1.csv">Dab1.bvh</option>
+					</select>	
+
+					<input class="takeStartTime" id="takeStartTimeB" type="text" placeholder="0">
+					<label>ms</label>
+
+					<div class="sidetabtitle">Duration</div>
+					<input type="text" placeholder="0">
+					<label>ms</label>
+
+					<div class="sidetabtitle">Body Part</div>
+					<select>
+						<option>Left Arm</option>
+						<option>Right Arm</option>
+						<option>Left Leg</option>
+						<option>Right Leg</option>
+						<option>Spine</option>
+					</select>
+
+					<button type="button"class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Compare</span></button>
+
 				</div>
 			</div>
 		</div>
