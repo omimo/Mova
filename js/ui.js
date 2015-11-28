@@ -9,7 +9,7 @@ var setSizes = function() {
   //TODO: subtract the size of the annotation track below
   $("#canCont").height($(document).height() - 150 - $("#footer").height());
 
-
+  
   if (movan.sidebyside == 1) {
     $("#lefttabs").width(($(document).width() - $("#legends").width() - 60)/2 - 10);
     $("#righttabs").width(($(document).width() - $("#legends").width() - 60)/2 - 10);

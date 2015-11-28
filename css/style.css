@@ -59,6 +59,20 @@ div.over2 {
 	padding-bottom: 20px;
 	float: left;
 	height: 520px;
+	position: relative;
+}
+#visCont {
+	width: 98%;
+	height: inherit;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	border: 1px solid;
+	padding-left: 10px;
+	padding-bottom: 18px;
+	float: left;
+	position: absolute;
+	background-color: white;
+	z-index: 20;
 }
 
 #sidebar {
