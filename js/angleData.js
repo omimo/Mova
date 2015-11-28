@@ -54,8 +54,8 @@ Take2Angle[......]	Same as above but for the second take	*/
 Input joints are spine and the joint connecting the extremity to the core of the skeleton. */
 	findAxis_spine : function(spineJoint, anchorJoint) {
 		var spine_vector = {					//Direction of spine
-			anchorJoint[1] - spineJoint[1],
 			anchorJoint[0] - spineJoint[0],
+			anchorJoint[1] - spineJoint[1],
 			anchorJoint[2] - spineJoint[2]
 		};
 		var spine_length = Math.sqrt(Math.pow(spine_vector[0], 2) + Math.pow(spine_vector[1], 2) + Math.pow(spine_vector[2], 2));
@@ -72,8 +72,8 @@ Input joints are spine and the joint connecting the extremity to the core of the
 	findAxis_width : function(spineJoint, partJoint, spine_axis) {
 		var ref_point = dotproduct(partJoint, spine_axis) * spine_axis;		//Finds the point on the spine where a perpendicular line can be drawn to the part joint
 		var side_vector = {						//Direction between spine and part joint
-			spineJoint[1] - ref_point[1],
 			spineJoint[0] - ref_point[0],
+			spineJoint[1] - ref_point[1],
 			spineJoint[2] - ref_point[2]
 		};
 		var side_length = Math.sqrt(Math.pow(side_vector[0], 2) + Math.pow(side_vector[1], 2) + Math.pow(side_vector[2], 2));
