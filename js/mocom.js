@@ -59,12 +59,12 @@ var mocom = {
 		var starttimeA = document.getElementById("takeStartTimeA").value;
 		var starttimeB = document.getElementById("takeStartTimeB").value;
 		var duration = document.getElementById("duration").value;
-		var bodypart = $("#bodypart").find(":selected").attr("data-bodypart");
+		var bodypart = parseInt($("#bodypart").find(":selected").attr("data-bodypart"));
 
 		var neededJoint = [];
 		var takeAPosition = [];
 		var takeBPosition = [];
-		switch(bodypart){
+		switch( parseInt($("#bodypart").find(":selected").attr("data-bodypart")) ){
 			case LEFTARM :
 			neededJoint = [C_SHOULDER, SPINE, L_SHOULDER, L_ELBLOW, L_WRIST, L_PALM];
 			break;
@@ -88,44 +88,47 @@ var mocom = {
 			default:
 			neededJoint = [];
 		}
+
 		// clear up the dataTracks and load our track to it.
 		movan.dataTracks = [];
-		fileHandler.loadDataTrack(urlA, function(){
-			movan.callbackForData();
+		fileHandler.loadDataTrack(urlA, function(dataTrack, t){
+			movan.dataTracks.push({content: dataTrack, type: t});
 			// get the start frame index, length
 			// different framerates (of takeA and takeB) might cause proublem later, but since we mostly consider takes in a same project so we ignore it for now.
-			var frametimeA = movan.dataTracks[0].content.frameTime;
-			var startFrameA = Math.floor(starttimeA / frametimeA);
+			var frameTimeA = movan.dataTracks[0].content.frameTime;
+			var startFrameA = Math.floor(starttimeA / frameTimeA);
 			var endFrameA = startFrameA + Math.floor(duration / frameTimeA);
-			var jointArray1, jointArray2, jointArray3, jointArray4, jointArray5, jointArray6 = []; //tmp joint holders
+			var jointArray1 = jointArray2 = jointArray3 = jointArray4 = jointArray5 = jointArray6 = []; //tmp joint holders
 			for (var i=startFrameA; i<endFrameA; i++){
 				var tmp = [];
-				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[0] ].positons[i]; jointArray1.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[1] ].positons[i]; jointArray2.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[2] ].positons[i]; jointArray3.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[3] ].positons[i]; jointArray4.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[4] ].positons[i]; jointArray5.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[5] ].positons[i]; jointArray6.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
+				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[0] ].positions[i]; 
+				jointArray1.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
+				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[1] ].positions[i]; jointArray2.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
+				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[2] ].positions[i]; jointArray3.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
+				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[3] ].positions[i]; jointArray4.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
+				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[4] ].positions[i]; jointArray5.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
+				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[5] ].positions[i]; jointArray6.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
 			}
 			takeAPosition = [jointArray1, jointArray2, jointArray3, jointArray4, jointArray5, jointArray6];
 		});
 
-		fileHandler.loadDataTrack(urlB, function(){
-			movan.callbackForData();
-			var frametimeB = movan.dataTracks[1].content.frameTime;
-			var startFrameB = Math.floor(starttimeA / frametimeB);
+		fileHandler.loadDataTrack(urlB, function(dataTrack, t){
+			movan.dataTracks.push({content: dataTrack, type: t});
+			var frameTimeB = movan.dataTracks[1].content.frameTime;
+			var startFrameB = Math.floor(starttimeA / frameTimeB);
 			var endFrameB = startFrameB + Math.floor(duration / frameTimeB);
-			var jointArray1, jointArray2, jointArray3, jointArray4, jointArray5, jointArray6 = []; //tmp joint holders
+			var jointArray1 = jointArray2 = jointArray3 = jointArray4 = jointArray5 = jointArray6 = []; //tmp joint holders
 			for (var i=startFrameB; i<endFrameB; i++){
 				var tmp = [];
-				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[0] ].positons[i]; jointArray1.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[1] ].positons[i]; jointArray2.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[2] ].positons[i]; jointArray3.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[3] ].positons[i]; jointArray4.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[4] ].positons[i]; jointArray5.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[5] ].positons[i]; jointArray6.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );		}
+				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[0] ].positions[i]; jointArray1.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
+				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[1] ].positions[i]; jointArray2.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
+				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[2] ].positions[i]; jointArray3.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
+				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[3] ].positions[i]; jointArray4.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
+				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[4] ].positions[i]; jointArray5.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
+				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[5] ].positions[i]; jointArray6.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );		}
 			takeBPosition = [jointArray1, jointArray2, jointArray3, jointArray4, jointArray5, jointArray6];
 		});
+
 	}
 
 
