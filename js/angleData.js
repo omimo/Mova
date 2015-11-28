@@ -1,5 +1,5 @@
 // input: 
-// Take1Position[
+// TakeAPosition[
 // 	jointArray1[{x:0, y:0, z:0},{},{},...],     "Root" joint (center shoulder or center hip
 // 	jointArray2[{x:0, y:0, z:0},{},{},...],		Spine joint
 // 	jointArray3[{x:0, y:0, z:0},{},{},...],		"Connecting" joint/body part joint 1 (joint that connects body part to core, right/left shoulder or hip
@@ -7,7 +7,7 @@
 // 	jointArray5[{x:0, y:0, z:0},{},{},...],		Body part joint 3 (wrist or ankle)
 // 	jointArray6[{x:0, y:0, z:0},{},{},...]		Body part joint 4 (hand or foot)
 // ]
-// Take2Position[
+// TakeBPosition[
 // 	jointArray1[{x:0, y:0, z:0},{},{},...],
 // 	jointArray2[{x:0, y:0, z:0},{},{},...],
 // 	jointArray3[{x:0, y:0, z:0},{},{},...],
@@ -17,12 +17,12 @@
 // ]
 
 // output:
-// Take1Angle[
+// TakeAAngle[
 // 	jointArray1[{alpha:0, beta:0},{},...],
 // 	jointArray2[{alpha:0, beta:0},{},...],
 // 	jointArray3[{alpha:0, beta:0},{},...]
 // ]
-// Take2Angle[
+// TakeBAngle[
 // 	jointArray1[{alpha:0, beta:0},{},...],
 // 	jointArray2[{alpha:0, beta:0},{},...],
 // 	jointArray3[{alpha:0, beta:0},{},...]
