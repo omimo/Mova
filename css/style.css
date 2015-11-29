@@ -64,21 +64,162 @@ div.over2 {
 #visCont {
 	width: 98%;
 	height: inherit;
-	overflow-x: hidden;
-	overflow-y: hidden;
 	border: 1px solid;
 	position: absolute;
 	left: 10px;
+	top: 0px;
+	overflow: scroll;
 	background-color: white;
 	z-index: 20;
-	display: none;
 }
-
+#visDetailedView {
+	width: 1200px;
+	height: 620px;
+	position: absolute;
+	top: 1px;
+	left: 0px;
+}
+#visInstFrame {
+	width: 100%;
+	height: 150px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+#visInstFrameP1 {
+	width: 250px;
+	height: 150px;
+	position: absolute;
+	top: 0px;
+	left: 300px;
+}
+#visInstFrameP2 {
+	width: 250px;
+	height: 150px;
+	position: absolute;
+	top: 0px;
+	left: 600px;
+}
+.visInstFrameA {
+	width: 48px;
+	height: 72px;
+	position: absolute;
+	top: 0px;
+	left: 100px;
+	border: 1px dotted;
+}
+.visInstFrameB {
+	width: 48px;
+	height: 72px;
+	position: absolute;
+	top: 75px;
+	left: 100px;
+	border: 1px dotted;
+}
+.visInstFrameDiff {
+	width: 98px;
+	height: 147px;
+	position: absolute;
+	top: 0px;
+	left: 151px;
+	border: 1px dotted;
+}
+#visMultiples {
+	width: 1200px;
+	height: 470px;
+	position: absolute;
+	top: 150px;
+	left: 0px;
+}
+#visMultiplesP1 {
+	width: 1200px;
+	height: 235px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	border-bottom: 1px solid;
+}
+#visMultiplesP2 {
+	width: 1200px;
+	height: 235px;
+	position: absolute;
+	top: 235px;
+	left: 0px;
+}
+.multiplesColumn {
+	width: 300px;
+	height: 235px;
+	position: absolute;
+	top: 0px;
+}
+.smallMultiple {
+	width: 300px;
+	height: 78px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+.jointsLegend {
+	width: 145px;
+	height: 230px;
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	border: 1px dotted;
+}
+#angleCharts{
+	left: 150px;
+	border-right: 1px solid;
+}
+#speedCharts{
+	left: 450px;
+	border-right: 1px solid;
+}
+#accelerationCharts{
+	left: 750px;
+}
+#visOverview {
+	width: 1200px;
+	height: 180px;
+	position: absolute;
+	top: 621px;
+	left: 0px;
+}
+#visOverviewP1 {
+	width: 1200px;
+	height: 90px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+#visOverviewP2 {
+	width: 1200px;
+	height: 90px;
+	position: absolute;
+	top: 90px;
+	left: 0px;
+}
+.visOverviewFrame {
+	width: 45px;
+	height: 65px;
+	position: absolute;
+	top: 20px;
+	left: 2px;
+	border: 1px dotted;
+}
+.visOverviewChart {
+	width: 1100px;
+	height: 70px;
+	position: absolute;
+	top: 15px;
+	left: 48px;
+}
 .loaderWrap{
 	position: relative;
 	width: 100%;
 	height: 100%;
 	background: #fff;
+	display: none;
 }
 
 .loader {
