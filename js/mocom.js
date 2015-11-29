@@ -107,25 +107,17 @@ var mocom = {
 				alert("Oops! Your duration extends outside the sequence duration. Please change it and try again.");
 				return;
 			}
-			var jointArray1 = jointArray2 = jointArray3 = jointArray4 = jointArray5 = jointArray6 = []; //tmp joint holders
-			for (var i=startFrameA; i<endFrameA-1; i++){
-				var tmp = []; var tmpJ = {};
-				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[0] ].positions[i]; 
-				tmpJ.x = tmp[0];
-				tmpJ.y = tmp[1];
-				tmpJ.z = tmp[2];
-				jointArray1.push( tmpJ );
-				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[1] ].positions[i];
-				tmpJ.x = tmp[0];
-				tmpJ.y = tmp[1];
-				tmpJ.z = tmp[2];
-				jointArray2.push( tmpJ );
-				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[2] ].positions[i]; jointArray3.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[3] ].positions[i]; jointArray4.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[4] ].positions[i]; jointArray5.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[5] ].positions[i]; jointArray6.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
+			
+			for (var j=0; j<6; j++){
+				takeAPosition[j] = [];
+				for (var i=startFrameA; i<endFrameA; i++){
+					var tmp = [];
+					var tmpJ = {};
+					tmp = movan.dataTracks[0].content.jointArray[ neededJoint[j] ].positions[i]; 
+					tmpJ = {x:tmp[0], y:tmp[1], z:tmp[2]};
+					takeAPosition[j].push(tmpJ);
+				}
 			}
-			takeAPosition = [jointArray1, jointArray2, jointArray3, jointArray4, jointArray5, jointArray6];
 			mocom.takeAAngles = mocom.angleData.convertData(takeAPosition);
 		});
 
@@ -143,16 +135,17 @@ var mocom = {
 				alert("Oops! Your duration extends outside the sequence duration. Please change it and try again.");
 				return;
 			}
-			var jointArray1 = jointArray2 = jointArray3 = jointArray4 = jointArray5 = jointArray6 = []; //tmp joint holders
-			for (var i=startFrameB; i<endFrameB; i++){
-				var tmp = [];
-				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[0] ].positions[i]; jointArray1.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[1] ].positions[i]; jointArray2.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[2] ].positions[i]; jointArray3.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[3] ].positions[i]; jointArray4.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[4] ].positions[i]; jointArray5.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[1].content.jointArray[ neededJoint[5] ].positions[i]; jointArray6.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );		}
-			takeBPosition = [jointArray1, jointArray2, jointArray3, jointArray4, jointArray5, jointArray6];
+
+			for (var j=0; j<6; j++){
+				takeBPosition[j] = [];
+				for (var i=startFrameB; i<endFrameB; i++){
+					var tmp = [];
+					var tmpJ = {};
+					tmp = movan.dataTracks[0].content.jointArray[ neededJoint[j] ].positions[i]; 
+					tmpJ = {x:tmp[0], y:tmp[1], z:tmp[2]};
+					takeBPosition[j].push(tmpJ);
+				}
+			}
 			mocom.takeBAngles = mocom.angleData.convertData(takeBPosition);
 		});
 		
