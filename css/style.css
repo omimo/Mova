@@ -71,6 +71,7 @@ div.over2 {
 	left: 10px;
 	background-color: white;
 	z-index: 20;
+	display: none;
 }
 
 .loaderWrap{

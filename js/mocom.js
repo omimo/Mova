@@ -112,10 +112,8 @@ var mocom = {
 				takeAPosition[j] = [];
 				for (var i=startFrameA; i<endFrameA; i++){
 					var tmp = [];
-					var tmpJ = {};
 					tmp = movan.dataTracks[0].content.jointArray[ neededJoint[j] ].positions[i]; 
-					tmpJ = {x:tmp[0], y:tmp[1], z:tmp[2]};
-					takeAPosition[j].push(tmpJ);
+					takeAPosition[j].push(tmp);
 				}
 			}
 			mocom.takeAAngles = mocom.angleData.convertData(takeAPosition);
@@ -140,10 +138,8 @@ var mocom = {
 				takeBPosition[j] = [];
 				for (var i=startFrameB; i<endFrameB; i++){
 					var tmp = [];
-					var tmpJ = {};
 					tmp = movan.dataTracks[0].content.jointArray[ neededJoint[j] ].positions[i]; 
-					tmpJ = {x:tmp[0], y:tmp[1], z:tmp[2]};
-					takeBPosition[j].push(tmpJ);
+					takeBPosition[j].push(tmp);
 				}
 			}
 			mocom.takeBAngles = mocom.angleData.convertData(takeBPosition);
@@ -183,10 +179,8 @@ var mocom = {
 			jointAngles[2] = [];
 			for (var i = 0; i < jointPositions[0].length; i++){	//Loops through all the frames as given by the length of one of the joint arrays in the input array
 				var anchorJoint = jointPositions[0][i];					//Anchor joint for new coordinate system
-				var temp = jointPositions[1][i];
-				var temp2 = jointPositions[3][i];
-				var spineJoint = mocom.angleData.translateOrigin(anchorJoint, temp);			//Translates the other coordinate joints according to anchorJoint
-				var partJoint = mocom.angleData.translateOrigin(anchorJoint, jointPositions[2][i]);
+				var spineJoint = mocom.angleData.getDirection(anchorJoint, jointPositions[1][i]);			//Translates the other coordinate joints according to anchorJoint
+				var partJoint = mocom.angleData.getDirection(anchorJoint, jointPositions[2][i]);
 				var spine_axis = mocom.angleData.findAxis_spine(spineJoint, anchorJoint);		//Defines the axis of the new coordinate systems, these are unit vectors
 				var side_axis = mocom.angleData.findAxis_width(spineJoint, partJoint, spine_axis);
 				var depth_axis = mocom.angleData.findAxis_depth(spine_axis, side_axis);
@@ -197,68 +191,52 @@ var mocom = {
 			return jointAngles;
 		},
 		
-		translateOrigin : function(newOrigin, point){
-				var point2 = {};
-				point2.x = point.x - newOrigin.x;
-				point2.y = point.y - newOrigin.y;
-				point2.z = point.z - newOrigin.z;
-				return point2;
+		getDirection : function(origin, point){
+				var newPoint = [
+				point[0] - origin[0],
+				point[1] - origin[1],
+				point[2] - origin[2]
+				];
+				return newPoint;
 		},
 
 	/* Function findAxis_width : Returns a unit vector in the direction parallel to shoulder or hip line.
 	Input joints are spine and the joint connecting the extremity to the core of the skeleton. */
 		findAxis_spine : function(spineJoint, anchorJoint) {
-			var spine_vector = [					//Direction of spine
-				anchorJoint.x - spineJoint.x,
-				anchorJoint.y - spineJoint.y,
-				anchorJoint.z - spineJoint.z
-			];
-			var spine_length = Math.sqrt(Math.pow(spine_vector[0], 2) + Math.pow(spine_vector[1], 2) + Math.pow(spine_vector[2], 2));
-			var spine_axis = [						//Normalizing the vector by dividing the components by its length
-				spine_vector[0] / spine_length,
-				spine_vector[1] / spine_length,
-				spine_vector[2] / spine_length
-			];
+			var spine_vector = mocom.angleData.getDirection(anchorJoint, spineJoint);
+			var spine_axis = mocom.angleData.normalize(spine_vector);				//Normalizing the vector by dividing the components by its length
 			return spine_axis;
 		},
 		
 	/* Function findAxis_width : Returns a unit vector in the direction parallel to shoulder or hip line.
 	Input joints are spine and the joint connecting the extremity to the core of the skeleton. */
 		findAxis_width : function(spineJoint, partJoint, spine_axis) {
-			var ref_point = {};
 			var scalar = mocom.angleData.dotproduct(partJoint, spine_axis);		//Finds the point on the spine where a perpendicular line can be drawn to the part joint
-			ref_point.x = spine_axis[0]*scalar;
-			ref_point.y = spine_axis[1]*scalar;
-			ref_point.z = spine_axis[2]*scalar;
-			var side_vector = [				//Direction between spine and part joint
-				spineJoint.x - ref_point.x,
-				spineJoint.y - ref_point.y,
-				spineJoint.z - ref_point.z
+			var refPoint = [
+				spine_axis[0]*scalar,
+				spine_axis[1]*scalar,
+				spine_axis[2]*scalar
 			];
-			var side_length = Math.sqrt(Math.pow(side_vector[0], 2) + Math.pow(side_vector[1], 2) + Math.pow(side_vector[2], 2));
-			var side_axis = [						//Normalizing the vector by dividing the components by its length
-				side_vector[0] / side_length,
-				side_vector[1] / side_length,
-				side_vector[2] / side_length
-			];
+			var side_vector = mocom.angleData.getDirection(refPoint, spineJoint);				//Direction between spine and part joint
+			var side_axis = mocom.angleData.normalize(side_vector);
 			return side_axis;
 		},
 		
 	/* Function findAxis_depth: Returns a unit vector in the direction perpendicular to input vectors */
 		findAxis_depth : function(spine_axis, side_axis) {
 			var depth_vector = mocom.angleData.crossproduct(spine_axis, side_axis);		//Using cross product of the two identified vectors to find the third one (perpendicular to both)
-			var depth_length = Math.sqrt(Math.pow(depth_vector[0], 2) + Math.pow(depth_vector[1], 2) + Math.pow(depth_vector[2], 2));
-			var depth_axis = [											//Normalizing the vector by dividing the components by its length
-				depth_vector[0] / depth_length,
-				depth_vector[1] / depth_length,
-				depth_vector[2] / depth_length
-			];
+			var depth_axis = mocom.angleData.normalize(depth_vector);
 			return depth_axis;
 		},
 		
 	//Function project: Projects input point onto plane defined by input normal vector (origin 0,0,0 has to be in the plane)
 		project : function(point, planeNormal){
-			var proj_point = (point - (mocom.angleData.dotproduct(point, planeNormal)) * planeNormal);
+			var scalar = mocom.angleData.dotproduct(point, planeNormal);
+			var proj_point = [
+				point[0] - (scalar * planeNormal[0]),
+				point[1] - (scalar * planeNormal[1]),
+				point[2] - (scalar * planeNormal[2])
+			];
 			return proj_point;
 		},
 		
@@ -268,26 +246,17 @@ var mocom = {
 			var node1_side = mocom.angleData.project(node1, viewAxis2);
 			var node2_front = mocom.angleData.project(node2, viewAxis1);
 			var node2_side = mocom.angleData.project(node2, viewAxis2);
-			var v = [								//Vector of limb in front perspective
-				node2_front[0] - node1_front[0],
-				node2_front[1] - node1_front[1],
-				node2_front[2] - node1_front[2]
-			];
-			var alpha = Math.atan2(mocom.angleData.dotproduct(relativeAxis, v), mocom.angleData.dotproduct(viewAxis1, v)) * 2 * Math.PI;	//Angle calculations for first perspective
-			v = [									//Changes the vector of limb to use second perspective
-				node2_side[0] - node1_side[0],
-				node2_side[1] - node1_side[1],
-				node2_side[2] - node1_side[2]
-			];
-			var beta = Math.atan2(mocom.angleData.dotproduct(relativeAxis, v), mocom.angleData.dotproduct(viewAxis2, v)) * 2 * Math.PI;	//Angle calculations for second perspective
+			var v = mocom.angleData.getDirection(node1_front, node2_front);							//Vector of limb in front perspective
+			var alpha = (Math.atan2(mocom.angleData.dotproduct(v, relativeAxis), mocom.angleData.dotproduct(v, viewAxis2))) * 2 * Math.PI;
+			v = mocom.angleData.getDirection(node1_side, node2_side);								//Changes the vector of limb to use second perspective
+			var beta = (Math.atan2(mocom.angleData.dotproduct(v, relativeAxis), mocom.angleData.dotproduct(v, viewAxis1))) * 2 * Math.PI;
 			return { alpha, beta };
 		},
 		
 	//Function to calculate the scalar product of vector a and b, returns scalar n
 		dotproduct : function(a,b) {
 			var n = 0;
-			var lim = Math.min(a.length,b.length);
-			for (var i=0; i<lim; i++) {
+			for (var i=0; i<3; i++) {
 				n += a[i] * b[i];
 			}
 			return n;
@@ -300,6 +269,21 @@ var mocom = {
 			c[1] = - ((a[0] * b[2]) - (a[2] * b[0]));
 			c[2] =   ((a[0] * b[1]) - (a[1] * b[0]));
 			return c;
+		},
+		
+		normalize : function(a) {
+			var length = Math.sqrt(Math.pow(a[0], 2) + Math.pow(a[1], 2) + Math.pow(a[2], 2));
+			if (length > 0) {
+			var normVector = [											//Normalizing the vector by dividing the components by its length
+				a[0] / length,
+				a[1] / length,
+				a[2] / length
+			];
+			}
+			else{
+			var normVector = [0,0,0];
+			}
+			return normVector;
 		}
 	}
 
