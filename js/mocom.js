@@ -53,6 +53,13 @@ var mocom = {
 	 * ]
 	 **/
 	prepareMocom : function(){
+		// show loader
+		$("#visCont .loaderWrap").remove();
+		$("#visCont")
+		.append('<div class="loaderWrap"><img class="loader" src="../img/loader.gif"></div>')
+		.css("display", "block");
+		var takeLoadCnt = 0;
+
 		// get from gui
 		var urlA = document.getElementById("sltURLA").value;
 		var urlB = document.getElementById("sltURLB").value;
@@ -93,6 +100,12 @@ var mocom = {
 		movan.dataTracks = [];
 		fileHandler.loadDataTrack(urlA, function(dataTrack, t){
 			movan.dataTracks.push({content: dataTrack, type: t});
+
+			takeLoadCnt++;
+			if(takeLoadCnt>=2){
+				$("#visCont .loaderWrap").remove();
+			}
+
 			// get the start frame index, length
 			// different framerates (of takeA and takeB) might cause proublem later, but since we mostly consider takes in a same project so we ignore it for now.
 			var frameTimeA = movan.dataTracks[0].content.frameTime;
@@ -121,6 +134,12 @@ var mocom = {
 
 		fileHandler.loadDataTrack(urlB, function(dataTrack, t){
 			movan.dataTracks.push({content: dataTrack, type: t});
+
+			takeLoadCnt++;
+			if(takeLoadCnt>=2){
+				$("#visCont .loaderWrap").remove();
+			}
+
 			var frameTimeB = movan.dataTracks[1].content.frameTime;
 			var lastFrameB = movan.dataTracks[0].content.frameCount;
 			var startFrameB = Math.floor(starttimeA / frameTimeB);
@@ -285,6 +304,10 @@ var mocom = {
 			}
 			return normVector;
 		}
+	},
+
+	closewindow : function(){
+		$("#visCont").hide();
 	}
 
 
