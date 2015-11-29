@@ -9,10 +9,10 @@ var CENTER		= 4;
 
 // joints index
 // left arm
-var L_SHOULDER	= 0;
-var L_ELBLOW	= 0;
-var L_WRIST		= 0;
-var L_PALM		= 0;
+var L_SHOULDER	= 5;
+var L_ELBLOW	= 6;
+var L_WRIST		= 7;
+var L_PALM		= 8;
 // right arm
 var R_SHOULDER	= 0;
 var R_ELBLOW	= 0;
@@ -30,8 +30,8 @@ var R_ANKLE		= 0;
 var R_FOOT		= 0;
 // conter
 var C_HIP		= 0;
-var SPINE		= 0;
-var C_SHOULDER	= 0;
+var SPINE		= 1;
+var C_SHOULDER	= 4;
 var HEAD		= 0;
 
 
@@ -56,9 +56,9 @@ var mocom = {
 		// get from gui
 		var urlA = document.getElementById("sltURLA").value;
 		var urlB = document.getElementById("sltURLB").value;
-		var starttimeA = document.getElementById("takeStartTimeA").value;
-		var starttimeB = document.getElementById("takeStartTimeB").value;
-		var duration = document.getElementById("duration").value;
+		var starttimeA = document.getElementById("takeStartTimeA").value/1000;
+		var starttimeB = document.getElementById("takeStartTimeB").value/1000;
+		var duration = document.getElementById("duration").value/1000;
 		var bodypart = parseInt($("#bodypart").find(":selected").attr("data-bodypart"));
 
 		var neededJoint = [];
@@ -96,14 +96,30 @@ var mocom = {
 			// get the start frame index, length
 			// different framerates (of takeA and takeB) might cause proublem later, but since we mostly consider takes in a same project so we ignore it for now.
 			var frameTimeA = movan.dataTracks[0].content.frameTime;
+			var lastFrameA = movan.dataTracks[0].content.frameCount;
 			var startFrameA = Math.floor(starttimeA / frameTimeA);
 			var endFrameA = startFrameA + Math.floor(duration / frameTimeA);
+			if(startFrameA >= lastFrameA || startFrameA < 0){
+				alert("Oops! Your start time is outside the sequence duration. Please change it and try again.");
+				return;
+			}
+			if(endFrameA >= lastFrameA){
+				alert("Oops! Your duration extends outside the sequence duration. Please change it and try again.");
+				return;
+			}
 			var jointArray1 = jointArray2 = jointArray3 = jointArray4 = jointArray5 = jointArray6 = []; //tmp joint holders
-			for (var i=startFrameA; i<endFrameA; i++){
-				var tmp = [];
+			for (var i=startFrameA; i<endFrameA-1; i++){
+				var tmp = []; var tmpJ = {};
 				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[0] ].positions[i]; 
-				jointArray1.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
-				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[1] ].positions[i]; jointArray2.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
+				tmpJ.x = tmp[0];
+				tmpJ.y = tmp[1];
+				tmpJ.z = tmp[2];
+				jointArray1.push( tmpJ );
+				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[1] ].positions[i];
+				tmpJ.x = tmp[0];
+				tmpJ.y = tmp[1];
+				tmpJ.z = tmp[2];
+				jointArray2.push( tmpJ );
 				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[2] ].positions[i]; jointArray3.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
 				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[3] ].positions[i]; jointArray4.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
 				tmp = movan.dataTracks[0].content.jointArray[ neededJoint[4] ].positions[i]; jointArray5.push( {x:tmp[0], y:tmp[1], z:tmp[2]} );
@@ -116,8 +132,17 @@ var mocom = {
 		fileHandler.loadDataTrack(urlB, function(dataTrack, t){
 			movan.dataTracks.push({content: dataTrack, type: t});
 			var frameTimeB = movan.dataTracks[1].content.frameTime;
+			var lastFrameB = movan.dataTracks[0].content.frameCount;
 			var startFrameB = Math.floor(starttimeA / frameTimeB);
 			var endFrameB = startFrameB + Math.floor(duration / frameTimeB);
+			if(startFrameB >= lastFrameB || startFrameB < 0){
+				alert("Oops! Your start time is outside the sequence duration. Please change it and try again.");
+				return;
+			}
+			if(endFrameB >= lastFrameB){
+				alert("Oops! Your duration extends outside the sequence duration. Please change it and try again.");
+				return;
+			}
 			var jointArray1 = jointArray2 = jointArray3 = jointArray4 = jointArray5 = jointArray6 = []; //tmp joint holders
 			for (var i=startFrameB; i<endFrameB; i++){
 				var tmp = [];
@@ -164,9 +189,11 @@ var mocom = {
 			jointAngles[1] = [];
 			jointAngles[2] = [];
 			for (var i = 0; i < jointPositions[0].length; i++){	//Loops through all the frames as given by the length of one of the joint arrays in the input array
-				var anchorJoint = jointPositions[0][i];													//Anchor joint for new coordinate system
-				var spineJoint = mocom.angleData.translateOrigin(jointPositions[0][i], jointPositions[1][i]);			//Translates the other coordinate joints according to anchorJoint
-				var partJoint = mocom.angleData.translateOrigin(jointPositions[0][i], jointPositions[2][i]);
+				var anchorJoint = jointPositions[0][i];					//Anchor joint for new coordinate system
+				var temp = jointPositions[1][i];
+				var temp2 = jointPositions[3][i];
+				var spineJoint = mocom.angleData.translateOrigin(anchorJoint, temp);			//Translates the other coordinate joints according to anchorJoint
+				var partJoint = mocom.angleData.translateOrigin(anchorJoint, jointPositions[2][i]);
 				var spine_axis = mocom.angleData.findAxis_spine(spineJoint, anchorJoint);		//Defines the axis of the new coordinate systems, these are unit vectors
 				var side_axis = mocom.angleData.findAxis_width(spineJoint, partJoint, spine_axis);
 				var depth_axis = mocom.angleData.findAxis_depth(spine_axis, side_axis);
@@ -178,17 +205,20 @@ var mocom = {
 		},
 		
 		translateOrigin : function(newOrigin, point){
-				point -= newOrigin;
-				return point;
+				var point2 = {};
+				point2.x = point.x - newOrigin.x;
+				point2.y = point.y - newOrigin.y;
+				point2.z = point.z - newOrigin.z;
+				return point2;
 		},
 
 	/* Function findAxis_width : Returns a unit vector in the direction parallel to shoulder or hip line.
 	Input joints are spine and the joint connecting the extremity to the core of the skeleton. */
 		findAxis_spine : function(spineJoint, anchorJoint) {
 			var spine_vector = [					//Direction of spine
-				anchorJoint[0] - spineJoint[0],
-				anchorJoint[1] - spineJoint[1],
-				anchorJoint[2] - spineJoint[2]
+				anchorJoint.x - spineJoint.x,
+				anchorJoint.y - spineJoint.y,
+				anchorJoint.z - spineJoint.z
 			];
 			var spine_length = Math.sqrt(Math.pow(spine_vector[0], 2) + Math.pow(spine_vector[1], 2) + Math.pow(spine_vector[2], 2));
 			var spine_axis = [						//Normalizing the vector by dividing the components by its length
@@ -202,11 +232,15 @@ var mocom = {
 	/* Function findAxis_width : Returns a unit vector in the direction parallel to shoulder or hip line.
 	Input joints are spine and the joint connecting the extremity to the core of the skeleton. */
 		findAxis_width : function(spineJoint, partJoint, spine_axis) {
-			var ref_point = mocom.angleData.dotproduct(partJoint, spine_axis) * spine_axis;		//Finds the point on the spine where a perpendicular line can be drawn to the part joint
+			var ref_point = {};
+			var scalar = mocom.angleData.dotproduct(partJoint, spine_axis);		//Finds the point on the spine where a perpendicular line can be drawn to the part joint
+			ref_point.x = spine_axis[0]*scalar;
+			ref_point.y = spine_axis[1]*scalar;
+			ref_point.z = spine_axis[2]*scalar;
 			var side_vector = [				//Direction between spine and part joint
-				spineJoint[0] - ref_point[0],
-				spineJoint[1] - ref_point[1],
-				spineJoint[2] - ref_point[2]
+				spineJoint.x - ref_point.x,
+				spineJoint.y - ref_point.y,
+				spineJoint.z - ref_point.z
 			];
 			var side_length = Math.sqrt(Math.pow(side_vector[0], 2) + Math.pow(side_vector[1], 2) + Math.pow(side_vector[2], 2));
 			var side_axis = [						//Normalizing the vector by dividing the components by its length
