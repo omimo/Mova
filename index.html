@@ -491,11 +491,11 @@
 				var overviewP1 = d3.selectAll("#visOverviewChartP1")
 											.append("svg")
 												.attr("width", 1100)
-												.attr("height", 70)
-				var overviewP2 = d3.selectAll("#visOverviewChartP2")
+												.attr("height", 70);
+				var overviewP2 = d3.select("#visOverviewChartP2")
 											.append("svg")
 												.attr("width", 1100)
-												.attr("height", 70)
+												.attr("height", 70);
 				
 				//Find the x-scale based on number of frames
 				var startFrame = 0;
@@ -551,7 +551,7 @@
 									return d.map(function (value, index) {
 													return {
 															x: index,
-															y: value
+															y: value,
 															};
 													});
 											});
@@ -561,6 +561,7 @@
 				var streams2 = newStack(data2);
 				
 				var area = d3.svg.area()
+									// d is like [0, 4, 2, 7, 9, 0], 
 									.x(function (d) {
 												return xScale(d.x);
 												})
@@ -576,6 +577,7 @@
 									.enter()
 									.append("path")
 										.attr("class", "stream")
+										// d is like [0, 4, 2, 7, 9, 0], 
 										.attr("d", function (d) {
 														return area(d);
 														})

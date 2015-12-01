@@ -164,8 +164,10 @@ var mocom = {
 			mocom.takeBAngles = mocom.angleData.convertData(takeBPosition);
 		});
 		
-
+		mocom.createVis();
 	},
+
+	createVis : function(){},
 
 	angleData : {
 
