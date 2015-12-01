@@ -146,6 +146,14 @@ div.over2 {
 	top: 235px;
 	left: 0px;
 }
+#visCont .closewindow{
+	position: relative;
+	width: 40px;
+	height: 40px;
+	top: 10px;
+	left: 10px;
+	cursor: pointer;
+}
 .multiplesColumn {
 	width: 300px;
 	height: 235px;
