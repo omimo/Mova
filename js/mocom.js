@@ -168,7 +168,128 @@ var mocom = {
 		
 	},
 
-	createVis : function(){},
+	createVis : function(){
+	//DUMMY DATA  should be array of angle differences for each joint
+		var data1 = [
+					[0, 4, 2, 7, 9, 0], 
+					[0, 2, 5, 10, 12, 0],
+					[0, 2, 16, 6, 10, 0]
+					];
+		var data2 = [
+					[2, 0, 2, 1, 9, 0], 
+					[3, 1, 5, 5, 10, 4],
+					[5, 2, 4, 6, 10, 0]
+					];
+	//NNED TO ADD FUNCTION TO CHECK WHICH TAKE OVER WHICH TO DETERMINE COLOR
+		var color = ["#bfd0ff", "#ddff33", "#14dba4"];
+							
+	//Creates the container for overview visualization
+		var overviewP1 = d3.selectAll("#visOverviewChartP1")
+									.append("svg")
+										.attr("width", 1100)
+										.attr("height", 70);
+		var overviewP2 = d3.select("#visOverviewChartP2")
+									.append("svg")
+										.attr("width", 1100)
+										.attr("height", 70);
+				
+	//Find the x-scale based on number of frames
+		var startFrame = 0;
+		var endFrame = 5;
+		var xScale = d3.scale.linear()
+								.domain([startFrame, endFrame])
+								.range([0, 1100]);
+	//Find the y-scale based on maximum sum of the values of the data
+		var totalY = [];
+		for(var x=0; x<data1[0].length; x++) {
+			totalY[x] = 0;
+			for(var y=0; y<data1.length; y++) {
+				totalY[x] += data1[y][x];
+			}
+		}
+		for(var x=0; x<data2[0].length; x++) {
+			totalY[data1[0].length + x] = 0;
+			for(var y=0; y<data2.length; y++) {
+				totalY[data1[0].length + x] += data2[y][x];
+			}
+		}
+		var yScale = d3.scale.linear()
+								.domain([0, d3.max(totalY)]) 
+								.range([0, 70]);
+					
+		/*		//Create x-axis
+				var xAxis = d3.svg.axis()
+									.scale(xScale);
+
+				var xAxisGroup = overviewContainer.append("g")
+													.attr("class", "overviewAxis") 
+													.call(xAxis);
+				
+							
+				//Create y-axis
+				var yAxis = d3.svg.axis()
+									.scale(yScale);
+									
+				var xAxisGroup = overviewContainer.append("g")
+													.attr("class", "overviewAxis") 
+													.call(yAxis);
+				*/		
+				//Data needs to have properties x and y to parse
+		data1 = data1.map(function (d) {
+							return d.map(function (value, index) {
+									return {
+											x: index,
+											y: value
+											};
+									});
+						});
+		data2 = data2.map(function (d) {
+							return d.map(function (value, index) {
+									return {
+											x: index,
+											y: value,
+											};
+									});
+						});
+											
+		var newStack = d3.layout.stack().offset("silhouette");
+		var streams1 = newStack(data1);
+		var streams2 = newStack(data2);
+				
+		var area = d3.svg.area() 
+							.x(function (d) {
+								return xScale(d.x);
+								})
+							.y0(function (d) {
+								return yScale(d.y0);
+								})
+							.y1(function (d) {
+								return yScale(d.y0 + d.y);
+								});
+
+		overviewP1.selectAll(".stream")
+							.data(streams1)
+							.enter()
+								.append("path")
+									.attr("class", "stream")
+									.attr("d", function (d) {
+												return area(d);
+												})
+									.style("fill", function (d, i) {
+												return color[i];
+												});
+		overviewP2.selectAll(".stream")
+							.data(streams2)
+							.enter()
+								.append("path")
+									.attr("class", "stream")
+									.attr("d", function (d) {
+												return area(d);
+												})
+									.style("fill", function (d, i) {
+													return color[i];
+													});
+	},
 
 	angleData : {
 
