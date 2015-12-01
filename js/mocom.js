@@ -101,11 +101,6 @@ var mocom = {
 		fileHandler.loadDataTrack(urlA, function(dataTrack, t){
 			movan.dataTracks.push({content: dataTrack, type: t});
 
-			takeLoadCnt++;
-			if(takeLoadCnt>=2){
-				$("#visCont .loaderWrap").remove();
-			}
-
 			// get the start frame index, length
 			// different framerates (of takeA and takeB) might cause proublem later, but since we mostly consider takes in a same project so we ignore it for now.
 			var frameTimeA = movan.dataTracks[0].content.frameTime;
@@ -130,15 +125,16 @@ var mocom = {
 				}
 			}
 			mocom.takeAAngles = mocom.angleData.convertData(takeAPosition);
-		});
-
-		fileHandler.loadDataTrack(urlB, function(dataTrack, t){
-			movan.dataTracks.push({content: dataTrack, type: t});
 
 			takeLoadCnt++;
 			if(takeLoadCnt>=2){
 				$("#visCont .loaderWrap").remove();
+				mocom.createVis();
 			}
+		});
+
+		fileHandler.loadDataTrack(urlB, function(dataTrack, t){
+			movan.dataTracks.push({content: dataTrack, type: t});
 
 			var frameTimeB = movan.dataTracks[1].content.frameTime;
 			var lastFrameB = movan.dataTracks[0].content.frameCount;
@@ -162,9 +158,14 @@ var mocom = {
 				}
 			}
 			mocom.takeBAngles = mocom.angleData.convertData(takeBPosition);
+
+			takeLoadCnt++;
+			if(takeLoadCnt>=2){
+				$("#visCont .loaderWrap").remove();
+				mocom.createVis();
+			}
 		});
 		
-		mocom.createVis();
 	},
 
 	createVis : function(){},
