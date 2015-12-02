@@ -169,13 +169,14 @@ var mocom = {
 	},
 
 	createVis : function(){
+		 var createOverview = function(){
 	//DUMMY DATA  should be array of angle differences for each joint
-		var data1 = [
+			var data1 = [
 					[0, 4, 2, 7, 9, 0], 
 					[0, 2, 5, 10, 12, 0],
 					[0, 2, 16, 6, 10, 0]
 					];
-		var data2 = [
+			var data2 = [
 					[2, 0, 2, 1, 9, 0], 
 					[3, 1, 5, 5, 10, 4],
 					[5, 2, 4, 6, 10, 0]
@@ -289,6 +290,89 @@ var mocom = {
 									.style("fill", function (d, i) {
 													return color[i];
 													});
+				};
+				
+	var createMultiples = function(){											
+			var data = [
+							[[0, 0],[1, 1],[0, 0],[1, 1]],
+							[[0, 0],[1, 1],[0, 0],[1, 1]],
+							[[0, 0],[1, 1],[0, 0],[1, 1]]
+							];
+				var multiplesP1 = d3.select("#visMultiplesP1");
+				var multiplesP2 = d3.select("#visMultiplesP2");
+				var anglesP1 = multiplesP1.select("#angleCharts")
+											.selectAll(".smallMultiple")
+												.data(data)
+												.append("svg")
+												.attr("width", 300)
+												.attr("height", 78);
+				var anglesP2 = multiplesP2.select("#angleCharts")
+											.selectAll(".smallMultiple")
+												.data(data)
+												.append("svg")
+												.attr("width", 300)
+												.attr("height", 78);
+				var speedsP1 = multiplesP1.select("#speedCharts")
+											.selectAll(".smallMultiple")
+												.data(data)
+												.append("svg")
+												.attr("width", 300)
+												.attr("height", 78);				
+				var speedsP2 = multiplesP2.select("#speedCharts")
+											.selectAll(".smallMultiple")
+												.data(data)
+												.append("svg")
+												.attr("width", 300)
+												.attr("height", 78);
+				var accsP1 = multiplesP1.select("#accelerationCharts")
+											.selectAll(".smallMultiple")
+												.data(data)
+												.append("svg")
+												.attr("width", 300)
+												.attr("height", 78);				
+				var accsP2 = multiplesP2.select("#accelerationCharts")
+											.selectAll(".smallMultiple")
+												.data(data)
+												.append("svg")
+												.attr("width", 300)
+												.attr("height", 78);
+												
+				anglesP1.append("circle")
+									.attr("cx", function(d,i){return 40+40*i;})
+									.attr("cy", 25)
+									.attr("r", 25)
+									.style("fill", "purple");
+				
+				anglesP2.append("circle")
+									.attr("cx", function(d,i){return 40+40*i;})
+									.attr("cy", 25)
+									.attr("r", 25)
+									.style("fill", "red");
+				speedsP1.append("circle")
+									.attr("cx", function(d,i){return 40+40*i;})
+									.attr("cy", 25)
+									.attr("r", 25)
+									.style("fill", "blue");
+				
+				speedsP2.append("circle")
+									.attr("cx", function(d,i){return 40+40*i;})
+									.attr("cy", 25)
+									.attr("r", 25)
+									.style("fill", "green");	
+				accsP1.append("circle")
+									.attr("cx", function(d,i){return 40+40*i;})
+									.attr("cy", 25)
+									.attr("r", 25)
+									.style("fill", "black");
+				
+				accsP2.append("circle")
+									.attr("cx", function(d,i){return 40+40*i;})
+									.attr("cy", 25)
+									.attr("r", 25)
+									.style("fill", "yellow");	
+			};
+		createOverview();
+		createMultiples();
 	},
 
 	angleData : {
