@@ -171,28 +171,18 @@ var mocom = {
 	createVis : function(){
 		 var createOverview = function(){
 	//DUMMY DATA  should be array of angle differences for each joint
-			var data1 = [
+			var dataP1 = [
 					[0, 4, 2, 7, 9, 0], 
 					[0, 2, 5, 10, 12, 0],
 					[0, 2, 16, 6, 10, 0]
 					];
-			var data2 = [
+			var dataP2 = [
 					[2, 0, 2, 1, 9, 0], 
 					[3, 1, 5, 5, 10, 4],
 					[5, 2, 4, 6, 10, 0]
 					];
 	//NNED TO ADD FUNCTION TO CHECK WHICH TAKE OVER WHICH TO DETERMINE COLOR
 		var color = ["#bfd0ff", "#ddff33", "#14dba4"];
-							
-	//Creates the container for overview visualization
-		var overviewP1 = d3.selectAll("#visOverviewChartP1")
-									.append("svg")
-										.attr("width", 1100)
-										.attr("height", 70);
-		var overviewP2 = d3.select("#visOverviewChartP2")
-									.append("svg")
-										.attr("width", 1100)
-										.attr("height", 70);
 				
 	//Find the x-scale based on number of frames
 		var startFrame = 0;
@@ -202,16 +192,16 @@ var mocom = {
 								.range([0, 1100]);
 	//Find the y-scale based on maximum sum of the values of the data
 		var totalY = [];
-		for(var x=0; x<data1[0].length; x++) {
+		for(var x=0; x<dataP1[0].length; x++) {
 			totalY[x] = 0;
-			for(var y=0; y<data1.length; y++) {
-				totalY[x] += data1[y][x];
+			for(var y=0; y<dataP1.length; y++) {
+				totalY[x] += dataP1[y][x];
 			}
 		}
-		for(var x=0; x<data2[0].length; x++) {
-			totalY[data1[0].length + x] = 0;
-			for(var y=0; y<data2.length; y++) {
-				totalY[data1[0].length + x] += data2[y][x];
+		for(var x=0; x<dataP2[0].length; x++) {
+			totalY[dataP1[0].length + x] = 0;
+			for(var y=0; y<dataP2.length; y++) {
+				totalY[dataP1[0].length + x] += dataP2[y][x];
 			}
 		}
 		var yScale = d3.scale.linear()
@@ -236,7 +226,7 @@ var mocom = {
 													.call(yAxis);
 				*/		
 				//Data needs to have properties x and y to parse
-		data1 = data1.map(function (d) {
+		dataP1 = dataP1.map(function (d) {
 							return d.map(function (value, index) {
 									return {
 											x: index,
@@ -244,7 +234,7 @@ var mocom = {
 											};
 									});
 						});
-		data2 = data2.map(function (d) {
+		dataP2 = dataP2.map(function (d) {
 							return d.map(function (value, index) {
 									return {
 											x: index,
@@ -254,8 +244,8 @@ var mocom = {
 						});
 											
 		var newStack = d3.layout.stack().offset("silhouette");
-		var streams1 = newStack(data1);
-		var streams2 = newStack(data2);
+		var streams1 = newStack(dataP1);
+		var streams2 = newStack(dataP2);
 				
 		var area = d3.svg.area() 
 							.x(function (d) {
@@ -267,6 +257,15 @@ var mocom = {
 							.y1(function (d) {
 								return yScale(d.y0 + d.y);
 								});
+		//Creates the container for overview visualization
+		var overviewP1 = d3.selectAll("#visOverviewChartP1")
+									.append("svg")
+										.attr("width", 1100)
+										.attr("height", 70);
+		var overviewP2 = d3.select("#visOverviewChartP2")
+									.append("svg")
+										.attr("width", 1100)
+										.attr("height", 70);
 
 		overviewP1.selectAll(".stream")
 							.data(streams1)
@@ -293,86 +292,136 @@ var mocom = {
 				};
 				
 	var createMultiples = function(){											
-			var data = [
-							[[0, 0],[1, 1],[0, 0],[1, 1]],
-							[[0, 0],[1, 1],[0, 0],[1, 1]],
-							[[0, 0],[1, 1],[0, 0],[1, 1]]
-							];
-				var multiplesP1 = d3.select("#visMultiplesP1");
-				var multiplesP2 = d3.select("#visMultiplesP2");
-				var anglesP1 = multiplesP1.select("#angleCharts")
-											.selectAll(".smallMultiple")
-												.data(data)
-												.append("svg")
-												.attr("width", 300)
-												.attr("height", 78);
-				var anglesP2 = multiplesP2.select("#angleCharts")
-											.selectAll(".smallMultiple")
-												.data(data)
-												.append("svg")
-												.attr("width", 300)
-												.attr("height", 78);
-				var speedsP1 = multiplesP1.select("#speedCharts")
-											.selectAll(".smallMultiple")
-												.data(data)
-												.append("svg")
-												.attr("width", 300)
-												.attr("height", 78);				
-				var speedsP2 = multiplesP2.select("#speedCharts")
-											.selectAll(".smallMultiple")
-												.data(data)
-												.append("svg")
-												.attr("width", 300)
-												.attr("height", 78);
-				var accsP1 = multiplesP1.select("#accelerationCharts")
-											.selectAll(".smallMultiple")
-												.data(data)
-												.append("svg")
-												.attr("width", 300)
-												.attr("height", 78);				
-				var accsP2 = multiplesP2.select("#accelerationCharts")
-											.selectAll(".smallMultiple")
-												.data(data)
-												.append("svg")
-												.attr("width", 300)
-												.attr("height", 78);
+		var dataTakeA = [
+					[[0, 1],[3, 1],[1, 0],[1, 1],[0, 0],[5, 1]],
+					[[2, 0],[2, 2],[1, 0],[1, 1],[0, 0],[1, 4]],
+					[[0, 3],[1, 4],[0, 1],[1, 1],[0, 0],[2, 1]]
+					];
+		var dataTakeB = [
+					[[2, 0],[2, 2],[1, 0],[1, 1],[0, 0],[1, 1]],
+					[[0, 3],[1, 4],[0, 1],[1, 1],[0, 0],[1, 1]],
+					[[0, 1],[3, 1],[1, 0],[1, 1],[0, 0],[1, 1]]
+					];
+		
+		//Find the x-scale based on number of frames
+		var startFrame = 0;
+		var endFrame = 5;
+		var xScale = d3.scale.linear()
+								.domain([startFrame, endFrame])
+								.range([1, 299]);
+		
+		//Find the y-scale based on maximum and minimum values of the data
+		var yMax = 0;
+		var yMin = 0;
+		for(var i=0; i<dataTakeA.length; i++) {
+			for(var j=0; j<dataTakeA[0].length; j++) {
+				for(var k=0; k<dataTakeA[0][0].length; k++){
+					if(dataTakeA[i][j][k] < yMin){
+						yMin = dataTakeA[i][j][k];
+					}
+					if(dataTakeB[i][j][k] < yMin){
+						yMin = dataTakeB[i][j][k];
+					}
+					if(dataTakeA[i][j][k] > yMax){
+						yMax = dataTakeA[i][j][k];
+					}
+					if(dataTakeB[i][j][k] > yMax){
+						yMax = dataTakeB[i][j][k];
+					}
+				}
+			}
+		}
+		var yScaleAngle = d3.scale.linear()
+								.domain([yMin, yMax]) 
+								.range([1, 77]);
+								
+		var lineP1 = d3.svg.line()
+							.x(function(d, i) { return xScale(i); })
+							.y(function(d) { return yScaleAngle(d[0]); });
+		var lineP2 = d3.svg.line()
+							.x(function(d, i) { return xScale(i); })
+							.y(function(d) { return yScaleAngle(d[1]); });
+								
+		var multiplesP1 = d3.select("#visMultiplesP1");
+		var multiplesP2 = d3.select("#visMultiplesP2");
+		var angleChartsP1 = multiplesP1.select("#angleCharts");
+		var angleChartsP2 = multiplesP2.select("#angleCharts");
+		var speedChartsP1 = multiplesP1.select("#speedCharts");
+		var speedChartsP2 = multiplesP2.select("#speedCharts");
+		var accelerationChartsP1 = multiplesP1.select("#accelerationCharts");
+		var accelerationChartsP2 = multiplesP2.select("#accelerationCharts");
+		var anglesP1A = angleChartsP1.selectAll(".smallMultiple")
+										.data(dataTakeA)
+										.append("svg")
+											.attr("class", "multipleSVG");
+		var anglesP1B = angleChartsP1.selectAll(".smallMultiple")
+										.data(dataTakeB)
+										.append("svg")
+											.attr("class", "multipleSVG");
+		var anglesP2A = angleChartsP2.selectAll(".smallMultiple")
+										.data(dataTakeA)
+										.append("svg")
+											.attr("class", "multipleSVG");
+		var anglesP2B = angleChartsP2.selectAll(".smallMultiple")
+										.data(dataTakeB)
+										.append("svg")
+											.attr("class", "multipleSVG");
+		var speedsP1A = speedChartsP1.selectAll(".smallMultiple")
+										.data(dataTakeA)
+										.append("svg")
+											.attr("class", "multipleSVG");
+		var speedsP1B = speedChartsP1.selectAll(".smallMultiple")
+										.data(dataTakeB)
+										.append("svg")
+											.attr("class", "multipleSVG");													
+		var speedsP2A = speedChartsP2.selectAll(".smallMultiple")
+										.data(dataTakeA)
+										.append("svg")
+											.attr("class", "multipleSVG");
+		var speedsP2B = speedChartsP2.selectAll(".smallMultiple")
+										.data(dataTakeB)
+										.append("svg")
+											.attr("class", "multipleSVG");
+		var accsP1A = accelerationChartsP1.selectAll(".smallMultiple")
+										.data(dataTakeA)
+										.append("svg")
+											.attr("class", "multipleSVG");		
+		var accsP1B = accelerationChartsP1.selectAll(".smallMultiple")
+										.data(dataTakeB)
+										.append("svg")
+											.attr("class", "multipleSVG");												
+		var accsP2A = accelerationChartsP2.selectAll(".smallMultiple")
+										.data(dataTakeA)
+										.append("svg")
+											.attr("class", "multipleSVG");
+		var accsP2B = accelerationChartsP2.selectAll(".smallMultiple")
+										.data(dataTakeB)
+										.append("svg")
+											.attr("class", "multipleSVG");
 												
-				anglesP1.append("circle")
-									.attr("cx", function(d,i){return 40+40*i;})
-									.attr("cy", 25)
-									.attr("r", 25)
-									.style("fill", "purple");
-				
-				anglesP2.append("circle")
-									.attr("cx", function(d,i){return 40+40*i;})
-									.attr("cy", 25)
-									.attr("r", 25)
-									.style("fill", "red");
-				speedsP1.append("circle")
-									.attr("cx", function(d,i){return 40+40*i;})
-									.attr("cy", 25)
-									.attr("r", 25)
-									.style("fill", "blue");
-				
-				speedsP2.append("circle")
-									.attr("cx", function(d,i){return 40+40*i;})
-									.attr("cy", 25)
-									.attr("r", 25)
-									.style("fill", "green");	
-				accsP1.append("circle")
-									.attr("cx", function(d,i){return 40+40*i;})
-									.attr("cy", 25)
-									.attr("r", 25)
-									.style("fill", "black");
-				
-				accsP2.append("circle")
-									.attr("cx", function(d,i){return 40+40*i;})
-									.attr("cy", 25)
-									.attr("r", 25)
-									.style("fill", "yellow");	
-			};
-		createOverview();
-		createMultiples();
+		anglesP1A.append("path")
+					.attr("class", "line")
+					.attr("d", function (d) {
+								return lineP1(d);
+								});
+		anglesP1B.append("path")
+					.attr("class", "line")
+					.attr("d", function (d) {
+								return lineP1(d);
+								});	
+		anglesP2A.append("path")
+					.attr("class", "line")
+					.attr("d", function (d) {
+								return lineP2(d);
+								});
+		anglesP2B.append("path")
+					.attr("class", "line")
+					.attr("d", function (d) {
+								return lineP2(d);
+								});
+	};
+	createOverview();
+	createMultiples();
 	},
 
 	angleData : {

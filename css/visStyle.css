@@ -5,3 +5,15 @@
 	stroke: black;
 	stroke-width: 0.5px;
 }
+.line{
+	fill: none;
+	stroke: black;
+	stroke-width: 1px;
+}
+.multipleSVG{
+	width: 300px;
+	height: 78px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	}
