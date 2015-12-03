@@ -301,13 +301,11 @@
 			</div>
 			<div id="visOverview">
 				<div id="visOverviewP1">
-					Overview front view
 					<div class="visOverviewFrame">First frame</div>
 					<div class="visOverviewChart" id="visOverviewChartP1"></div>
 					<div class="visOverviewFrame" style="left: 1150px";>Last frame</div>
 				</div>
 				<div id="visOverviewP2">
-					Overview side view
 					<div class="visOverviewFrame">First frame</div>
 					<div class="visOverviewChart" id="visOverviewChartP2"></div>
 					<div class="visOverviewFrame" style="left: 1150px";>Last frame</div>
@@ -343,7 +341,9 @@
 					</div>
 					<select name="drop1" id="fileSelect" size="4" multiple="multiple"
 					onchange="movan.loadNew()" style="border:2px solid #ccc; width:200px; height: 120px; overflow-y: auto;">
-					 <option value="movs/MS2_8Walk_M_nopos.bvh" selected="selected">MS2_8Walk_M_nopos.bvh</option>
+						<option value="movs/AV_8Walk_HVHA_Rep1.bvh">AV_8Walk_HVHA_Rep1.bvh</option>
+						<option value="movs/AV_8Walk_HVHA_Rep2.bvh">AV_8Walk_HVHA_Rep2.bvh</option>
+						<option value="movs/MS2_8Walk_M_nopos.bvh" selected="selected">MS2_8Walk_M_nopos.bvh</option>
 						<option value="movs/Slash_x4_0001KAREN.bvh">Slash_x4_0001KAREN.bvh</option>
 						<option value="movs/MS2_8Walk_M.bvh">MS2_8Walk_M.bvh</option>
 						<option value="movs/Dab1.csv">Dab1.bvh</option>
@@ -413,7 +413,10 @@
 				<div id="comparison" class="sidetab">
 					<div class="sidetabtitle">Take A</div>
 					<select id="sltURLA">
+						<option value="movs/AV_8Walk_HVHA_Rep3.bvh">AV_8Walk_HVHA_Rep3.bvh</option>
 						<option value="movs/AV_8Walk_HVHA_Rep1.bvh">AV_8Walk_HVHA_Rep1.bvh</option>
+						<option value="movs/AV_8Walk_HVHA_Rep2.bvh">AV_8Walk_HVHA_Rep2.bvh</option>
+
 						<option value="movs/Slash_x4_0001KAREN.bvh">Slash_x4_0001KAREN.bvh</option>
 						<option value="movs/MS2_8Walk_M.bvh">MS2_8Walk_M.bvh</option>
 						<option value="movs/Dab1.csv">Dab1.bvh</option>
@@ -423,6 +426,7 @@
 
 					<div class="sidetabtitle">Take B</div>
 					<select id="sltURLB">
+						<option value="movs/AV_8Walk_HVHA_Rep2.bvh">AV_8Walk_HVHA_Rep2.bvh</option>
 						<option value="movs/AV_8Walk_HVHA_Rep1.bvh">AV_8Walk_HVHA_Rep1.bvh</option>
 						<option value="movs/Slash_x4_0001KAREN.bvh">Slash_x4_0001KAREN.bvh</option>
 						<option value="movs/MS2_8Walk_M.bvh">MS2_8Walk_M.bvh</option>
@@ -471,11 +475,6 @@
 					}
 				});
 			});
-		</script>
-		<script type="text/javascript">
-				$(function(){
-										
-				});
 		</script>
 		<div id="footer" style="clear:both;text-align:center;padding-top:20px;">
 			<small>(C) Moving Stories - Fall 2013 - Fall 2015</small>
