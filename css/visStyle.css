@@ -8,6 +8,7 @@
 	overflow: scroll;
 	background-color: white;
 	z-index: 20;
+	display: none;
 }
 #visDetailedView {
 	width: 1200px;

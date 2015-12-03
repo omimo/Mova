@@ -474,8 +474,7 @@ var mocom = {
 										.data(accDataB)
 										.append("svg")
 											.attr("class", "multipleSVG");
-												
-<<<<<<< Updated upstream
+							
 		anglesP1A.append("path")
 					.attr("class", "line")
 					.attr("d", function (d) {
@@ -538,43 +537,6 @@ var mocom = {
 								});
 								
 	};
-	createOverview();
-	createMultiples();
-=======
-				anglesP1.append("circle")
-									.attr("cx", function(d,i){return 40+40*i;})
-									.attr("cy", 25)
-									.attr("r", 25)
-									.style("fill", "purple");
-				
-				anglesP2.append("circle")
-									.attr("cx", function(d,i){return 40+40*i;})
-									.attr("cy", 25)
-									.attr("r", 25)
-									.style("fill", "red");
-				speedsP1.append("circle")
-									.attr("cx", function(d,i){return 40+40*i;})
-									.attr("cy", 25)
-									.attr("r", 25)
-									.style("fill", "blue");
-				
-				speedsP2.append("circle")
-									.attr("cx", function(d,i){return 40+40*i;})
-									.attr("cy", 25)
-									.attr("r", 25)
-									.style("fill", "green");	
-				accsP1.append("circle")
-									.attr("cx", function(d,i){return 40+40*i;})
-									.attr("cy", 25)
-									.attr("r", 25)
-									.style("fill", "black");
-				
-				accsP2.append("circle")
-									.attr("cx", function(d,i){return 40+40*i;})
-									.attr("cy", 25)
-									.attr("r", 25)
-									.style("fill", "yellow");	
-			};
 
 			var createInstView = function(){
 				// get the frame
@@ -629,7 +591,6 @@ var mocom = {
 		createOverview();
 		createMultiples();
 		createInstView();
->>>>>>> Stashed changes
 	},
 
 	angleData : {
@@ -773,6 +734,7 @@ var mocom = {
 
 	closewindow : function(){
 		$("#visCont").hide();
+		d3.selectAll("#visCont svg").remove();
 	}
 
 
