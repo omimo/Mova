@@ -133,7 +133,7 @@ var mocom = {
 				mocom.createVis();
 			}
 		});
-
+		
 		fileHandler.loadDataTrack(urlB, function(dataTrack, t){
 			movan.dataTracks.push({content: dataTrack, type: t});
 
@@ -171,38 +171,40 @@ var mocom = {
 
 	createVis : function(){
 		 var createOverview = function(){
+		 
+		 	var startFrame = 100;
+			var endFrame = 200;
 	//DUMMY DATA  should be array of angle differences for each joint
-			var dataP1 = [
-					[0, 4, 2, 7, 9, 0], 
-					[0, 2, 5, 10, 12, 0],
-					[0, 2, 16, 6, 10, 0]
-					];
-			var dataP2 = [
-					[2, 0, 2, 1, 9, 0], 
-					[3, 1, 5, 5, 10, 4],
-					[5, 2, 4, 6, 10, 0]
-					];
+			var dataP1 = [];
+			var dataP2 = [];
+			for(var i=0; i<mocom.takeAAngles.length; i++){
+				dataP1[i] = [];
+				dataP2[i] = [];
+				for(var j=startFrame; j<= endFrame; j++){
+					dataP1[i][j] = mocom.takeAAngles[i][j].alpha - mocom.takeBAngles[i][j].alpha;
+					dataP2[i][j] = mocom.takeAAngles[i][j].beta - mocom.takeBAngles[i][j].beta;
+				}
+			}
 	//NNED TO ADD FUNCTION TO CHECK WHICH TAKE OVER WHICH TO DETERMINE COLOR
 		var color = ["#bfd0ff", "#ddff33", "#14dba4"];
 				
 	//Find the x-scale based on number of frames
-		var startFrame = 0;
-		var endFrame = 5;
 		var xScale = d3.scale.linear()
 								.domain([startFrame, endFrame])
-								.range([0, 1100]);
+								.range([5, 1095]);
 	//Find the y-scale based on maximum sum of the values of the data
 		var totalY = [];
-		for(var x=0; x<dataP1[0].length; x++) {
-			totalY[x] = 0;
-			for(var y=0; y<dataP1.length; y++) {
-				totalY[x] += dataP1[y][x];
+		var k = 0;
+		for(var j=startFrame; j<=endFrame; j++, k++) {
+			totalY[k] = 0;
+			for(var i=0; i<dataP1.length; i++) {
+				totalY[k] += dataP1[i][j];
 			}
 		}
-		for(var x=0; x<dataP2[0].length; x++) {
-			totalY[dataP1[0].length + x] = 0;
-			for(var y=0; y<dataP2.length; y++) {
-				totalY[dataP1[0].length + x] += dataP2[y][x];
+		for(var j=startFrame; j<=endFrame; j++, k++) {
+			totalY[k] = 0;
+			for(var i=0; i<dataP2.length; i++) {
+				totalY[k] += dataP2[i][j];
 			}
 		}
 		var yScale = d3.scale.linear()
@@ -228,18 +230,18 @@ var mocom = {
 				*/		
 				//Data needs to have properties x and y to parse
 		dataP1 = dataP1.map(function (d) {
-							return d.map(function (value, index) {
+							return d.map(function (d, index) {
 									return {
 											x: index,
-											y: value
+											y: d
 											};
 									});
 						});
 		dataP2 = dataP2.map(function (d) {
-							return d.map(function (value, index) {
+							return d.map(function (d, index) {
 									return {
 											x: index,
-											y: value,
+											y: d
 											};
 									});
 						});
@@ -293,255 +295,270 @@ var mocom = {
 				};
 				
 		var createMultiples = function(){											
-			var dataTakeA = [
-					[[0, 1],[3, 1],[1, 0],[1, 1],[0, 0],[5, 1]],
-					[[2, 0],[2, 2],[1, 0],[1, 1],[0, 0],[1, 4]],
-					[[0, 3],[1, 4],[0, 1],[1, 1],[0, 0],[2, 1]]
-					];
-			var dataTakeB = [
-					[[2, 0],[2, 2],[1, 0],[1, 1],[0, 0],[1, 1]],
-					[[0, 3],[1, 4],[0, 1],[1, 1],[0, 0],[1, 1]],
-					[[0, 1],[3, 1],[1, 0],[1, 1],[0, 0],[1, 1]]
-					];
-					
 			var startFrame = 0;
-			var endFrame = 5;
+			var endFrame = 100;
 		
 			//Calculate the speed in each frame. Uses next frame to determine speed in a frame. Last frame is set to be identical to next to last frame
 			var speedDataA = [];
 			var speedDataB = [];
-			for(var i=0; i<dataTakeA.length; i++){
+			for(var i=0; i<mocom.takeAAngles.length; i++){
 				speedDataA[i] = [];
 				speedDataB[i] = [];
-			for(var j=0; j<dataTakeA[0].length-1; j++){
-				speedDataA[i][j] = [(dataTakeA[i][j+1][0]-dataTakeA[i][j][0])/movan.dataTracks[0].content.frameTime, (dataTakeA[i][j+1][1]-dataTakeA[i][j][1])/movan.dataTracks[0].content.frameTime];
-				speedDataB[i][j] = [(dataTakeB[i][j+1][0]-dataTakeB[i][j][0])/movan.dataTracks[0].content.frameTime, (dataTakeB[i][j+1][1]-dataTakeB[i][j][1])/movan.dataTracks[0].content.frameTime];
+				for(var j=startFrame; j<endFrame; j++){
+					speedDataA[i][j] = [((mocom.takeAAngles[i][j+1].alpha-mocom.takeAAngles[i][j].alpha)/movan.dataTracks[0].content.frameTime), ((mocom.takeAAngles[i][j+1].beta-mocom.takeAAngles[i][j].beta)/movan.dataTracks[0].content.frameTime)];
+					speedDataB[i][j] = [((mocom.takeBAngles[i][j+1].alpha-mocom.takeBAngles[i][j].alpha)/movan.dataTracks[0].content.frameTime), ((mocom.takeBAngles[i][j+1].beta-mocom.takeBAngles[i][j].beta)/movan.dataTracks[0].content.frameTime)];
+				}
+				speedDataA[i][endFrame] = speedDataA[i][endFrame-1];
+				speedDataB[i][endFrame] = speedDataB[i][endFrame-1];
 			}
-			speedDataA[i][dataTakeA[0].length-1] = speedDataA[i][dataTakeA[0].length-2];
-			speedDataB[i][dataTakeB[0].length-1] = speedDataB[i][dataTakeB[0].length-2];
-		}
-		//Calculate the acceleration in each frame. Uses next frame to determine acceleration in a frame. Last frame is set to be identical to next to last frame
-		var accDataA = [];
-		var accDataB = [];
-		for(var i=0; i<speedDataA.length; i++){
-			accDataA[i] = [];
-			accDataB[i] = [];
-			for(var j=0; j<speedDataA[0].length-1; j++){
-				accDataA[i][j] = [(speedDataA[i][j+1][0]-speedDataA[i][j][0])/movan.dataTracks[0].content.frameTime, (speedDataA[i][j+1][1]-speedDataA[i][j][1])/movan.dataTracks[0].content.frameTime];
-				accDataB[i][j] = [(speedDataB[i][j+1][0]-speedDataB[i][j][0])/movan.dataTracks[0].content.frameTime, (speedDataB[i][j+1][1]-speedDataB[i][j][1])/movan.dataTracks[0].content.frameTime];
+			//Calculate the acceleration in each frame. Uses next frame to determine acceleration in a frame. Last frame is set to be identical to next to last frame
+			var accDataA = [];
+			var accDataB = [];
+			for(var i=0; i<speedDataA.length; i++){
+				accDataA[i] = [];
+				accDataB[i] = [];
+				for(var j=startFrame; j<endFrame; j++){
+					accDataA[i][j] = [((speedDataA[i][j+1][0]-speedDataA[i][j][0])/movan.dataTracks[0].content.frameTime), ((speedDataA[i][j+1][1]-speedDataA[i][j][1])/movan.dataTracks[0].content.frameTime)];
+					accDataB[i][j] = [((speedDataB[i][j+1][0]-speedDataB[i][j][0])/movan.dataTracks[0].content.frameTime), ((speedDataB[i][j+1][1]-speedDataB[i][j][1])/movan.dataTracks[0].content.frameTime)];
+				}
+				accDataA[i][endFrame] = accDataA[i][endFrame-1];
+				accDataB[i][endFrame] = accDataB[i][endFrame-1];
 			}
-			accDataA[i][speedDataA[0].length-1] = accDataA[i][speedDataA[0].length-2];
-			accDataB[i][speedDataB[0].length-1] = accDataB[i][speedDataB[0].length-2];
-		}
 		
-		//Find the x-scale based on number of frames
-		var xScale = d3.scale.linear()
-								.domain([startFrame, endFrame])
-								.range([5, 295]);
-		
-		//Find the y-scale based on maximum and minimum values of the data
-		var yMaxAngle = 0;
-		var yMinAngle = 0;
-		var yMaxSpeed = 0;
-		var yMinSpeed = 0;
-		var yMaxAcc = 0;
-		var yMinAcc = 0;
-		for(var i=0; i<dataTakeA.length; i++) {
-			for(var j=0; j<dataTakeA[0].length; j++) {
-				for(var k=0; k<dataTakeA[0][0].length; k++){
-					if(dataTakeA[i][j][k] < yMinAngle){
-						yMin = dataTakeA[i][j][k];
-					}
-					if(dataTakeB[i][j][k] < yMinAngle){
-						yMin = dataTakeB[i][j][k];
-					}
-
-					if(dataTakeA[i][j][k] > yMaxAngle){
-						yMaxAngle = dataTakeA[i][j][k];
-					}
-					if(dataTakeB[i][j][k] > yMaxAngle){
-						yMaxAngle = dataTakeB[i][j][k];
-					}
-					if(speedDataA[i][j][k] < yMinSpeed){
-						yMinSpeed = speedDataA[i][j][k];
-					}
-					if(speedDataB[i][j][k] < yMinSpeed){
-						yMinSpeed = speedDataB[i][j][k];
-					}
-					if(speedDataA[i][j][k] > yMaxSpeed){
-						yMaxSpeed = speedDataA[i][j][k];
-					}
-					if(speedDataB[i][j][k] > yMaxSpeed){
-						yMaxSpeed = speedDataB[i][j][k];
-					}
-					if(accDataA[i][j][k] < yMinAcc){
-						yMinAcc = accDataA[i][j][k];
-					}
-					if(accDataB[i][j][k] < yMinAcc){
-						yMinAcc = accDataB[i][j][k];
-					}
-					if(accDataA[i][j][k] > yMaxAcc){
-						yMaxAcc = accDataA[i][j][k];
-					}
-					if(accDataB[i][j][k] > yMaxAcc){
-						yMaxAcc = accDataB[i][j][k];
+			//Find the x-scale based on number of frames
+			var xScale = d3.scale.linear()
+									.domain([startFrame, endFrame])
+									.range([5, 295]);
+			
+			//Find the y-scale based on maximum and minimum values of the data
+			var yMaxAngle = 0;
+			var yMinAngle = 0;
+			var yMaxSpeed = 0;
+			var yMinSpeed = 0;
+			var yMaxAcc = 0;
+			var yMinAcc = 0;
+			for(var i=0; i<mocom.takeAAngles.length; i++) {
+				for(var j=startFrame; j<=endFrame; j++) {
+				var tempAAngles = [mocom.takeAAngles[i][j].alpha, mocom.takeAAngles[i][j].beta];
+				var tempBAngles = [mocom.takeBAngles[i][j].alpha, mocom.takeBAngles[i][j].beta];
+						if(d3.min(tempAAngles) < yMinAngle){
+							yMin = d3.min(tempAAngles);
+						}
+						else if(d3.max(tempAAngles) > yMaxAngle){
+							yMaxAngle = d3.max(tempAAngles);
+						}
+						if(d3.min(tempBAngles) < yMinAngle){
+							yMin = d3.min(tempBAngles);
+						}
+						else if(d3.max(tempBAngles) > yMaxAngle){
+							yMaxAngle = d3.max(tempBAngles);
+						}
+						if(d3.min(speedDataA[i][j]) < yMinSpeed){
+							yMinSpeed = d3.min(speedDataA[i][j]);
+						}
+						else if(d3.max(speedDataA[i][j]) > yMaxSpeed){
+							yMaxSpeed = d3.max(speedDataA[i][j]);
+						}
+						if(d3.min(speedDataB[i][j]) < yMinSpeed){
+							yMinSpeed = d3.min(speedDataB[i][j]);
+						}
+						else if(d3.max(speedDataB[i][j]) > yMaxSpeed){
+							yMaxSpeed = d3.max(speedDataB[i][j]);
+						}
+						if(d3.min(accDataA[i][j]) < yMinAcc){
+							yMinAcc = d3.min(accDataA[i][j]);
+						}
+						else if(d3.max(accDataA[i][j]) > yMaxAcc){
+							yMaxAcc = d3.max(accDataA[i][j]);
+						}
+						if(d3.min(accDataB[i][j]) < yMinAcc){
+							yMinAcc = d3.min(accDataB[i][j]);
+						}
+						else if(d3.max(accDataB[i][j]) > yMaxAcc){
+							yMaxAcc = d3.max(accDataB[i][j]);
+						}
 					}
 				}
-			}
-		}
-		var yScaleAngle = d3.scale.linear()
-								.domain([yMinAngle, yMaxAngle]) 
-								.range([2, 76]);		
-		var yScaleSpeed = d3.scale.linear()
-								.domain([yMinSpeed, yMaxSpeed]) 
-								.range([2, 76]);
-		var yScaleAcc = d3.scale.linear()
-								.domain([yMinAcc, yMaxAcc]) 
-								.range([2, 76]);
+			var yScaleAngle = d3.scale.linear()
+									.domain([yMinAngle, yMaxAngle]) 
+									.range([4, 74]);		
+			var yScaleSpeed = d3.scale.linear()
+									.domain([yMinSpeed, yMaxSpeed]) 
+									.range([4, 74]);
+			var yScaleAcc = d3.scale.linear()
+									.domain([yMinAcc, yMaxAcc]) 
+									.range([4, 74]);
+									
+			var lineAngleP1 = d3.svg.line()
+								.x(function(d, i) { return xScale(i); })
+								.y(function(d) { return yScaleAngle(d.alpha); });
+			var lineAngleP2 = d3.svg.line()
+								.x(function(d, i) { return xScale(i); })
+								.y(function(d) { return yScaleAngle(d.beta); });
+			var lineSpeedP1 = d3.svg.line()
+								.x(function(d, i) { return xScale(i); })
+								.y(function(d) { return yScaleSpeed(d[0]); });
+			var lineSpeedP2 = d3.svg.line()
+								.x(function(d, i) { return xScale(i); })
+								.y(function(d) { return yScaleSpeed(d[1]); });
+			var lineAccP1 = d3.svg.line()
+								.x(function(d, i) { return xScale(i); })
+								.y(function(d) { return yScaleAcc(d[0]); });
+			var lineAccP2 = d3.svg.line()
+								.x(function(d, i) { return xScale(i); })
+								.y(function(d) { return yScaleAcc(d[1]); });
+									
+			var multiplesP1 = d3.select("#visMultiplesP1");
+			var multiplesP2 = d3.select("#visMultiplesP2");
+			var angleChartsP1 = multiplesP1.select("#angleCharts");
+			var angleChartsP2 = multiplesP2.select("#angleCharts");
+			var speedChartsP1 = multiplesP1.select("#speedCharts");
+			var speedChartsP2 = multiplesP2.select("#speedCharts");
+			var accelerationChartsP1 = multiplesP1.select("#accelerationCharts");
+			var accelerationChartsP2 = multiplesP2.select("#accelerationCharts");
+			var anglesP1A = angleChartsP1.selectAll(".smallMultiple")
+											.data(mocom.takeAAngles.map(function(d){
+																			return d.filter(function(d,i){
+																							if (i >= startFrame && i <= endFrame){ return true;}
+																							else{return false;}
+																							});
+																					}
+																		)
+													)
+											.append("svg")
+												.attr("class", "multipleSVG");
+			var anglesP1B = angleChartsP1.selectAll(".smallMultiple")
+											.data(mocom.takeBAngles.map(function(d){
+																			return d.filter(function(d,i){
+																							if (i >= startFrame && i <= endFrame){ return true;}
+																							else{return false;}
+																							});
+																					}
+																		)
+													)
+											.append("svg")
+												.attr("class", "multipleSVG");
+			var anglesP2A = angleChartsP2.selectAll(".smallMultiple")
+											.data(mocom.takeAAngles.map(function(d){
+																			return d.filter(function(d,i){
+																							if (i >= startFrame && i <= endFrame){ return true;}
+																							else{return false;}
+																							});
+																					}
+																		)
+													)
+											.append("svg")
+												.attr("class", "multipleSVG");
+			var anglesP2B = angleChartsP2.selectAll(".smallMultiple")
+											.data(mocom.takeBAngles.map(function(d){
+																			return d.filter(function(d,i){
+																							if (i >= startFrame && i <= endFrame){ return true;}
+																							else{return false;}
+																							});
+																					}
+																		)
+													)
+											.append("svg")
+												.attr("class", "multipleSVG");
+			var speedsP1A = speedChartsP1.selectAll(".smallMultiple")
+											.data(speedDataA)
+											.append("svg")
+												.attr("class", "multipleSVG");
+			var speedsP1B = speedChartsP1.selectAll(".smallMultiple")
+											.data(speedDataB)
+											.append("svg")
+												.attr("class", "multipleSVG");													
+			var speedsP2A = speedChartsP2.selectAll(".smallMultiple")
+											.data(speedDataA)
+											.append("svg")
+												.attr("class", "multipleSVG");
+			var speedsP2B = speedChartsP2.selectAll(".smallMultiple")
+											.data(speedDataB)
+											.append("svg")
+												.attr("class", "multipleSVG");
+			var accsP1A = accelerationChartsP1.selectAll(".smallMultiple")
+											.data(accDataA)
+											.append("svg")
+												.attr("class", "multipleSVG");		
+			var accsP1B = accelerationChartsP1.selectAll(".smallMultiple")
+											.data(accDataB)
+											.append("svg")
+												.attr("class", "multipleSVG");												
+			var accsP2A = accelerationChartsP2.selectAll(".smallMultiple")
+											.data(accDataA)
+											.append("svg")
+												.attr("class", "multipleSVG");
+			var accsP2B = accelerationChartsP2.selectAll(".smallMultiple")
+											.data(accDataB)
+											.append("svg")
+												.attr("class", "multipleSVG");
 								
-		var lineAngleP1 = d3.svg.line()
-							.x(function(d, i) { return xScale(i); })
-							.y(function(d) { return yScaleAngle(d[0]); });
-		var lineAngleP2 = d3.svg.line()
-							.x(function(d, i) { return xScale(i); })
-							.y(function(d) { return yScaleAngle(d[1]); });
-		var lineSpeedP1 = d3.svg.line()
-							.x(function(d, i) { return xScale(i); })
-							.y(function(d) { return yScaleSpeed(d[0]); });
-		var lineSpeedP2 = d3.svg.line()
-							.x(function(d, i) { return xScale(i); })
-							.y(function(d) { return yScaleSpeed(d[1]); });
-		var lineAccP1 = d3.svg.line()
-							.x(function(d, i) { return xScale(i); })
-							.y(function(d) { return yScaleAcc(d[0]); });
-		var lineAccP2 = d3.svg.line()
-							.x(function(d, i) { return xScale(i); })
-							.y(function(d) { return yScaleAcc(d[1]); });
-								
-		var multiplesP1 = d3.select("#visMultiplesP1");
-		var multiplesP2 = d3.select("#visMultiplesP2");
-		var angleChartsP1 = multiplesP1.select("#angleCharts");
-		var angleChartsP2 = multiplesP2.select("#angleCharts");
-		var speedChartsP1 = multiplesP1.select("#speedCharts");
-		var speedChartsP2 = multiplesP2.select("#speedCharts");
-		var accelerationChartsP1 = multiplesP1.select("#accelerationCharts");
-		var accelerationChartsP2 = multiplesP2.select("#accelerationCharts");
-		var anglesP1A = angleChartsP1.selectAll(".smallMultiple")
-										.data(dataTakeA)
-										.append("svg")
-											.attr("class", "multipleSVG");
-		var anglesP1B = angleChartsP1.selectAll(".smallMultiple")
-										.data(dataTakeB)
-										.append("svg")
-											.attr("class", "multipleSVG");
-		var anglesP2A = angleChartsP2.selectAll(".smallMultiple")
-										.data(dataTakeA)
-										.append("svg")
-											.attr("class", "multipleSVG");
-		var anglesP2B = angleChartsP2.selectAll(".smallMultiple")
-										.data(dataTakeB)
-										.append("svg")
-											.attr("class", "multipleSVG");
-		var speedsP1A = speedChartsP1.selectAll(".smallMultiple")
-										.data(speedDataA)
-										.append("svg")
-											.attr("class", "multipleSVG");
-		var speedsP1B = speedChartsP1.selectAll(".smallMultiple")
-										.data(speedDataB)
-										.append("svg")
-											.attr("class", "multipleSVG");													
-		var speedsP2A = speedChartsP2.selectAll(".smallMultiple")
-										.data(speedDataA)
-										.append("svg")
-											.attr("class", "multipleSVG");
-		var speedsP2B = speedChartsP2.selectAll(".smallMultiple")
-										.data(speedDataB)
-										.append("svg")
-											.attr("class", "multipleSVG");
-		var accsP1A = accelerationChartsP1.selectAll(".smallMultiple")
-										.data(accDataA)
-										.append("svg")
-											.attr("class", "multipleSVG");		
-		var accsP1B = accelerationChartsP1.selectAll(".smallMultiple")
-										.data(accDataB)
-										.append("svg")
-											.attr("class", "multipleSVG");												
-		var accsP2A = accelerationChartsP2.selectAll(".smallMultiple")
-										.data(accDataA)
-										.append("svg")
-											.attr("class", "multipleSVG");
-		var accsP2B = accelerationChartsP2.selectAll(".smallMultiple")
-										.data(accDataB)
-										.append("svg")
-											.attr("class", "multipleSVG");
-							
-		anglesP1A.append("path")
-					.attr("class", "line")
-					.attr("d", function (d) {
-								return lineAngleP1(d);
-								});
-		anglesP1B.append("path")
-					.attr("class", "line")
-					.attr("d", function (d) {
-								return lineAngleP1(d);
-								});	
-		anglesP2A.append("path")
-					.attr("class", "line")
-					.attr("d", function (d) {
-								return lineAngleP2(d);
-								});
-		anglesP2B.append("path")
-					.attr("class", "line")
-					.attr("d", function (d) {
-								return lineAngleP2(d);
-								});
-		speedsP1A.append("path")
-					.attr("class", "line")
-					.attr("d", function (d) {
-								return lineSpeedP1(d);
-								});
-		speedsP1B.append("path")
-					.attr("class", "line")
-					.attr("d", function (d) {
-								return lineSpeedP1(d);
-								});	
-		speedsP2A.append("path")
-					.attr("class", "line")
-					.attr("d", function (d) {
-								return lineSpeedP2(d);
-								});
-		speedsP2B.append("path")
-					.attr("class", "line")
-					.attr("d", function (d) {
-								return lineSpeedP2(d);
-								});
-		accsP1A.append("path")
-					.attr("class", "line")
-					.attr("d", function (d) {
-								return lineAccP1(d);
-								});
-		accsP1B.append("path")
-					.attr("class", "line")
-					.attr("d", function (d) {
-								return lineAccP1(d);
-								});	
-		accsP2A.append("path")
-					.attr("class", "line")
-					.attr("d", function (d) {
-								return lineAccP2(d);
-								});
-		accsP2B.append("path")
-					.attr("class", "line")
-					.attr("d", function (d) {
-								return lineAccP2(d);
-								});
-								
-	};
+			anglesP1A.append("path")
+						.attr("class", "line")
+						.attr("d", function (d) {
+									return lineAngleP1(d);
+									});
+			anglesP1B.append("path")
+						.attr("class", "line")
+						.attr("d", function (d) {
+									return lineAngleP1(d);
+									});	
+			anglesP2A.append("path")
+						.attr("class", "line")
+						.attr("d", function (d) {
+									return lineAngleP2(d);
+									});
+			anglesP2B.append("path")
+						.attr("class", "line")
+						.attr("d", function (d) {
+									return lineAngleP2(d);
+									});
+			speedsP1A.append("path")
+						.attr("class", "line")
+						.attr("d", function (d) {
+									return lineSpeedP1(d);
+									});
+			speedsP1B.append("path")
+						.attr("class", "line")
+						.attr("d", function (d) {
+									return lineSpeedP1(d);
+									});	
+			speedsP2A.append("path")
+						.attr("class", "line")
+						.attr("d", function (d) {
+									return lineSpeedP2(d);
+									});
+			speedsP2B.append("path")
+						.attr("class", "line")
+						.attr("d", function (d) {
+									return lineSpeedP2(d);
+									});
+			accsP1A.append("path")
+						.attr("class", "line")
+						.attr("d", function (d) {
+									return lineAccP1(d);
+									});
+			accsP1B.append("path")
+						.attr("class", "line")
+						.attr("d", function (d) {
+									return lineAccP1(d);
+									});	
+			accsP2A.append("path")
+						.attr("class", "line")
+						.attr("d", function (d) {
+									return lineAccP2(d);
+									});
+			accsP2B.append("path")
+						.attr("class", "line")
+						.attr("d", function (d) {
+									return lineAccP2(d);
+									});							
+		};
 
-			var createInstView = function(){
-				// get the frame
-				var currentFrameA = movan.dataTracks[0].content.getPositionsAt(0);
-				var currentFrameB = movan.dataTracks[1].content.getPositionsAt(0);
+		var createInstView = function(){
+			// get the frame
+			var currentFrameA = movan.dataTracks[0].content.getPositionsAt(0);
+			var currentFrameB = movan.dataTracks[1].content.getPositionsAt(0);
 
 				// map out the perspectives of A and B
 				var currentFrameP1A = currentFrameA.map(function(d) {
