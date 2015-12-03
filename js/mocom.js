@@ -138,7 +138,7 @@ var mocom = {
 			movan.dataTracks.push({content: dataTrack, type: t});
 
 			var frameTimeB = movan.dataTracks[1].content.frameTime;
-			var lastFrameB = movan.dataTracks[0].content.frameCount;
+			var lastFrameB = movan.dataTracks[1].content.frameCount;
 			var startFrameB = Math.floor(starttimeA / frameTimeB);
 			var endFrameB = startFrameB + Math.floor(duration / frameTimeB);
 			if(startFrameB >= lastFrameB || startFrameB < 0){
@@ -154,7 +154,7 @@ var mocom = {
 				takeBPosition[j] = [];
 				for (var i=startFrameB; i<endFrameB; i++){
 					var tmp = [];
-					tmp = movan.dataTracks[0].content.jointArray[ mocom.neededJoint[j] ].positions[i]; 
+					tmp = movan.dataTracks[1].content.jointArray[ mocom.neededJoint[j] ].positions[i]; 
 					takeBPosition[j].push(tmp);
 				}
 			}
@@ -172,17 +172,17 @@ var mocom = {
 	createVis : function(){
 		 var createOverview = function(){
 		 
-		 	var startFrame = 100;
-			var endFrame = 200;
+		 	var startFrame = 0;
+			var endFrame = 239;
 	//DUMMY DATA  should be array of angle differences for each joint
 			var dataP1 = [];
 			var dataP2 = [];
 			for(var i=0; i<mocom.takeAAngles.length; i++){
 				dataP1[i] = [];
 				dataP2[i] = [];
-				for(var j=startFrame; j<= endFrame; j++){
-					dataP1[i][j] = mocom.takeAAngles[i][j].alpha - mocom.takeBAngles[i][j].alpha;
-					dataP2[i][j] = mocom.takeAAngles[i][j].beta - mocom.takeBAngles[i][j].beta;
+				for(var j=0; j<= endFrame-startFrame; j++){
+					dataP1[i][j] = mocom.takeAAngles[i][startFrame+j].alpha - mocom.takeBAngles[i][startFrame+j].alpha;
+					dataP2[i][j] = mocom.takeAAngles[i][startFrame+j].beta - mocom.takeBAngles[i][startFrame+j].beta;
 				}
 			}
 	//NNED TO ADD FUNCTION TO CHECK WHICH TAKE OVER WHICH TO DETERMINE COLOR
@@ -195,13 +195,13 @@ var mocom = {
 	//Find the y-scale based on maximum sum of the values of the data
 		var totalY = [];
 		var k = 0;
-		for(var j=startFrame; j<=endFrame; j++, k++) {
+		for(var j=0; j<dataP1[0].length; j++, k++) {
 			totalY[k] = 0;
 			for(var i=0; i<dataP1.length; i++) {
 				totalY[k] += dataP1[i][j];
 			}
 		}
-		for(var j=startFrame; j<=endFrame; j++, k++) {
+		for(var j=0; j<dataP1[0].length; j++, k++) {
 			totalY[k] = 0;
 			for(var i=0; i<dataP2.length; i++) {
 				totalY[k] += dataP2[i][j];
@@ -296,7 +296,7 @@ var mocom = {
 				
 		var createMultiples = function(){											
 			var startFrame = 0;
-			var endFrame = 100;
+			var endFrame = 239;
 		
 			//Calculate the speed in each frame. Uses next frame to determine speed in a frame. Last frame is set to be identical to next to last frame
 			var speedDataA = [];
@@ -338,9 +338,9 @@ var mocom = {
 			var yMaxAcc = 0;
 			var yMinAcc = 0;
 			for(var i=0; i<mocom.takeAAngles.length; i++) {
-				for(var j=startFrame; j<=endFrame; j++) {
-				var tempAAngles = [mocom.takeAAngles[i][j].alpha, mocom.takeAAngles[i][j].beta];
-				var tempBAngles = [mocom.takeBAngles[i][j].alpha, mocom.takeBAngles[i][j].beta];
+				for(var j=0; j<speedDataA[0].length; j++) {
+				var tempAAngles = [mocom.takeAAngles[i][startFrame+j].alpha, mocom.takeAAngles[i][startFrame+j].beta];
+				var tempBAngles = [mocom.takeBAngles[i][startFrame+j].alpha, mocom.takeBAngles[i][startFrame+j].beta];
 						if(d3.min(tempAAngles) < yMinAngle){
 							yMin = d3.min(tempAAngles);
 						}
