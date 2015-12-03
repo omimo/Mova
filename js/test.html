@@ -1,18 +1,115 @@
 <!DOCTYPE html>
-<html>
-<head>
-	<title>test</title>
-	<script type="text/javascript" src="../lib/d3.v3.min.js"></script>
-	<script type="text/javascript">
-	var theData = [ 1, 2, 3 ]
-	var p = d3.select("body").selectAll("p")
-   .data(theData)
-   .enter()
-   .append("p")
-   .text("hello ");
-	</script>
-</head>
-<body>
+<meta charset="utf-8">
+<style>
 
-</body>
-</html>
+svg {
+  font: 10px sans-serif;
+}
+
+circle {
+  -webkit-transition: fill-opacity 250ms linear;
+}
+
+.selecting circle {
+  fill-opacity: .2;
+}
+
+.selecting circle.selected {
+  stroke: #f00;
+}
+
+.resize path {
+  fill: #666;
+  fill-opacity: .8;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.brush .extent {
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
+}
+
+</style>
+<body>
+<script type="text/javascript" src="../lib/d3.v3.min.js"></script>
+<script>
+
+var data = d3.range(800).map(Math.random);
+
+// var margin = {top: 194, right: 50, bottom: 214, left: 50},
+    // width = 960 - margin.left - margin.right,
+    // height = 500 - margin.top - margin.bottom;
+
+var margin = {top: 194, right: 50, bottom: 214, left: 50};
+var width = 400;
+var height = 30;
+
+var xScale = d3.scale.linear()
+    .range([0, width]);
+
+var yScale = d3.random.normal(height / 2, height / 8);
+
+var brush = d3.svg.brush()
+    .x(xScale)
+    .extent([.3, .5])
+    .on("brushstart", brushstart)
+    .on("brush", brushmove)
+    .on("brushend", brushend);
+
+var arc = d3.svg.arc()
+    .outerRadius(height / 2)
+    .startAngle(0)
+    .endAngle(function(d, i) { return i ? -Math.PI : Math.PI; });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// svg.append("g")
+//     .attr("class", "x axis")
+//     .attr("transform", "translate(0," + height + ")")
+//     .call(d3.svg.axis().scale(xScale).orient("bottom"));
+
+var circle = svg.append("g").selectAll("circle")
+    .data(data)
+  .enter().append("circle")
+    .attr("transform", function(d) { return "translate(" + xScale(d) + "," + yScale() + ")"; })
+    .attr("r", 3.5);
+
+var brushg = svg.append("g")
+    .attr("class", "brush")
+    .call(brush);
+
+brushg.selectAll(".resize").append("path")
+    .attr("transform", "translate(0," +  height / 2 + ")")
+    .attr("d", arc);
+
+brushg.selectAll("rect")
+    .attr("height", height);
+
+brushstart();
+brushmove();
+
+function brushstart() {
+  svg.classed("selecting",true);
+}
+
+function brushmove() {
+  var s = brush.extent();
+  circle.classed("selected", function(d) { return s[0] <= d && d <= s[1]; });
+}
+
+function brushend() {
+  svg.classed("selecting", !d3.event.target.empty());
+}
+
+</script>

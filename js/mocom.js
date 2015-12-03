@@ -170,6 +170,7 @@ var mocom = {
 	},
 
 	createVis : function(){
+
 		 var createOverview = function(){
 	//DUMMY DATA  should be array of angle differences for each joint
 			var dataP1 = [
@@ -538,55 +539,66 @@ var mocom = {
 								
 	};
 
-			var createInstView = function(){
-				// get the frame
-				var currentFrameA = movan.dataTracks[0].content.getPositionsAt(0);
-				var currentFrameB = movan.dataTracks[1].content.getPositionsAt(0);
+		var createInstView = function(){
+			// get the frame
+			var currentFrameA = movan.dataTracks[0].content.getPositionsAt(0);
+			var currentFrameB = movan.dataTracks[1].content.getPositionsAt(0);
 
-				// map out the perspectives of A and B
-				var currentFrameP1A = currentFrameA.map(function(d) {
-					return {
-						x : d.x + 20,
-						y : -1 * d.y + 70,
-						z : d.z
-					};
-				});
-				var currentFrameP2A = currentFrameA.map(function(d) {
-					return {
-						x : d.x + 20,
-						y : -1 * d.y + 70,
-						z : d.z
-					};
-				});
-				var currentFrameP1B = currentFrameB.map(function(d) {
-					return {
-						x : d.x + 20,
-						y : -1 * d.y + 70,
-						z : d.z
-					};
-				});
-				var currentFrameP2B = currentFrameB.map(function(d) {
-					return {
-						x : d.x + 20,
-						y : -1 * d.y + 70,
-						z : d.z
-					};
-				});
 
-				// append svg
-				d3.selectAll("#visInstFrameP1, #visInstFrameP2").selectAll("svg").remove();
-				var visInstFrameP1A = d3.select("#visInstFrameP1 .visInstFrameA").append("svg").attr("height",170);
-				var visInstFrameP1B = d3.select("#visInstFrameP1 .visInstFrameB").append("svg").attr("height",170);
-				var visInstFrameP2A = d3.select("#visInstFrameP2 .visInstFrameA").append("svg").attr("height",170);
-				var visInstFrameP2B = d3.select("#visInstFrameP2 .visInstFrameB").append("svg").attr("height",170);
-				
-				// match the data to svg - draw em all
-				//drawSkelPartial(svg, currentFrameA, index, highlightJ, mocap)
-				figureSketch.drawSkelPartial(visInstFrameP1A, currentFrameP1A, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
-				figureSketch.drawSkelPartial(visInstFrameP1B, currentFrameP1B, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
-				figureSketch.drawSkelPartial(visInstFrameP2A, currentFrameP2A, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
-				figureSketch.drawSkelPartial(visInstFrameP2B, currentFrameP2B, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
-			};
+			// * TakeAPosition[
+			// * 	jointArray1[{x:0, y:0, z:0},{},{},...],     "Root" joint (center shoulder or center hip
+			// * 	jointArray2[{x:0, y:0, z:0},{},{},...],		Spine joint
+			// * 	jointArray3[{x:0, y:0, z:0},{},{},...],		"Connecting" joint/body part joint 1 (joint that connects body part to core, right/left shoulder or hip
+			// * 	jointArray4[{x:0, y:0, z:0},{},{},...],		Body part joint 2 (elbow or knee)
+			// * 	jointArray5[{x:0, y:0, z:0},{},{},...],		Body part joint 3 (wrist or ankle)
+			// * 	jointArray6[{x:0, y:0, z:0},{},{},...]		Body part joint 4 (hand or foot)
+			// var currentFrameA = takeAPosition;
+			// var currentFrameB = takeBPosition;
+
+			// map out the perspectives of A and B
+			var currentFrameP1A = currentFrameA.map(function(d) {
+				return {
+					x : d.x + 20,
+					y : -1 * d.y + 70,
+					z : d.z 
+				};
+			});
+			var currentFrameP1B = currentFrameB.map(function(d) {
+				return {
+					x : d.x + 20,
+					y : -1 * d.y + 70,
+					z : d.z
+				};
+			});
+			var currentFrameP2A = currentFrameA.map(function(d) {
+				return {
+					x : 1 * d.z + 170,
+					y : -1 * d.y + 70,
+					z : d.x +20
+				};
+			});
+			var currentFrameP2B = currentFrameB.map(function(d) {
+				return {
+					x : 1 * d.z + 170,
+					y : -1 * d.y + 70,
+					z : d.x +20
+				};
+			});
+
+			// append svg
+			d3.selectAll("#visInstFrameP1, #visInstFrameP2").selectAll("svg").remove();
+			var visInstFrameP1A = d3.select("#visInstFrameP1 .visInstFrameA").append("svg").attr("height",70);
+			var visInstFrameP1B = d3.select("#visInstFrameP1 .visInstFrameB").append("svg").attr("height",70);
+			var visInstFrameP2A = d3.select("#visInstFrameP2 .visInstFrameA").append("svg").attr("height",70);
+			var visInstFrameP2B = d3.select("#visInstFrameP2 .visInstFrameB").append("svg").attr("height",70);
+			
+			// match the data to svg - draw em all
+			//drawSkelPartial(svg, currentFrameA, index, highlightJ, mocap)
+			figureSketch.drawSkelPartial(visInstFrameP1A, currentFrameP1A, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
+			figureSketch.drawSkelPartial(visInstFrameP1B, currentFrameP1B, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
+			figureSketch.drawSkelPartial(visInstFrameP2A, currentFrameP2A, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
+			figureSketch.drawSkelPartial(visInstFrameP2B, currentFrameP2B, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
+		};
 
 		createOverview();
 		createMultiples();
