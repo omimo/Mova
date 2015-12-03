@@ -139,7 +139,7 @@ var mocom = {
 
 			var frameTimeB = movan.dataTracks[1].content.frameTime;
 			var lastFrameB = movan.dataTracks[1].content.frameCount;
-			var startFrameB = Math.floor(starttimeA / frameTimeB);
+			var startFrameB = Math.floor(starttimeB / frameTimeB);
 			var endFrameB = startFrameB + Math.floor(duration / frameTimeB);
 			if(startFrameB >= lastFrameB || startFrameB < 0){
 				alert("Oops! Your start time is outside the sequence duration. Please change it and try again.");
@@ -171,18 +171,14 @@ var mocom = {
 
 	createVis : function(){
 		 var createOverview = function(){
-		 
-		 	var startFrame = 0;
-			var endFrame = 239;
-	//DUMMY DATA  should be array of angle differences for each joint
 			var dataP1 = [];
 			var dataP2 = [];
-			for(var i=0; i<mocom.takeAAngles.length; i++){
+			for(var i=0; i < mocom.takeAAngles.length; i++){
 				dataP1[i] = [];
 				dataP2[i] = [];
-				for(var j=0; j<= endFrame-startFrame; j++){
-					dataP1[i][j] = mocom.takeAAngles[i][startFrame+j].alpha - mocom.takeBAngles[i][startFrame+j].alpha;
-					dataP2[i][j] = mocom.takeAAngles[i][startFrame+j].beta - mocom.takeBAngles[i][startFrame+j].beta;
+				for(var j=0; j < mocom.takeAAngles[0].length; j++){
+					dataP1[i][j] = mocom.takeAAngles[i][j].alpha - mocom.takeBAngles[i][j].alpha;
+					dataP2[i][j] = mocom.takeAAngles[i][j].beta - mocom.takeBAngles[i][j].beta;
 				}
 			}
 	//NNED TO ADD FUNCTION TO CHECK WHICH TAKE OVER WHICH TO DETERMINE COLOR
@@ -190,11 +186,11 @@ var mocom = {
 				
 	//Find the x-scale based on number of frames
 		var xScale = d3.scale.linear()
-								.domain([startFrame, endFrame])
+								.domain([0, mocom.takeAAngles[0].length])
 								.range([5, 1095]);
 	//Find the y-scale based on maximum sum of the values of the data
-		var totalY = [];
 		var k = 0;
+		var totalY = [];
 		for(var j=0; j<dataP1[0].length; j++, k++) {
 			totalY[k] = 0;
 			for(var i=0; i<dataP1.length; i++) {
@@ -209,7 +205,7 @@ var mocom = {
 		}
 		var yScale = d3.scale.linear()
 								.domain([0, d3.max(totalY)]) 
-								.range([0, 70]);
+								.range([4, 66]);
 					
 		/*		//Create x-axis
 				var xAxis = d3.svg.axis()
@@ -233,7 +229,7 @@ var mocom = {
 							return d.map(function (d, index) {
 									return {
 											x: index,
-											y: d
+											y: Math.abs(d)
 											};
 									});
 						});
@@ -241,7 +237,7 @@ var mocom = {
 							return d.map(function (d, index) {
 									return {
 											x: index,
-											y: d
+											y: Math.abs(d)
 											};
 									});
 						});
@@ -296,7 +292,7 @@ var mocom = {
 				
 		var createMultiples = function(){											
 			var startFrame = 0;
-			var endFrame = 239;
+			var endFrame = mocom.takeAAngles[0].length-1;
 		
 			//Calculate the speed in each frame. Uses next frame to determine speed in a frame. Last frame is set to be identical to next to last frame
 			var speedDataA = [];
@@ -342,13 +338,13 @@ var mocom = {
 				var tempAAngles = [mocom.takeAAngles[i][startFrame+j].alpha, mocom.takeAAngles[i][startFrame+j].beta];
 				var tempBAngles = [mocom.takeBAngles[i][startFrame+j].alpha, mocom.takeBAngles[i][startFrame+j].beta];
 						if(d3.min(tempAAngles) < yMinAngle){
-							yMin = d3.min(tempAAngles);
+							yMinAngle = d3.min(tempAAngles);
 						}
 						else if(d3.max(tempAAngles) > yMaxAngle){
 							yMaxAngle = d3.max(tempAAngles);
 						}
 						if(d3.min(tempBAngles) < yMinAngle){
-							yMin = d3.min(tempBAngles);
+							yMinAngle = d3.min(tempBAngles);
 						}
 						else if(d3.max(tempBAngles) > yMaxAngle){
 							yMaxAngle = d3.max(tempBAngles);
