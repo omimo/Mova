@@ -234,6 +234,7 @@ var movan = {
 									});
 			},
 
+			// Omid~
 			drawJointChooser: function (mocap) {
 
 				frame = mocap.getPositionsAt(0);

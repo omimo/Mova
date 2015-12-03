@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>test</title>
+	<script type="text/javascript" src="../lib/d3.v3.min.js"></script>
+	<script type="text/javascript">
+	var theData = [ 1, 2, 3 ]
+	var p = d3.select("body").selectAll("p")
+   .data(theData)
+   .enter()
+   .append("p")
+   .text("hello ");
+	</script>
+</head>
+<body>
+
+</body>
+</html>

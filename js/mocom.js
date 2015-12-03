@@ -40,6 +40,8 @@ var mocom = {
 	takeAAngles : [],
 
 	takeBAngles : [],
+		
+	neededJoint : [],
 
 	/**
 	 * get positions and calculate angles
@@ -68,32 +70,31 @@ var mocom = {
 		var duration = document.getElementById("duration").value/1000;
 		var bodypart = parseInt($("#bodypart").find(":selected").attr("data-bodypart"));
 
-		var neededJoint = [];
 		var takeAPosition = [];
 		var takeBPosition = [];
 		switch( parseInt($("#bodypart").find(":selected").attr("data-bodypart")) ){
 			case LEFTARM :
-			neededJoint = [C_SHOULDER, SPINE, L_SHOULDER, L_ELBLOW, L_WRIST, L_PALM];
+			mocom.neededJoint = [C_SHOULDER, SPINE, L_SHOULDER, L_ELBLOW, L_WRIST, L_PALM];
 			break;
 
 			case RIGHTARM : 
-			neededJoint = [C_SHOULDER, SPINE, R_SHOULDER, R_ELBLOW, R_WRIST, R_PALM];
+			mocom.neededJoint = [C_SHOULDER, SPINE, R_SHOULDER, R_ELBLOW, R_WRIST, R_PALM];
 			break;
 
 			case LEFTLEG :
-			neededJoint = [C_HIP, SPINE, L_HIP, L_KNEE, L_ANKLE, L_FOOT];
+			mocom.neededJoint = [C_HIP, SPINE, L_HIP, L_KNEE, L_ANKLE, L_FOOT];
 			break;
 
 			case RIGHTLEG :
-			neededJoint = [C_HIP, SPINE, R_HIP, R_KNEE, R_ANKLE, R_FOOT];
+			mocom.neededJoint = [C_HIP, SPINE, R_HIP, R_KNEE, R_ANKLE, R_FOOT];
 			break;
 
 			case SPINE :
-			neededJoint = [C_HIP, SPINE, C_SHOULDER, HEAD];
+			mocom.neededJoint = [C_HIP, SPINE, C_SHOULDER, HEAD];
 			break;
 
 			default:
-			neededJoint = [];
+			mocom.neededJoint = [];
 		}
 
 		// clear up the dataTracks and load our track to it.
@@ -120,7 +121,7 @@ var mocom = {
 				takeAPosition[j] = [];
 				for (var i=startFrameA; i<endFrameA; i++){
 					var tmp = [];
-					tmp = movan.dataTracks[0].content.jointArray[ neededJoint[j] ].positions[i]; 
+					tmp = movan.dataTracks[0].content.jointArray[ mocom.neededJoint[j] ].positions[i]; 
 					takeAPosition[j].push(tmp);
 				}
 			}
@@ -153,7 +154,7 @@ var mocom = {
 				takeBPosition[j] = [];
 				for (var i=startFrameB; i<endFrameB; i++){
 					var tmp = [];
-					tmp = movan.dataTracks[0].content.jointArray[ neededJoint[j] ].positions[i]; 
+					tmp = movan.dataTracks[0].content.jointArray[ mocom.neededJoint[j] ].positions[i]; 
 					takeBPosition[j].push(tmp);
 				}
 			}
@@ -474,6 +475,7 @@ var mocom = {
 										.append("svg")
 											.attr("class", "multipleSVG");
 												
+<<<<<<< Updated upstream
 		anglesP1A.append("path")
 					.attr("class", "line")
 					.attr("d", function (d) {
@@ -538,6 +540,96 @@ var mocom = {
 	};
 	createOverview();
 	createMultiples();
+=======
+				anglesP1.append("circle")
+									.attr("cx", function(d,i){return 40+40*i;})
+									.attr("cy", 25)
+									.attr("r", 25)
+									.style("fill", "purple");
+				
+				anglesP2.append("circle")
+									.attr("cx", function(d,i){return 40+40*i;})
+									.attr("cy", 25)
+									.attr("r", 25)
+									.style("fill", "red");
+				speedsP1.append("circle")
+									.attr("cx", function(d,i){return 40+40*i;})
+									.attr("cy", 25)
+									.attr("r", 25)
+									.style("fill", "blue");
+				
+				speedsP2.append("circle")
+									.attr("cx", function(d,i){return 40+40*i;})
+									.attr("cy", 25)
+									.attr("r", 25)
+									.style("fill", "green");	
+				accsP1.append("circle")
+									.attr("cx", function(d,i){return 40+40*i;})
+									.attr("cy", 25)
+									.attr("r", 25)
+									.style("fill", "black");
+				
+				accsP2.append("circle")
+									.attr("cx", function(d,i){return 40+40*i;})
+									.attr("cy", 25)
+									.attr("r", 25)
+									.style("fill", "yellow");	
+			};
+
+			var createInstView = function(){
+				// get the frame
+				var currentFrameA = movan.dataTracks[0].content.getPositionsAt(0);
+				var currentFrameB = movan.dataTracks[1].content.getPositionsAt(0);
+
+				// map out the perspectives of A and B
+				var currentFrameP1A = currentFrameA.map(function(d) {
+					return {
+						x : d.x + 20,
+						y : -1 * d.y + 70,
+						z : d.z
+					};
+				});
+				var currentFrameP2A = currentFrameA.map(function(d) {
+					return {
+						x : d.x + 20,
+						y : -1 * d.y + 70,
+						z : d.z
+					};
+				});
+				var currentFrameP1B = currentFrameB.map(function(d) {
+					return {
+						x : d.x + 20,
+						y : -1 * d.y + 70,
+						z : d.z
+					};
+				});
+				var currentFrameP2B = currentFrameB.map(function(d) {
+					return {
+						x : d.x + 20,
+						y : -1 * d.y + 70,
+						z : d.z
+					};
+				});
+
+				// append svg
+				d3.selectAll("#visInstFrameP1, #visInstFrameP2").selectAll("svg").remove();
+				var visInstFrameP1A = d3.select("#visInstFrameP1 .visInstFrameA").append("svg").attr("height",170);
+				var visInstFrameP1B = d3.select("#visInstFrameP1 .visInstFrameB").append("svg").attr("height",170);
+				var visInstFrameP2A = d3.select("#visInstFrameP2 .visInstFrameA").append("svg").attr("height",170);
+				var visInstFrameP2B = d3.select("#visInstFrameP2 .visInstFrameB").append("svg").attr("height",170);
+				
+				// match the data to svg - draw em all
+				//drawSkelPartial(svg, currentFrameA, index, highlightJ, mocap)
+				figureSketch.drawSkelPartial(visInstFrameP1A, currentFrameP1A, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
+				figureSketch.drawSkelPartial(visInstFrameP1B, currentFrameP1B, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
+				figureSketch.drawSkelPartial(visInstFrameP2A, currentFrameP2A, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
+				figureSketch.drawSkelPartial(visInstFrameP2B, currentFrameP2B, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
+			};
+
+		createOverview();
+		createMultiples();
+		createInstView();
+>>>>>>> Stashed changes
 	},
 
 	angleData : {
