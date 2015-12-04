@@ -674,9 +674,9 @@ var mocom = {
 				jointNewPos[3][i] = [mocom.angleData.project(jointPositions[3][i], depth_axis), mocom.angleData.project(jointPositions[3][i], side_axis)];
 				jointNewPos[4][i] = [mocom.angleData.project(jointPositions[4][i], depth_axis), mocom.angleData.project(jointPositions[4][i], side_axis)];
 				jointNewPos[5][i] = [mocom.angleData.project(jointPositions[5][i], depth_axis), mocom.angleData.project(jointPositions[5][i], side_axis)];
-				jointAngles[0][i] = mocom.angleData.vectorAngle(jointPositions[2][i], jointPositions[3][i], spine_axis, depth_axis, side_axis);		//Fills the array for each joint
-				jointAngles[1][i] = mocom.angleData.vectorAngle(jointPositions[3][i], jointPositions[4][i], spine_axis, depth_axis, side_axis);		//The return of vectorAngle function is an array with angles alpha and beta
-				jointAngles[2][i] = mocom.angleData.vectorAngle(jointPositions[4][i], jointPositions[5][i], spine_axis, depth_axis, side_axis);		//These angles define the position of limbs in the new coordinate system
+				jointAngles[0][i] = mocom.angleData.vectorAngle(jointNewPos[2][i], jointNewPos[3][i], spine_axis, depth_axis, side_axis);		//Fills the array for each joint
+				jointAngles[1][i] = mocom.angleData.vectorAngle(jointNewPos[3][i], jointNewPos[4][i], spine_axis, depth_axis, side_axis);		//The return of vectorAngle function is an array with angles alpha and beta
+				jointAngles[2][i] = mocom.angleData.vectorAngle(jointNewPos[4][i], jointNewPos[5][i], spine_axis, depth_axis, side_axis);		//These angles define the position of limbs in the new coordinate system
 			}
 			return [jointAngles, jointNewPos];
 		},
@@ -732,10 +732,10 @@ var mocom = {
 		
 	//Function vectorAngle: Calculates the angles between the bone connecting input arguments and spine in front and side perspectives (as defined by the axis passed)
 		vectorAngle : function(node1, node2, relativeAxis, viewAxis1, viewAxis2) {
-			var node1_front = mocom.angleData.project(node1, viewAxis1);		//Projects the limbs in both perpectives
-			var node1_side = mocom.angleData.project(node1, viewAxis2);
-			var node2_front = mocom.angleData.project(node2, viewAxis1);
-			var node2_side = mocom.angleData.project(node2, viewAxis2);
+			var node1_front = node1[0];		//Projects the limbs in both perpectives
+			var node1_side = node1[1];
+			var node2_front = node2[0];
+			var node2_side = node2[1];
 			var v = mocom.angleData.getDirection(node1_front, node2_front);							//Vector of limb in front perspective
 			var alpha = (Math.atan2(mocom.angleData.dotproduct(v, relativeAxis), mocom.angleData.dotproduct(v, viewAxis2))) * 2 * Math.PI;
 			v = mocom.angleData.getDirection(node1_side, node2_side);								//Changes the vector of limb to use second perspective
