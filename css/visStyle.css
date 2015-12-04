@@ -189,8 +189,8 @@
 }
 
 .brusherWrap{
-	position: absolute;	
-	z-index: 100;
+	position: absolute;
+	left: 53px;
 }
 
 .brusher{

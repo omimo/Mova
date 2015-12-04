@@ -196,18 +196,20 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 	},
 
 	createVis : function(){
+		var frameCount = mocom.takeAAngles[0].length; // total frames of all this comparison
+
 		mocom.createOverview();
-		mocom.createMultiples();
+		mocom.createMultiples(0, frameCount-100);
 		mocom.createInstView();
 
 		// get the brusher container (overview)
 		var overviewCont = d3.select("#visOverview");
 
 		// create the dragable brusher
-		var width = 1000;
-		var height = 200;
+		var width = 1086;
+		var height = 180;
 		var xScale = d3.scale.linear()
-			.domain([0,1])
+			.domain([0,frameCount-1])
 		    .range([0, width]);
 		var brush = d3.svg.brush()
 			.x(xScale)
@@ -232,7 +234,10 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		};
 		function brushmove(){
 			var s = brush.extent();
-			console.log(s[0] + ", " + s[1]);
+			var newStart = Math.round(s[0]);
+			var newEnd = Math.round(s[1]);
+			console.log(newStart + ", " + newEnd);
+			mocom.createMultiples(newStart, newEnd);
 		};
 
 	},
@@ -357,9 +362,9 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 													});
 	},
 
-	createMultiples : function(){											
-		var startFrame = 0;
-		var endFrame = mocom.takeAAngles[0].length-1;
+	createMultiples : function(startFrame, endFrame){											
+		// var startFrame = 0;
+		// var endFrame = mocom.takeAAngles[0].length-1;
 	
 		//Calculate the speed in each frame. Uses next frame to determine speed in a frame. Last frame is set to be identical to next to last frame
 		var speedDataA = [];
@@ -401,9 +406,9 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		var yMaxAcc = 0;
 		var yMinAcc = 0;
 		for(var i=0; i<mocom.takeAAngles.length; i++) {
-			for(var j=0; j<speedDataA[0].length; j++) {
-			var tempAAngles = [mocom.takeAAngles[i][startFrame+j].alpha, mocom.takeAAngles[i][startFrame+j].beta];
-			var tempBAngles = [mocom.takeBAngles[i][startFrame+j].alpha, mocom.takeBAngles[i][startFrame+j].beta];
+			for(var j=startFrame; j<endFrame; j++) {
+			var tempAAngles = [mocom.takeAAngles[i][j].alpha, mocom.takeAAngles[i][j].beta];
+			var tempBAngles = [mocom.takeBAngles[i][j].alpha, mocom.takeBAngles[i][j].beta];
 					if(d3.min(tempAAngles) < yMinAngle){
 						yMinAngle = d3.min(tempAAngles);
 					}
