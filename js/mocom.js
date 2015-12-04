@@ -372,12 +372,12 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		for(var i=0; i<mocom.takeAAngles.length; i++){
 			speedDataA[i] = [];
 			speedDataB[i] = [];
-			for(var j=startFrame; j<endFrame; j++){
-				speedDataA[i][j] = [((mocom.takeAAngles[i][j+1].alpha-mocom.takeAAngles[i][j].alpha)/movan.dataTracks[0].content.frameTime), ((mocom.takeAAngles[i][j+1].beta-mocom.takeAAngles[i][j].beta)/movan.dataTracks[0].content.frameTime)];
-				speedDataB[i][j] = [((mocom.takeBAngles[i][j+1].alpha-mocom.takeBAngles[i][j].alpha)/movan.dataTracks[0].content.frameTime), ((mocom.takeBAngles[i][j+1].beta-mocom.takeBAngles[i][j].beta)/movan.dataTracks[0].content.frameTime)];
+			for(var j=0; j<endFrame-startFrame; j++){
+				speedDataA[i][j] = [((mocom.takeAAngles[i][j+startFrame+1].alpha-mocom.takeAAngles[i][j+startFrame].alpha)/movan.dataTracks[0].content.frameTime), ((mocom.takeAAngles[i][j+startFrame+1].beta-mocom.takeAAngles[i][j+startFrame].beta)/movan.dataTracks[0].content.frameTime)];
+				speedDataB[i][j] = [((mocom.takeBAngles[i][j+startFrame+1].alpha-mocom.takeBAngles[i][j+startFrame].alpha)/movan.dataTracks[0].content.frameTime), ((mocom.takeBAngles[i][j+startFrame+1].beta-mocom.takeBAngles[i][j+startFrame].beta)/movan.dataTracks[0].content.frameTime)];
 			}
-			speedDataA[i][endFrame] = speedDataA[i][endFrame-1];
-			speedDataB[i][endFrame] = speedDataB[i][endFrame-1];
+			speedDataA[i][endFrame-startFrame] = speedDataA[i][endFrame-startFrame-1];
+			speedDataB[i][endFrame-startFrame] = speedDataB[i][endFrame-startFrame-1];
 		}
 		//Calculate the acceleration in each frame. Uses next frame to determine acceleration in a frame. Last frame is set to be identical to next to last frame
 		var accDataA = [];
@@ -385,17 +385,17 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		for(var i=0; i<speedDataA.length; i++){
 			accDataA[i] = [];
 			accDataB[i] = [];
-			for(var j=startFrame; j<endFrame; j++){
+			for(var j=0; j<endFrame-startFrame; j++){
 				accDataA[i][j] = [((speedDataA[i][j+1][0]-speedDataA[i][j][0])/movan.dataTracks[0].content.frameTime), ((speedDataA[i][j+1][1]-speedDataA[i][j][1])/movan.dataTracks[0].content.frameTime)];
 				accDataB[i][j] = [((speedDataB[i][j+1][0]-speedDataB[i][j][0])/movan.dataTracks[0].content.frameTime), ((speedDataB[i][j+1][1]-speedDataB[i][j][1])/movan.dataTracks[0].content.frameTime)];
 			}
-			accDataA[i][endFrame] = accDataA[i][endFrame-1];
-			accDataB[i][endFrame] = accDataB[i][endFrame-1];
+			accDataA[i][endFrame-startFrame] = accDataA[i][endFrame-startFrame-1];
+			accDataB[i][endFrame-startFrame] = accDataB[i][endFrame-startFrame-1];
 		}
 	
 		//Find the x-scale based on number of frames
 		var xScale = d3.scale.linear()
-								.domain([startFrame, endFrame])
+								.domain([0, endFrame-startFrame])
 								.range([5, 295]);
 		
 		//Find the y-scale based on maximum and minimum values of the data
@@ -406,9 +406,9 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		var yMaxAcc = 0;
 		var yMinAcc = 0;
 		for(var i=0; i<mocom.takeAAngles.length; i++) {
-			for(var j=startFrame; j<endFrame; j++) {
-			var tempAAngles = [mocom.takeAAngles[i][j].alpha, mocom.takeAAngles[i][j].beta];
-			var tempBAngles = [mocom.takeBAngles[i][j].alpha, mocom.takeBAngles[i][j].beta];
+			for(var j=0; j<endFrame-startFrame; j++) {
+			var tempAAngles = [mocom.takeAAngles[i][j+startFrame].alpha, mocom.takeAAngles[i][j+startFrame].beta];
+			var tempBAngles = [mocom.takeBAngles[i][j+startFrame].alpha, mocom.takeBAngles[i][j+startFrame].beta];
 					if(d3.min(tempAAngles) < yMinAngle){
 						yMinAngle = d3.min(tempAAngles);
 					}
@@ -484,6 +484,8 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		var speedChartsP2 = multiplesP2.select("#speedCharts");
 		var accelerationChartsP1 = multiplesP1.select("#accelerationCharts");
 		var accelerationChartsP2 = multiplesP2.select("#accelerationCharts");
+		multiplesP1.selectAll("svg").remove();
+		multiplesP2.selectAll("svg").remove();		
 		var anglesP1A = angleChartsP1.selectAll(".smallMultiple")
 										.data(mocom.takeAAngles.map(function(d){
 																		return d.filter(function(d,i){
