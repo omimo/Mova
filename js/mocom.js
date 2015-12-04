@@ -234,8 +234,12 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		};
 		function brushmove(){
 			var s = brush.extent();
-			var newStart = Math.round(s[0]);
-			var newEnd = Math.round(s[1]);
+			var newStart = 0;
+			var newEnd = frameCount-1;
+			if(!brush.empty()){
+				newStart = Math.round(s[0]);
+				newEnd = Math.round(s[1]);
+			}
 			console.log(newStart + ", " + newEnd);
 			mocom.createMultiples(newStart, newEnd);
 		};
