@@ -12,27 +12,27 @@ var CENTER		= 4;
 var L_SHOULDER	= 5;
 var L_ELBLOW	= 6;
 var L_WRIST		= 7;
-var L_PALM		= 8;
+var L_PALM		= 10;
 // right arm
-var R_SHOULDER	= 0;
-var R_ELBLOW	= 0;
-var R_WRIST		= 0;
-var R_PALM		= 0;
+var R_SHOULDER	= 13;
+var R_ELBLOW	= 14;
+var R_WRIST		= 15;
+var R_PALM		= 18;
 // left leg
-var L_HIP		= 0;
-var L_KNEE		= 0;
-var L_ANKLE		= 0;
-var L_FOOT		= 0;
+var L_HIP		= 20;
+var L_KNEE		= 21;
+var L_ANKLE		= 22;
+var L_FOOT		= 23;
 // right leg
-var R_HIP		= 0;
-var R_KNEE		= 0;
-var R_ANKLE		= 0;
-var R_FOOT		= 0;
+var R_HIP		= 25;
+var R_KNEE		= 26;
+var R_ANKLE		= 27;
+var R_FOOT		= 28;
 // conter
 var C_HIP		= 0;
 var SPINE		= 1;
 var C_SHOULDER	= 4;
-var HEAD		= 0;
+var HEAD		= 2;
 
 
 var mocom = {
