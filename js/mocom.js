@@ -236,7 +236,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 			var s = brush.extent();
 			var newStart = 0;
 			var newEnd = frameCount-1;
-			if(!brush.empty()){
+			if(Math.round(s[0])!=Math.round(s[1])){
 				newStart = Math.round(s[0]);
 				newEnd = Math.round(s[1]);
 			}
