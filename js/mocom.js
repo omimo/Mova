@@ -40,6 +40,10 @@ var mocom = {
 	takeAAngles : [],
 
 	takeBAngles : [],
+	
+	takeAPos : [],
+	
+	takeBPos : [],
 		
 	neededJoint : [],
 
@@ -125,7 +129,9 @@ var mocom = {
 					takeAPosition[j].push(tmp);
 				}
 			}
-			mocom.takeAAngles = mocom.angleData.convertData(takeAPosition);
+			var takeAData = mocom.angleData.convertData(takeAPosition);
+			mocom.takeAAngles = takeAData[0];
+			mocom.takeAPos = takeAData[1];
 
 			takeLoadCnt++;
 			if(takeLoadCnt>=2){
@@ -158,7 +164,9 @@ var mocom = {
 					takeBPosition[j].push(tmp);
 				}
 			}
-			mocom.takeBAngles = mocom.angleData.convertData(takeBPosition);
+			var takeBData = mocom.angleData.convertData(takeBPosition);
+			mocom.takeBAngles = takeBData[0];
+			mocom.takeBPos = takeBData[1];
 
 			takeLoadCnt++;
 			if(takeLoadCnt>=2){
@@ -643,9 +651,16 @@ var mocom = {
 	/* Function convertData takes the input array for one of the takes and converts it to the output array as specified above	*/
 		convertData : function(jointPositions){
 			var jointAngles = [];	//mocom variable is the output array eventually returned
+			var jointNewPos = [];
 			jointAngles[0] = [];	//Creates one array of frames for each joint
 			jointAngles[1] = [];
 			jointAngles[2] = [];
+			jointNewPos[0] = [];
+			jointNewPos[1] = [];
+			jointNewPos[2] = [];
+			jointNewPos[3] = [];
+			jointNewPos[4] = [];
+			jointNewPos[5] = [];
 			for (var i = 0; i < jointPositions[0].length; i++){	//Loops through all the frames as given by the length of one of the joint arrays in the input array
 				var anchorJoint = jointPositions[0][i];					//Anchor joint for new coordinate system
 				var spineJoint = mocom.angleData.getDirection(anchorJoint, jointPositions[1][i]);			//Translates the other coordinate joints according to anchorJoint
@@ -653,11 +668,17 @@ var mocom = {
 				var spine_axis = mocom.angleData.findAxis_spine(spineJoint, anchorJoint);		//Defines the axis of the new coordinate systems, these are unit vectors
 				var side_axis = mocom.angleData.findAxis_width(spineJoint, partJoint, spine_axis);
 				var depth_axis = mocom.angleData.findAxis_depth(spine_axis, side_axis);
+				jointNewPos[0][i] = [mocom.angleData.project(jointPositions[0][i], depth_axis), mocom.angleData.project(jointPositions[0][i], side_axis)];
+				jointNewPos[1][i] = [mocom.angleData.project(jointPositions[1][i], depth_axis), mocom.angleData.project(jointPositions[1][i], side_axis)];
+				jointNewPos[2][i] = [mocom.angleData.project(jointPositions[2][i], depth_axis), mocom.angleData.project(jointPositions[2][i], side_axis)];
+				jointNewPos[3][i] = [mocom.angleData.project(jointPositions[3][i], depth_axis), mocom.angleData.project(jointPositions[3][i], side_axis)];
+				jointNewPos[4][i] = [mocom.angleData.project(jointPositions[4][i], depth_axis), mocom.angleData.project(jointPositions[4][i], side_axis)];
+				jointNewPos[5][i] = [mocom.angleData.project(jointPositions[5][i], depth_axis), mocom.angleData.project(jointPositions[5][i], side_axis)];
 				jointAngles[0][i] = mocom.angleData.vectorAngle(jointPositions[2][i], jointPositions[3][i], spine_axis, depth_axis, side_axis);		//Fills the array for each joint
 				jointAngles[1][i] = mocom.angleData.vectorAngle(jointPositions[3][i], jointPositions[4][i], spine_axis, depth_axis, side_axis);		//The return of vectorAngle function is an array with angles alpha and beta
 				jointAngles[2][i] = mocom.angleData.vectorAngle(jointPositions[4][i], jointPositions[5][i], spine_axis, depth_axis, side_axis);		//These angles define the position of limbs in the new coordinate system
 			}
-			return jointAngles;
+			return [jointAngles, jointNewPos];
 		},
 		
 		getDirection : function(origin, point){
