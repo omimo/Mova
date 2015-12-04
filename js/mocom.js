@@ -37,6 +37,24 @@ var HEAD		= 0;
 
 var mocom = {
 
+/**
+takeAAngles and takeBAngles format:
+takeAAngles = [
+joint0[frame0{alpha, beta}, frame1{alpha, beta}..........]
+joint1[frame0{alpha, beta}, frame1{alpha, beta}..........]
+joint2[frame0{alpha, beta}, frame1{alpha, beta}..........]
+]
+
+takeAPos and takeBPos format:
+takeAPos = [
+joint0[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
+joint1[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
+joint2[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
+joint3[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
+joint4[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
+joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
+]
+**/
 	takeAAngles : [],
 
 	takeBAngles : [],
