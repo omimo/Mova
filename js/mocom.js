@@ -199,6 +199,42 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		mocom.createOverview();
 		mocom.createMultiples();
 		mocom.createInstView();
+
+		// get the brusher container (overview)
+		var overviewCont = d3.select("#visOverview");
+
+		// create the dragable brusher
+		var width = 1000;
+		var height = 200;
+		var xScale = d3.scale.linear()
+			.domain([0,1])
+		    .range([0, width]);
+		var brush = d3.svg.brush()
+			.x(xScale)
+			.extent([.3, .5])
+			.on("brushstart", brushstart)
+			.on("brush", brushmove)
+			.on("brushend", brushend);
+		var brusher = overviewCont.append("svg")
+			.classed("brusherWrap", true)
+		    .attr("width", width)
+		    .attr("height", height)
+			.append("g")
+		    .attr("class", "brusher")
+		    .call(brush);
+		brusher.selectAll("rect")
+		    .attr("height", height);
+		
+		// set callback functions
+		function brushstart(){
+		};
+		function brushend(){
+		};
+		function brushmove(){
+			var s = brush.extent();
+			console.log(s[0] + ", " + s[1]);
+		};
+
 	},
 
 	createOverview : function(){

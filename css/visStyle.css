@@ -186,4 +186,17 @@
 	position: absolute;
 	top: 0px;
 	left: 0px;
-	}
+}
+
+.brusherWrap{
+	position: absolute;	
+	z-index: 100;
+}
+
+.brusher{
+}
+
+.brusher .extent{
+	fill-opacity: .125;
+	shape-rendering: crispEdges;
+}
