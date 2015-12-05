@@ -62,6 +62,14 @@
 	left: 151px;
 	border: 1px dotted;
 }
+.jointsLegend {
+	width: 145px;
+	height: 230px;
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	border: 1px dotted;
+}
 #visMultiples {
 	width: 1200px;
 	height: 470px;
@@ -107,11 +115,9 @@
 }
 #angleCharts{
 	left: 150px;
-	border-right: 1px solid;
 }
 #speedCharts{
 	left: 450px;
-	border-right: 1px solid;
 }
 #accelerationCharts{
 	left: 750px;
@@ -186,6 +192,24 @@
 	position: absolute;
 	top: 0px;
 	left: 0px;
+}
+.multipleAxisY {
+	fill: none;
+	stroke: black;
+	stroke-width: 0.5px;
+	transform: translate(4px);
+}
+.multipleAxisY text {
+	font-family: sans-serif;
+    font-size: 11px;
+}
+.multipleAxisX path {
+	fill: none;
+	stroke: black;
+	stroke-width: 0.5px;
+}
+.multipleAxisX text {
+	display: none;
 }
 
 .brusherWrap{

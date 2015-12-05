@@ -62,14 +62,7 @@ div.over2 {
 	position: relative;
 }
 
-.jointsLegend {
-	width: 145px;
-	height: 230px;
-	position: absolute;
-	top: 2px;
-	left: 2px;
-	border: 1px dotted;
-}
+
 
 #sidebar {
 	width: 250px;

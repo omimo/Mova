@@ -243,7 +243,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 			console.log(newStart + ", " + newEnd);
 			mocom.createMultiples(newStart, newEnd);
 		};
-
+		var multiples = d3.selectAll(".smallMultiple");
 	},
 
 	createOverview : function(){
@@ -270,13 +270,13 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		for(var j=0; j<dataP1[0].length; j++, k++) {
 			totalY[k] = 0;
 			for(var i=0; i<dataP1.length; i++) {
-				totalY[k] += dataP1[i][j];
+				totalY[k] += Math.abs(dataP1[i][j]);
 			}
 		}
 		for(var j=0; j<dataP1[0].length; j++, k++) {
 			totalY[k] = 0;
 			for(var i=0; i<dataP2.length; i++) {
-				totalY[k] += dataP2[i][j];
+				totalY[k] += Math.abs(dataP2[i][j]);
 			}
 		}
 		var yScale = d3.scale.linear()
@@ -290,22 +290,14 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 			var xAxisGroup = overviewContainer.append("g")
 												.attr("class", "overviewAxis") 
 												.call(xAxis);
-			
-						
-			//Create y-axis
-			var yAxis = d3.svg.axis()
-								.scale(yScale);
-								
-			var xAxisGroup = overviewContainer.append("g")
-												.attr("class", "overviewAxis") 
-												.call(yAxis);
-			*/		
+			*/
 			//Data needs to have properties x and y to parse
 		dataP1 = dataP1.map(function (d) {
 							return d.map(function (d, index) {
 									return {
 											x: index,
-											y: Math.abs(d)
+											y: Math.abs(d),
+											y0: 0
 											};
 									});
 						});
@@ -313,7 +305,8 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 							return d.map(function (d, index) {
 									return {
 											x: index,
-											y: Math.abs(d)
+											y: Math.abs(d),
+											y0: 0
 											};
 									});
 						});
@@ -401,6 +394,10 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		var xScale = d3.scale.linear()
 								.domain([0, endFrame-startFrame])
 								.range([5, 295]);
+		var xAxis = d3.svg.axis()
+							.scale(xScale)
+							.outerTickSize(0)
+							.ticks(0);
 		
 		//Find the y-scale based on maximum and minimum values of the data
 		var yMaxAngle = 0;
@@ -452,14 +449,30 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 				}
 			}
 		var yScaleAngle = d3.scale.linear()
-								.domain([yMinAngle, yMaxAngle]) 
-								.range([4, 74]);		
+								.domain([Math.ceil(yMaxAngle), Math.floor(yMinAngle)]) 
+								.range([6, 70]);		
 		var yScaleSpeed = d3.scale.linear()
-								.domain([yMinSpeed, yMaxSpeed]) 
-								.range([4, 74]);
+								.domain([Math.ceil(yMaxSpeed), Math.floor(yMinSpeed)]) 
+								.range([6, 70]);
 		var yScaleAcc = d3.scale.linear()
-								.domain([yMinAcc, yMaxAcc]) 
-								.range([4, 74]);
+								.domain([Math.ceil(yMaxAcc), Math.floor(yMinAcc)]) 
+								.range([6, 70]);
+		
+			
+		//Create y-axis
+		var yAxisAngle = d3.svg.axis()
+								.scale(yScaleAngle)
+								.orient("right")
+								.ticks(0)
+								.tickValues(yScaleAngle.domain());
+		var yAxisSpeed = d3.svg.axis()
+								.scale(yScaleSpeed)
+								.orient("right")
+								.ticks(0)
+		var yAxisAcc = d3.svg.axis()
+								.scale(yScaleAcc)
+								.orient("right")
+								.ticks(0)
 								
 		var lineAngleP1 = d3.svg.line()
 							.x(function(d, i) { return xScale(i); })
@@ -566,7 +579,13 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 										.data(accDataB)
 										.append("svg")
 											.attr("class", "multipleSVG");
-	
+		anglesP1A.append("g")
+					.attr("class", "multipleAxisY")
+					.call(yAxisAngle);
+		anglesP1A.append("g")
+					.attr("class", "multipleAxisX")
+					.attr("transform", "translate(0," + yScaleAngle(0) + ")")
+					.call(xAxis);
 		anglesP1A.append("path")
 					.attr("class", "line")
 					.attr("d", function (d) {
@@ -577,6 +596,13 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 					.attr("d", function (d) {
 								return lineAngleP1(d);
 								});	
+		anglesP2A.append("g")
+					.attr("class", "multipleAxisY")
+					.call(yAxisAngle);
+		anglesP2A.append("g")
+					.attr("class", "multipleAxisX")
+					.attr("transform", "translate(0," + yScaleAngle(0) + ")")
+					.call(xAxis);
 		anglesP2A.append("path")
 					.attr("class", "line")
 					.attr("d", function (d) {
@@ -587,6 +613,13 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 					.attr("d", function (d) {
 								return lineAngleP2(d);
 								});
+		speedsP1A.append("g")
+					.attr("class", "multipleAxisY")
+					.call(yAxisSpeed);
+		speedsP1A.append("g")
+					.attr("class", "multipleAxisX")
+					.attr("transform", "translate(0," + yScaleSpeed(0) + ")")
+					.call(xAxis);
 		speedsP1A.append("path")
 					.attr("class", "line")
 					.attr("d", function (d) {
@@ -597,6 +630,13 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 					.attr("d", function (d) {
 								return lineSpeedP1(d);
 								});	
+		speedsP2A.append("g")
+					.attr("class", "multipleAxisY")
+					.call(yAxisSpeed);
+		speedsP2A.append("g")
+					.attr("class", "multipleAxisX")
+					.attr("transform", "translate(0," + yScaleSpeed(0) + ")")
+					.call(xAxis);
 		speedsP2A.append("path")
 					.attr("class", "line")
 					.attr("d", function (d) {
@@ -607,6 +647,13 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 					.attr("d", function (d) {
 								return lineSpeedP2(d);
 								});
+		accsP1A.append("g")
+					.attr("class", "multipleAxisY")
+					.call(yAxisAcc);
+		accsP1A.append("g")
+					.attr("class", "multipleAxisX")
+					.attr("transform", "translate(0," + yScaleAcc(0) + ")")
+					.call(xAxis);
 		accsP1A.append("path")
 					.attr("class", "line")
 					.attr("d", function (d) {
@@ -617,6 +664,13 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 					.attr("d", function (d) {
 								return lineAccP1(d);
 								});	
+		accsP2A.append("g")
+					.attr("class", "multipleAxisY")
+					.call(yAxisAcc);
+		accsP2A.append("g")
+					.attr("class", "multipleAxisX")
+					.attr("transform", "translate(0," + yScaleAcc(0) + ")")
+					.call(xAxis);
 		accsP2A.append("path")
 					.attr("class", "line")
 					.attr("d", function (d) {
@@ -733,15 +787,19 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 				var spine_axis = mocom.angleData.findAxis_spine(spineJoint, anchorJoint);		//Defines the axis of the new coordinate systems, these are unit vectors
 				var side_axis = mocom.angleData.findAxis_width(spineJoint, partJoint, spine_axis);
 				var depth_axis = mocom.angleData.findAxis_depth(spine_axis, side_axis);
-				jointNewPos[0][i] = [mocom.angleData.project(jointPositions[0][i], depth_axis), mocom.angleData.project(jointPositions[0][i], side_axis)];
-				jointNewPos[1][i] = [mocom.angleData.project(jointPositions[1][i], depth_axis), mocom.angleData.project(jointPositions[1][i], side_axis)];
-				jointNewPos[2][i] = [mocom.angleData.project(jointPositions[2][i], depth_axis), mocom.angleData.project(jointPositions[2][i], side_axis)];
-				jointNewPos[3][i] = [mocom.angleData.project(jointPositions[3][i], depth_axis), mocom.angleData.project(jointPositions[3][i], side_axis)];
-				jointNewPos[4][i] = [mocom.angleData.project(jointPositions[4][i], depth_axis), mocom.angleData.project(jointPositions[4][i], side_axis)];
-				jointNewPos[5][i] = [mocom.angleData.project(jointPositions[5][i], depth_axis), mocom.angleData.project(jointPositions[5][i], side_axis)];
+				jointNewPos[0][i] = [mocom.angleData.project([0,0,0], depth_axis), mocom.angleData.project([0,0,0], side_axis)];
+				jointNewPos[1][i] = [mocom.angleData.project(spineJoint, depth_axis), mocom.angleData.project(spineJoint, side_axis)];
+				jointNewPos[2][i] = [mocom.angleData.project(partJoint, depth_axis), mocom.angleData.project(partJoint, side_axis)];
+				jointNewPos[3][i] = [mocom.angleData.project(mocom.angleData.getDirection(anchorJoint, jointPositions[3][i]), depth_axis), mocom.angleData.project(mocom.angleData.getDirection(anchorJoint, jointPositions[3][i]), side_axis)];
+				jointNewPos[4][i] = [mocom.angleData.project(mocom.angleData.getDirection(anchorJoint, jointPositions[4][i]), depth_axis), mocom.angleData.project(mocom.angleData.getDirection(anchorJoint, jointPositions[4][i]), side_axis)];
+				jointNewPos[5][i] = [mocom.angleData.project(mocom.angleData.getDirection(anchorJoint, jointPositions[5][i]), depth_axis), mocom.angleData.project(mocom.angleData.getDirection(anchorJoint, jointPositions[5][i]), side_axis)];
 				jointAngles[0][i] = mocom.angleData.vectorAngle(jointNewPos[2][i], jointNewPos[3][i], spine_axis, depth_axis, side_axis);		//Fills the array for each joint
 				jointAngles[1][i] = mocom.angleData.vectorAngle(jointNewPos[3][i], jointNewPos[4][i], spine_axis, depth_axis, side_axis);		//The return of vectorAngle function is an array with angles alpha and beta
 				jointAngles[2][i] = mocom.angleData.vectorAngle(jointNewPos[4][i], jointNewPos[5][i], spine_axis, depth_axis, side_axis);		//These angles define the position of limbs in the new coordinate system
+				jointAngles[2][i].alpha -= jointAngles[1][i].alpha;
+				jointAngles[2][i].beta -= jointAngles[1][i].beta;		
+				jointAngles[1][i].alpha -= jointAngles[0][i].alpha;
+				jointAngles[1][i].beta -= jointAngles[0][i].beta;
 			}
 			return [jointAngles, jointNewPos];
 		},
@@ -802,9 +860,9 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 			var node2_front = node2[0];
 			var node2_side = node2[1];
 			var v = mocom.angleData.getDirection(node1_front, node2_front);							//Vector of limb in front perspective
-			var alpha = (Math.atan2(mocom.angleData.dotproduct(v, relativeAxis), mocom.angleData.dotproduct(v, viewAxis2))) * 2 * Math.PI;
+			var alpha = (Math.atan2(mocom.angleData.dotproduct(v, relativeAxis), mocom.angleData.dotproduct(v, viewAxis2))) * Math.PI;
 			v = mocom.angleData.getDirection(node1_side, node2_side);								//Changes the vector of limb to use second perspective
-			var beta = (Math.atan2(mocom.angleData.dotproduct(v, relativeAxis), mocom.angleData.dotproduct(v, viewAxis1))) * 2 * Math.PI;
+			var beta = (Math.atan2(mocom.angleData.dotproduct(v, relativeAxis), mocom.angleData.dotproduct(v, viewAxis1))) * Math.PI;
 			return { alpha, beta };
 		},
 		
