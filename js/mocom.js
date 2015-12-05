@@ -259,7 +259,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		//Add a line to them
 		activeArea.append("line")
 			.attr("x1", 0)
-			.attr("y1", 64)
+			.attr("y1", 0)
 			.attr("x2", 0)
 			.attr("y2", 64)
 			.attr("class", "highlightLine")
@@ -769,15 +769,15 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		// map out the perspectives of A and B
 		var currentFrameP1A = currentFrameA.map(function(d,i) {
 			return {
-				x : d[0][0][0],
-				y : d[0][0][1],
+				x : d[0][0][0]+20,
+				y : -1*(d[0][0][1])+20,
 				z : d[0][0][2]
 			};
 		});
 		var currentFrameP1B = currentFrameB.map(function(d) {
 			return {
-				x : d[0][0][0],
-				y : d[0][0][1],
+				x : d[0][0][0]+20,
+				y : -1*(d[0][0][1])+20,
 				z : d[0][0][2]
 				// x : d.x + 20,
 				// y : -1 * d.y + 70,
@@ -786,15 +786,15 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		});
 		var currentFrameP2A = currentFrameA.map(function(d) {
 			return {
-				x : d[0][1][0],
-				y : d[0][1][1],
+				x : d[0][1][0]+20,
+				y : d[0][1][1]+20,
 				z : d[0][1][2]
 			};
 		});
 		var currentFrameP2B = currentFrameB.map(function(d) {
 			return {
-				x : d[0][1][0],
-				y : d[0][1][1],
+				x : d[0][1][0]+20,
+				y : d[0][1][1]+20,
 				z : d[0][1][2]
 				// x : 1 * d.z + 170,
 				// y : -1 * d.y + 70,
@@ -860,15 +860,15 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 				var spine_axis = mocom.angleData.findAxis_spine(spineJoint, anchorJoint);		//Defines the axis of the new coordinate systems, these are unit vectors
 				var side_axis = mocom.angleData.findAxis_width(spineJoint, partJoint, spine_axis);
 				var depth_axis = mocom.angleData.findAxis_depth(spine_axis, side_axis);
-				jointNewPos[0][i] = [mocom.angleData.project(jointPositions[0][i], depth_axis), mocom.angleData.project(jointPositions[0][i], side_axis)];
-				jointNewPos[1][i] = [mocom.angleData.project(jointPositions[1][i], depth_axis), mocom.angleData.project(jointPositions[1][i], side_axis)];
-				jointNewPos[2][i] = [mocom.angleData.project(jointPositions[2][i], depth_axis), mocom.angleData.project(jointPositions[2][i], side_axis)];
-				jointNewPos[3][i] = [mocom.angleData.project(jointPositions[3][i], depth_axis), mocom.angleData.project(jointPositions[3][i], side_axis)];
-				jointNewPos[4][i] = [mocom.angleData.project(jointPositions[4][i], depth_axis), mocom.angleData.project(jointPositions[4][i], side_axis)];
-				jointNewPos[5][i] = [mocom.angleData.project(jointPositions[5][i], depth_axis), mocom.angleData.project(jointPositions[5][i], side_axis)];
-				jointAngles[0][i] = mocom.angleData.vectorAngle(jointNewPos[2][i], jointNewPos[3][i], spine_axis, depth_axis, side_axis);		//Fills the array for each joint
-				jointAngles[1][i] = mocom.angleData.vectorAngle(jointNewPos[3][i], jointNewPos[4][i], spine_axis, depth_axis, side_axis);		//The return of vectorAngle function is an array with angles alpha and beta
-				jointAngles[2][i] = mocom.angleData.vectorAngle(jointNewPos[4][i], jointNewPos[5][i], spine_axis, depth_axis, side_axis);		//These angles define the position of limbs in the new coordinate system
+				jointNewPos[0][i] = [[0,0,0], [0,0,0]];
+				jointNewPos[1][i] = [mocom.angleData.project(spineJoint, side_axis), mocom.angleData.project(spineJoint, spine_axis)];
+				jointNewPos[2][i] = [mocom.angleData.project(partJoint, side_axis), mocom.angleData.project(partJoint, spine_axis)];
+				jointNewPos[3][i] = [mocom.angleData.project(mocom.angleData.getDirection(anchorJoint,jointPositions[3][i]), side_axis), mocom.angleData.project(mocom.angleData.getDirection(anchorJoint, jointPositions[3][i]), spine_axis)];
+				jointNewPos[4][i] = [mocom.angleData.project(mocom.angleData.getDirection(anchorJoint,jointPositions[4][i]), side_axis), mocom.angleData.project(mocom.angleData.getDirection(anchorJoint,jointPositions[4][i]), spine_axis)];
+				jointNewPos[5][i] = [mocom.angleData.project(mocom.angleData.getDirection(anchorJoint,jointPositions[5][i]), side_axis), mocom.angleData.project(mocom.angleData.getDirection(anchorJoint,jointPositions[5][i]), spine_axis)];
+				jointAngles[0][i] = mocom.angleData.vectorAngle(jointNewPos[2][i], jointNewPos[3][i], spine_axis, side_axis, spine_axis);		//Fills the array for each joint
+				jointAngles[1][i] = mocom.angleData.vectorAngle(jointNewPos[3][i], jointNewPos[4][i], spine_axis, side_axis, spine_axis);		//The return of vectorAngle function is an array with angles alpha and beta
+				jointAngles[2][i] = mocom.angleData.vectorAngle(jointNewPos[4][i], jointNewPos[5][i], spine_axis, side_axis, spine_axis);		//These angles define the position of limbs in the new coordinate system
 				jointAngles[2][i].alpha -= jointAngles[1][i].alpha;
 				jointAngles[2][i].beta -= jointAngles[1][i].beta;		
 				jointAngles[1][i].alpha -= jointAngles[0][i].alpha;
