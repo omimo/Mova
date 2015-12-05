@@ -730,9 +730,20 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 
 	createInstView : function(frameIndex){
 		// get the frame
-		var currentFrameA = movan.dataTracks[0].content.getPositionsAt(frameIndex);
-		var currentFrameB = movan.dataTracks[1].content.getPositionsAt(frameIndex);
-
+		// var currentFrameA = movan.dataTracks[0].content.getPositionsAt(frameIndex);
+		// var currentFrameB = movan.dataTracks[1].content.getPositionsAt(frameIndex);
+		var currentFrameA = mocom.takeAPos.map(function(d){
+			return d.filter(function(d,i){
+				if(i==frameIndex) return true;
+				else return false;
+			});
+		});
+		var currentFrameB = mocom.takeBPos.map(function(d){
+			return d.filter(function(d,i){
+				if(i==frameIndex) return true;
+				else return false;
+			});
+		});
 
 		// * TakeAPosition[
 		// * 	jointArray1[{x:0, y:0, z:0},{},{},...],     "Root" joint (center shoulder or center hip
@@ -744,33 +755,50 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		// var currentFrameA = takeAPosition;
 		// var currentFrameB = takeBPosition;
 
+		/**
+		takeAPos and takeBPos format:
+		takeAPos = [
+		joint0[frame0[[x,y,z],[x,y,z] ]]
+		joint1[frame0[[x,y,z],[x,y,z] ]]
+		joint2[frame0[[x,y,z],[x,y,z] ]]
+		joint3[frame0[[x,y,z],[x,y,z] ]]
+		joint4[frame0[[x,y,z],[x,y,z] ]]
+		joint5[frame0[[x,y,z],[x,y,z] ]]
+		]
+		**/
 		// map out the perspectives of A and B
-		var currentFrameP1A = currentFrameA.map(function(d) {
+		var currentFrameP1A = currentFrameA.map(function(d,i) {
 			return {
-				x : d.x + 20,
-				y : -1 * d.y + 70,
-				z : d.z 
+				x : d[0][0][0],
+				y : d[0][0][1],
+				z : d[0][0][2]
 			};
 		});
 		var currentFrameP1B = currentFrameB.map(function(d) {
 			return {
-				x : d.x + 20,
-				y : -1 * d.y + 70,
-				z : d.z
+				x : d[0][0][0],
+				y : d[0][0][1],
+				z : d[0][0][2]
+				// x : d.x + 20,
+				// y : -1 * d.y + 70,
+				// z : d.z
 			};
 		});
 		var currentFrameP2A = currentFrameA.map(function(d) {
 			return {
-				x : 1 * d.z + 170,
-				y : -1 * d.y + 70,
-				z : d.x +20
+				x : d[0][1][0],
+				y : d[0][1][1],
+				z : d[0][1][2]
 			};
 		});
 		var currentFrameP2B = currentFrameB.map(function(d) {
 			return {
-				x : 1 * d.z + 170,
-				y : -1 * d.y + 70,
-				z : d.x +20
+				x : d[0][1][0],
+				y : d[0][1][1],
+				z : d[0][1][2]
+				// x : 1 * d.z + 170,
+				// y : -1 * d.y + 70,
+				// z : d.x +20
 			};
 		});
 
@@ -782,7 +810,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		var visInstFrameP2B = d3.select("#visInstFrameP2 .visInstFrameB").append("svg").attr("height",70);
 		
 		// match the data to svg - draw em all
-		//drawSkelPartial(svg, currentFrameA, index, highlightJ, mocap)
+		//drawSkelPartial(svg, currentFrameA, index, highlightJ, mocap, jointfilter)
 		figureSketch.drawSkelPartial(visInstFrameP1A, currentFrameP1A, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
 		figureSketch.drawSkelPartial(visInstFrameP1B, currentFrameP1B, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
 		figureSketch.drawSkelPartial(visInstFrameP2A, currentFrameP2A, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);

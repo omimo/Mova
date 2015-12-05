@@ -58,13 +58,9 @@ drawFiguresCanvas: function (parent,track, highlightJ, frameSkip, pad) {
 drawSkelPartial: function (svg, currentFrame, index, highlightJ, mocap, neededJoints) {
 	//bones
 	svg.selectAll("line.f" + index)
-	.data(mocap.connectivityMatrix.filter(function(d,i){
-		for(var a=0; a<neededJoints.length; a++){
-			if(i==neededJoints[a]){
-				return d;
-			}
-		}
-	}))
+	.data(
+		[[0, 1], [1, 2], [0, 2], [2, 3], [3, 4], [4, 5]]	
+	)
 	.enter()
 	.append("line")
 	.attr("stroke", "grey")
@@ -72,27 +68,21 @@ drawSkelPartial: function (svg, currentFrame, index, highlightJ, mocap, neededJo
 	.attr("x1",0).attr("x2",0)
 	//.transition().duration(1000).ease("elastic")
 	.attr("x1", function(d, j) {
-		return currentFrame[d[0].jointIndex].x;
+		return currentFrame[d[0]].x;
 	})
 	.attr("x2", function(d, j) {
-		return currentFrame[d[1].jointIndex].x;
+		return currentFrame[d[1]].x;
 	})
 	.attr("y1", function(d, j) {
-		return currentFrame[d[0].jointIndex].y;
+		return currentFrame[d[0]].y;
 	})
 	.attr("y2", function(d, j) {
-		return currentFrame[d[1].jointIndex].y;
+		return currentFrame[d[1]].y;
 	});
 
 	//draw joints
 	svg.selectAll("circle.f" + index)
-	.data(currentFrame.filter(function(d,i){
-		for(var a=0; a<neededJoints.length; a++){
-			if(i==neededJoints[a]){
-				return d;
-			}
-		}
-	}))
+	.data(currentFrame)
 	.enter()
 	.append("circle")
 	.attr("class", function(d,i) {
