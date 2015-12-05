@@ -201,7 +201,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		var brushEndFrame = frameCount-1;
 		mocom.createOverview();
 		mocom.createMultiples(0, frameCount-1);
-		mocom.createInstView();
+		mocom.createInstView(0);
 
 		// get the brusher container (overview)
 		var overviewCont = d3.select("#visOverview");
@@ -272,6 +272,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 			d3.selectAll(".highlightLine")	
 				.attr("style", "display: inline;");
 			focusFrame = Math.round(xScaleFocus.invert(d3.mouse(this)[0]));
+			mocom.createInstView(focusFrame);
 			console.log(focusFrame);
 		};
 		function mousemove(){
@@ -281,6 +282,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 				.attr("x2", d3.mouse(this)[0])
 				.attr("y2", 64)
 			focusFrame = Math.round(xScaleFocus.invert(d3.mouse(this)[0]));
+			mocom.createInstView(focusFrame);
 			console.log(focusFrame);
 		};
 		function mouseout(){
@@ -726,10 +728,10 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 								});							
 	},
 
-	createInstView : function(){
+	createInstView : function(frameIndex){
 		// get the frame
-		var currentFrameA = movan.dataTracks[0].content.getPositionsAt(0);
-		var currentFrameB = movan.dataTracks[1].content.getPositionsAt(0);
+		var currentFrameA = movan.dataTracks[0].content.getPositionsAt(frameIndex);
+		var currentFrameB = movan.dataTracks[1].content.getPositionsAt(frameIndex);
 
 
 		// * TakeAPosition[
