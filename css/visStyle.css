@@ -211,6 +211,21 @@
 .multipleAxisX text {
 	display: none;
 }
+.highlightWrapper {	
+	position: absolute;
+	top: 6px;
+	left: 5px;
+	width: 290px;
+	height: 64px;
+	fill: none;
+	z-index: 100;
+}
+.highlightLine {
+	fill: none;
+	stroke: red;
+	stroke-width: 2px;
+	stroke-opacity: .25;
+}
 
 .brusherWrap{
 	position: absolute;

@@ -197,9 +197,10 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 
 	createVis : function(){
 		var frameCount = mocom.takeAAngles[0].length; // total frames of all this comparison
-
+		var brushStartFrame = 0;
+		var brushEndFrame = frameCount-1;
 		mocom.createOverview();
-		mocom.createMultiples(0, frameCount-100);
+		mocom.createMultiples(0, frameCount-1);
 		mocom.createInstView();
 
 		// get the brusher container (overview)
@@ -234,16 +235,61 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		};
 		function brushmove(){
 			var s = brush.extent();
-			var newStart = 0;
-			var newEnd = frameCount-1;
+			brushStartFrame = 0;
+			brushEndFrame = frameCount-1;
 			if(Math.round(s[0])!=Math.round(s[1])){
-				newStart = Math.round(s[0]);
-				newEnd = Math.round(s[1]);
+				brushStartFrame = Math.round(s[0]);
+				brushEndFrame = Math.round(s[1]);
 			}
-			console.log(newStart + ", " + newEnd);
-			mocom.createMultiples(newStart, newEnd);
+			console.log(brushStartFrame + ", " + brushEndFrame);
+			mocom.createMultiples(brushStartFrame, brushEndFrame);
+			updateScale();
 		};
+		
+		//MOUSE OVER HIGHLIGHTER
+		var xScaleFocus = d3.scale.linear()
+			.domain([brushStartFrame,brushEndFrame])
+		    .range([0, 289]);
+		var focusFrame = brushStartFrame;
+		//Get all multiples svgs
 		var multiples = d3.selectAll(".smallMultiple");
+		//Draw a responsive overlay
+		var activeArea = multiples.append("svg")
+			.attr("class", "highlightWrapper");			
+		//Add a line to them
+		activeArea.append("line")
+			.attr("x1", 0)
+			.attr("y1", 64)
+			.attr("x2", 0)
+			.attr("y2", 64)
+			.attr("class", "highlightLine")
+			.attr("style", "display: none;");
+		//Add listeners
+		activeArea.on("mouseover", mouseover)
+			.on("mousemove", mousemove)
+			.on("mouseout", mouseout);
+		function mouseover(){
+			d3.selectAll(".highlightLine")	
+				.attr("style", "display: inline;");
+			focusFrame = Math.round(xScaleFocus.invert(d3.mouse(this)[0]));
+			console.log(focusFrame);
+		};
+		function mousemove(){
+			d3.selectAll(".highlightLine")		
+				.attr("x1", d3.mouse(this)[0])
+				.attr("y1", 0)
+				.attr("x2", d3.mouse(this)[0])
+				.attr("y2", 64)
+			focusFrame = Math.round(xScaleFocus.invert(d3.mouse(this)[0]));
+			console.log(focusFrame);
+		};
+		function mouseout(){
+			d3.selectAll(".highlightLine")
+				.attr("style", "display: none;");
+		};
+		function updateScale(){
+			xScaleFocus.domain([brushStartFrame,brushEndFrame]);
+		};
 	},
 
 	createOverview : function(){
@@ -360,9 +406,6 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 	},
 
 	createMultiples : function(startFrame, endFrame){											
-		// var startFrame = 0;
-		// var endFrame = mocom.takeAAngles[0].length-1;
-	
 		//Calculate the speed in each frame. Uses next frame to determine speed in a frame. Last frame is set to be identical to next to last frame
 		var speedDataA = [];
 		var speedDataB = [];
@@ -501,8 +544,8 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		var speedChartsP2 = multiplesP2.select("#speedCharts");
 		var accelerationChartsP1 = multiplesP1.select("#accelerationCharts");
 		var accelerationChartsP2 = multiplesP2.select("#accelerationCharts");
-		multiplesP1.selectAll("svg").remove();
-		multiplesP2.selectAll("svg").remove();		
+		multiplesP1.selectAll(".multipleSVG").remove();
+		multiplesP2.selectAll(".multipleSVG").remove();		
 		var anglesP1A = angleChartsP1.selectAll(".smallMultiple")
 										.data(mocom.takeAAngles.map(function(d){
 																		return d.filter(function(d,i){
@@ -787,12 +830,12 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 				var spine_axis = mocom.angleData.findAxis_spine(spineJoint, anchorJoint);		//Defines the axis of the new coordinate systems, these are unit vectors
 				var side_axis = mocom.angleData.findAxis_width(spineJoint, partJoint, spine_axis);
 				var depth_axis = mocom.angleData.findAxis_depth(spine_axis, side_axis);
-				jointNewPos[0][i] = [mocom.angleData.project([0,0,0], depth_axis), mocom.angleData.project([0,0,0], side_axis)];
-				jointNewPos[1][i] = [mocom.angleData.project(spineJoint, depth_axis), mocom.angleData.project(spineJoint, side_axis)];
-				jointNewPos[2][i] = [mocom.angleData.project(partJoint, depth_axis), mocom.angleData.project(partJoint, side_axis)];
-				jointNewPos[3][i] = [mocom.angleData.project(mocom.angleData.getDirection(anchorJoint, jointPositions[3][i]), depth_axis), mocom.angleData.project(mocom.angleData.getDirection(anchorJoint, jointPositions[3][i]), side_axis)];
-				jointNewPos[4][i] = [mocom.angleData.project(mocom.angleData.getDirection(anchorJoint, jointPositions[4][i]), depth_axis), mocom.angleData.project(mocom.angleData.getDirection(anchorJoint, jointPositions[4][i]), side_axis)];
-				jointNewPos[5][i] = [mocom.angleData.project(mocom.angleData.getDirection(anchorJoint, jointPositions[5][i]), depth_axis), mocom.angleData.project(mocom.angleData.getDirection(anchorJoint, jointPositions[5][i]), side_axis)];
+				jointNewPos[0][i] = [mocom.angleData.project(jointPositions[0][i], depth_axis), mocom.angleData.project(jointPositions[0][i], side_axis)];
+				jointNewPos[1][i] = [mocom.angleData.project(jointPositions[1][i], depth_axis), mocom.angleData.project(jointPositions[1][i], side_axis)];
+				jointNewPos[2][i] = [mocom.angleData.project(jointPositions[2][i], depth_axis), mocom.angleData.project(jointPositions[2][i], side_axis)];
+				jointNewPos[3][i] = [mocom.angleData.project(jointPositions[3][i], depth_axis), mocom.angleData.project(jointPositions[3][i], side_axis)];
+				jointNewPos[4][i] = [mocom.angleData.project(jointPositions[4][i], depth_axis), mocom.angleData.project(jointPositions[4][i], side_axis)];
+				jointNewPos[5][i] = [mocom.angleData.project(jointPositions[5][i], depth_axis), mocom.angleData.project(jointPositions[5][i], side_axis)];
 				jointAngles[0][i] = mocom.angleData.vectorAngle(jointNewPos[2][i], jointNewPos[3][i], spine_axis, depth_axis, side_axis);		//Fills the array for each joint
 				jointAngles[1][i] = mocom.angleData.vectorAngle(jointNewPos[3][i], jointNewPos[4][i], spine_axis, depth_axis, side_axis);		//The return of vectorAngle function is an array with angles alpha and beta
 				jointAngles[2][i] = mocom.angleData.vectorAngle(jointNewPos[4][i], jointNewPos[5][i], spine_axis, depth_axis, side_axis);		//These angles define the position of limbs in the new coordinate system
@@ -860,9 +903,9 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 			var node2_front = node2[0];
 			var node2_side = node2[1];
 			var v = mocom.angleData.getDirection(node1_front, node2_front);							//Vector of limb in front perspective
-			var alpha = (Math.atan2(mocom.angleData.dotproduct(v, relativeAxis), mocom.angleData.dotproduct(v, viewAxis2))) * Math.PI;
+			var alpha = (Math.atan2(mocom.angleData.dotproduct(v, relativeAxis), mocom.angleData.dotproduct(v, viewAxis2))) * 2 * Math.PI;
 			v = mocom.angleData.getDirection(node1_side, node2_side);								//Changes the vector of limb to use second perspective
-			var beta = (Math.atan2(mocom.angleData.dotproduct(v, relativeAxis), mocom.angleData.dotproduct(v, viewAxis1))) * Math.PI;
+			var beta = (Math.atan2(mocom.angleData.dotproduct(v, relativeAxis), mocom.angleData.dotproduct(v, viewAxis1))) * 2 * Math.PI;
 			return { alpha, beta };
 		},
 		
