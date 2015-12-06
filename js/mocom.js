@@ -249,7 +249,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		//MOUSE OVER HIGHLIGHTER
 		var xScaleFocus = d3.scale.linear()
 			.domain([brushStartFrame,brushEndFrame])
-		    .range([0, 289]);
+		    .range([0, 290]);
 		var focusFrame = brushStartFrame;
 		//Get all multiples svgs
 		var multiples = d3.selectAll(".smallMultiple");
@@ -261,7 +261,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 			.attr("x1", 0)
 			.attr("y1", 0)
 			.attr("x2", 0)
-			.attr("y2", 64)
+			.attr("y2", 60)
 			.attr("class", "highlightLine")
 			.attr("style", "display: none;");
 		//Add listeners
@@ -272,18 +272,16 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 			d3.selectAll(".highlightLine")	
 				.attr("style", "display: inline;");
 			focusFrame = Math.round(xScaleFocus.invert(d3.mouse(this)[0]));
-			mocom.createInstView(focusFrame);
 			console.log(focusFrame);
+			mocom.createInstView(focusFrame);
 		};
 		function mousemove(){
 			d3.selectAll(".highlightLine")		
 				.attr("x1", d3.mouse(this)[0])
-				.attr("y1", 0)
 				.attr("x2", d3.mouse(this)[0])
-				.attr("y2", 64)
 			focusFrame = Math.round(xScaleFocus.invert(d3.mouse(this)[0]));
-			mocom.createInstView(focusFrame);
 			console.log(focusFrame);
+			mocom.createInstView(focusFrame);
 		};
 		function mouseout(){
 			d3.selectAll(".highlightLine")
@@ -306,7 +304,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 			}
 		}
 		//NNED TO ADD FUNCTION TO CHECK WHICH TAKE OVER WHICH TO DETERMINE COLOR
-		var color = ["#bfd0ff", "#ddff33", "#14dba4"];
+		var color = d3.scale.category20c();
 				
 		//Find the x-scale based on number of frames
 		var xScale = d3.scale.linear()
@@ -392,7 +390,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 												return area(d);
 												})
 									.style("fill", function (d, i) {
-												return color[i];
+												return color(i);
 												});
 		overviewP2.selectAll(".stream")
 							.data(streams2)
@@ -403,7 +401,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 												return area(d);
 												})
 									.style("fill", function (d, i) {
-													return color[i];
+													return color(i);
 													});
 	},
 
@@ -509,15 +507,18 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 								.scale(yScaleAngle)
 								.orient("right")
 								.ticks(0)
-								.tickValues(yScaleAngle.domain());
+								.tickValues(yScaleAngle.domain())
+								.outerTickSize(3);
 		var yAxisSpeed = d3.svg.axis()
 								.scale(yScaleSpeed)
 								.orient("right")
 								.ticks(0)
+								.outerTickSize(3);
 		var yAxisAcc = d3.svg.axis()
 								.scale(yScaleAcc)
 								.orient("right")
 								.ticks(0)
+								.outerTickSize(3);
 								
 		var lineAngleP1 = d3.svg.line()
 							.x(function(d, i) { return xScale(i); })
@@ -632,12 +633,12 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 					.attr("transform", "translate(0," + yScaleAngle(0) + ")")
 					.call(xAxis);
 		anglesP1A.append("path")
-					.attr("class", "line")
+					.attr("class", "lineA")
 					.attr("d", function (d) {
 								return lineAngleP1(d);
 								});
 		anglesP1B.append("path")
-					.attr("class", "line")
+					.attr("class", "lineB")
 					.attr("d", function (d) {
 								return lineAngleP1(d);
 								});	
@@ -649,12 +650,12 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 					.attr("transform", "translate(0," + yScaleAngle(0) + ")")
 					.call(xAxis);
 		anglesP2A.append("path")
-					.attr("class", "line")
+					.attr("class", "lineA")
 					.attr("d", function (d) {
 								return lineAngleP2(d);
 								});
 		anglesP2B.append("path")
-					.attr("class", "line")
+					.attr("class", "lineB")
 					.attr("d", function (d) {
 								return lineAngleP2(d);
 								});
@@ -666,12 +667,12 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 					.attr("transform", "translate(0," + yScaleSpeed(0) + ")")
 					.call(xAxis);
 		speedsP1A.append("path")
-					.attr("class", "line")
+					.attr("class", "lineA")
 					.attr("d", function (d) {
 								return lineSpeedP1(d);
 								});
 		speedsP1B.append("path")
-					.attr("class", "line")
+					.attr("class", "lineB")
 					.attr("d", function (d) {
 								return lineSpeedP1(d);
 								});	
@@ -683,12 +684,12 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 					.attr("transform", "translate(0," + yScaleSpeed(0) + ")")
 					.call(xAxis);
 		speedsP2A.append("path")
-					.attr("class", "line")
+					.attr("class", "lineA")
 					.attr("d", function (d) {
 								return lineSpeedP2(d);
 								});
 		speedsP2B.append("path")
-					.attr("class", "line")
+					.attr("class", "lineB")
 					.attr("d", function (d) {
 								return lineSpeedP2(d);
 								});
@@ -700,12 +701,12 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 					.attr("transform", "translate(0," + yScaleAcc(0) + ")")
 					.call(xAxis);
 		accsP1A.append("path")
-					.attr("class", "line")
+					.attr("class", "lineA")
 					.attr("d", function (d) {
 								return lineAccP1(d);
 								});
 		accsP1B.append("path")
-					.attr("class", "line")
+					.attr("class", "lineB")
 					.attr("d", function (d) {
 								return lineAccP1(d);
 								});	
@@ -717,12 +718,12 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 					.attr("transform", "translate(0," + yScaleAcc(0) + ")")
 					.call(xAxis);
 		accsP2A.append("path")
-					.attr("class", "line")
+					.attr("class", "lineA")
 					.attr("d", function (d) {
 								return lineAccP2(d);
 								});
 		accsP2B.append("path")
-					.attr("class", "line")
+					.attr("class", "lineB")
 					.attr("d", function (d) {
 								return lineAccP2(d);
 								});							

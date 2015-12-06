@@ -71,8 +71,7 @@
 	position: absolute;
 	top: 0px;
 	left: 0px;
-	border-bottom: 1px solid;
-	border: 1px solid #ccc;
+	/*border: 1px solid #ccc;*/
 }
 #visMultiplesP2 {
 	width: 945px;
@@ -80,7 +79,7 @@
 	position: absolute;
 	top: 240px;
 	left: 0px;
-	border: 1px solid #ccc;
+	/*border: 1px solid #ccc;*/
 }
 #visCont .closewindow{
 	position: relative;
@@ -91,8 +90,6 @@
 	cursor: pointer;
 }
 .multiplesColumn {
-	width: 300px;
-	height: 235px;
 	position: absolute;
 	top: 0px;
 }
@@ -113,10 +110,10 @@
 	left: 0px;
 }
 #speedCharts{
-	left: 300px;
+	left: 320px;
 }
 #accelerationCharts{
-	left: 600px;
+	left: 640px;
 }
 #visOverview {
 	width: 1200px;
@@ -178,17 +175,22 @@
 	display: none;
 }
 .stream{
-	stroke: black;
-	stroke-width: 0.5px;
-}
-.line{
-	fill: none;
-	stroke: black;
+	stroke: rgba(255,255,255,0.3);
 	stroke-width: 1px;
+}
+.lineA, .lineB{
+	fill: none;
+	stroke-width:2px;
+}
+.lineA{
+	stroke: rgba(255, 168, 38, 0.77);
+}
+.lineB{
+	stroke: rgba(3, 181, 234, 0.77)
 }
 .multipleSVG{
 	width: 300px;
-	height: 78px;
+	height: 60px;
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -201,30 +203,35 @@
 }
 .multipleAxisY text {
 	font-family: sans-serif;
+	stroke: none;
+	fill: #333	;
     font-size: 11px;
 }
 .multipleAxisX path {
 	fill: none;
-	stroke: black;
+	stroke: #333;
 	stroke-width: 0.5px;
 }
 .multipleAxisX text {
 	display: none;
+	stroke: none;
+	fill: #333;
 }
 .highlightWrapper {	
 	position: absolute;
-	top: 6px;
+	top: 5px;
 	left: 5px;
 	width: 290px;
-	height: 64px;
+	height: 50px;
 	fill: none;
 	z-index: 100;
 }
 .highlightLine {
+	height: 100%;
 	fill: none;
-	stroke: red;
-	stroke-width: 2px;
-	stroke-opacity: .25;
+	stroke: grey;
+	stroke-width: 1px;
+	stroke-opacity: .75;
 }
 
 .brusherWrap{
