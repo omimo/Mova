@@ -208,7 +208,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 
 		// create the dragable brusher
 		var width = 1086;
-		var height = 180;
+		var height = 140;
 		var xScale = d3.scale.linear()
 			.domain([0,frameCount-1])
 		    .range([0, width]);
@@ -438,7 +438,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		//Find the x-scale based on number of frames
 		var xScale = d3.scale.linear()
 								.domain([0, endFrame-startFrame])
-								.range([5, 295]);
+								.range([5, 295]); // width
 		var xAxis = d3.svg.axis()
 							.scale(xScale)
 							.outerTickSize(0)
@@ -495,13 +495,13 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 			}
 		var yScaleAngle = d3.scale.linear()
 								.domain([Math.ceil(yMaxAngle), Math.floor(yMinAngle)]) 
-								.range([6, 70]);		
+								.range([5, 56]);
 		var yScaleSpeed = d3.scale.linear()
 								.domain([Math.ceil(yMaxSpeed), Math.floor(yMinSpeed)]) 
-								.range([6, 70]);
+								.range([5, 56]);
 		var yScaleAcc = d3.scale.linear()
 								.domain([Math.ceil(yMaxAcc), Math.floor(yMinAcc)]) 
-								.range([6, 70]);
+								.range([5, 56]);
 		
 			
 		//Create y-axis

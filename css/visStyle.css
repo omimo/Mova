@@ -1,101 +1,91 @@
 #visCont {
 	width: 98%;
-	height: inherit;
+	height: 98%;
 	border: 1px solid;
 	position: absolute;
-	left: 10px;
-	top: 0px;
+	left: 1%;
+	top: 1%;
 	overflow: scroll;
 	background-color: white;
 	z-index: 20;
 	display: none;
 }
-#visDetailedView {
-	width: 1200px;
-	height: 620px;
-	position: absolute;
-	top: 1px;
-	left: 0px;
+
+#visCont p{
+	display: none;
 }
-#visInstFrame {
-	width: 100%;
-	height: 150px;
+
+#visDetailedView {
+	position: absolute;
+	top: 50px;
+	left: 15px;
+}
+#visInstFrame {	
 	position: absolute;
 	top: 0px;
 	left: 0px;
 }
 #visInstFrameP1 {
-	width: 250px;
-	height: 150px;
 	position: absolute;
 	top: 0px;
-	left: 300px;
-}
-#visInstFrameP2 {
-	width: 250px;
-	height: 150px;
-	position: absolute;
-	top: 0px;
-	left: 600px;
-}
-.visInstFrameA {
-	width: 48px;
-	height: 72px;
-	position: absolute;
-	top: 0px;
-	left: 100px;
-	border: 1px dotted;
-}
-.visInstFrameB {
-	width: 48px;
-	height: 72px;
-	position: absolute;
-	top: 75px;
-	left: 100px;
-	border: 1px dotted;
-}
-.visInstFrameDiff {
-	width: 98px;
-	height: 147px;
-	position: absolute;
-	top: 0px;
-	left: 151px;
-	border: 1px dotted;
-}
-.jointsLegend {
-	width: 145px;
-	height: 230px;
-	position: absolute;
-	top: 2px;
-	left: 2px;
-	border: 1px dotted;
-}
-#visMultiples {
-	width: 1200px;
-	height: 470px;
-	position: absolute;
-	top: 150px;
 	left: 0px;
 }
+#visInstFrameP2 {
+	position: absolute;
+	top: 240px;
+	left: 0px;
+}
+.visInstFrameA {
+	width: 80px;
+	height: 100px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	border: 1px solid #ccc;
+}
+.visInstFrameB {
+	width: 80px;
+	height: 100px;
+	position: absolute;
+	top: 110px;
+	left: 0px;
+	border: 1px solid #ccc;
+}
+.visInstFrameDiff {
+	width: 160px;
+	height: 210px;
+	position: absolute;
+	top: 0px;
+	left: 90px;
+	border: 1px solid #ccc;
+}
+#visMultiples {
+	position: absolute;
+	top: 0px;
+	left: 260px;
+}
 #visMultiplesP1 {
-	width: 1200px;
-	height: 235px;
+	width: 945px;
+	/* height was 235*/
+	height: 210px; 
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	border-bottom: 1px solid;
+	border: 1px solid #ccc;
 }
 #visMultiplesP2 {
-	width: 1200px;
-	height: 235px;
+	width: 945px;
+	height: 210px;
 	position: absolute;
-	top: 235px;
+	top: 240px;
 	left: 0px;
+	border: 1px solid #ccc;
 }
 #visCont .closewindow{
 	position: relative;
-	width: 40px;
-	height: 40px;
+	width: 30px;
+	height: 30px;
 	top: 10px;
 	left: 10px;
 	cursor: pointer;
@@ -106,28 +96,34 @@
 	position: absolute;
 	top: 0px;
 }
-.smallMultiple {
+.multiplesColumn .smallMultiple {
 	width: 300px;
-	height: 78px;
+	height: 60px;
 	position: absolute;
 	top: 0px;
 	left: 0px;
 }
+.multiplesColumn .smallMultiple:nth-child(2n){
+	top: 74px;
+}
+.multiplesColumn .smallMultiple:nth-child(3n){
+	top: 148px;
+}
 #angleCharts{
-	left: 150px;
+	left: 0px;
 }
 #speedCharts{
-	left: 450px;
+	left: 300px;
 }
 #accelerationCharts{
-	left: 750px;
+	left: 600px;
 }
 #visOverview {
 	width: 1200px;
 	height: 180px;
 	position: absolute;
-	top: 621px;
-	left: 0px;
+	top: 530px;
+	left: 15px;
 }
 #visOverviewP1 {
 	width: 1200px;
@@ -140,23 +136,27 @@
 	width: 1200px;
 	height: 90px;
 	position: absolute;
-	top: 90px;
+	top: 70px;
 	left: 0px;
 }
 .visOverviewFrame {
-	width: 45px;
-	height: 65px;
+	width: 40px;
+	height: 50px;
 	position: absolute;
-	top: 20px;
-	left: 2px;
-	border: 1px dotted;
+	top: 10px;
+	left: 0px;
+	border: 1px solid #ccc;
+}
+.visOverviewFrame:last-child {
+	left: 1165px;
 }
 .visOverviewChart {
 	width: 1100px;
 	height: 70px;
 	position: absolute;
-	top: 15px;
-	left: 48px;
+	top: 0px;
+	left: 55px;
+	background: #eee;
 }
 .loaderWrap{
 	position: absolute;
