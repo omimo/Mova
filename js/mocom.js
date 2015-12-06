@@ -841,12 +841,15 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 				var anchorJoint = mocom.angleData.getDirection(jointPositions[0][i], jointPositions[0][i]);					//Anchor joint for new coordinate system
 				var spineJoint = mocom.angleData.getDirection(jointPositions[0][i], jointPositions[1][i]);			//Translates the other coordinate joints according to anchorJoint
 				var partJoint = mocom.angleData.getDirection(jointPositions[0][i], jointPositions[2][i]);
-				var spine_axis = mocom.angleData.findAxis_spine(spineJoint, anchorJoint);		//Defines the axis of the new coordinate systems, these are unit vectors
-				var side_axis = mocom.angleData.findAxis_width(anchorJoint, partJoint, spine_axis);
+				var spine_axis = mocom.angleData.findAxis_spine(spineJoint);		//Defines the axis of the new coordinate systems, these are unit vectors
+				var side_axis = mocom.angleData.findAxis_width(partJoint, spine_axis);
+				console.log(mocom.angleData.dotproduct(spine_axis,side_axis));
 				var depth_axis = mocom.angleData.findAxis_depth(spine_axis, side_axis);
 				jointNewPos[0][i] = [anchorJoint, anchorJoint];
 				jointNewPos[1][i] = [mocom.angleData.project(spineJoint, depth_axis), mocom.angleData.project(spineJoint, side_axis)];
 				jointNewPos[2][i] = [mocom.angleData.project(partJoint, depth_axis), mocom.angleData.project(partJoint, side_axis)];
+			//	jointNewPos[1][i] = [spineJoint, spineJoint];
+			//	jointNewPos[2][i] = [partJoint, partJoint];
 				jointNewPos[3][i] = [mocom.angleData.project(mocom.angleData.getDirection(jointPositions[0][i],jointPositions[3][i]), depth_axis), mocom.angleData.project(mocom.angleData.getDirection(jointPositions[0][i], jointPositions[3][i]), side_axis)];
 				jointNewPos[4][i] = [mocom.angleData.project(mocom.angleData.getDirection(jointPositions[0][i],jointPositions[4][i]), depth_axis), mocom.angleData.project(mocom.angleData.getDirection(jointPositions[0][i],jointPositions[4][i]), side_axis)];
 				jointNewPos[5][i] = [mocom.angleData.project(mocom.angleData.getDirection(jointPositions[0][i],jointPositions[5][i]), depth_axis), mocom.angleData.project(mocom.angleData.getDirection(jointPositions[0][i],jointPositions[5][i]), side_axis)];
@@ -871,19 +874,18 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		},
 
 		findAxis_spine : function(spineJoint, anchorJoint) {
-			var spine_vector = mocom.angleData.getDirection(anchorJoint, spineJoint);
-			var spine_axis = mocom.angleData.normalize(spine_vector);				//Normalizing the vector by dividing the components by its length
+			var spine_axis = mocom.angleData.normalize(spineJoint);				//Normalizing the vector by dividing the components by its length
 			return spine_axis;
 		},
 		
 	/* Function findAxis_width : Returns a unit vector in the direction parallel to shoulder or hip line.
 	Input joints are spine and the joint connecting the extremity to the core of the skeleton. */
-		findAxis_width : function(anchorJoint, partJoint, spine_axis) {
-			var scalar = mocom.angleData.dotproduct(mocom.angleData.getDirection(anchorJoint, partJoint), spine_axis);		//Finds the point on the spine where a perpendicular line can be drawn to the part joint
+		findAxis_width : function(partJoint, spine_axis) {
+			var scalar = mocom.angleData.dotproduct(partJoint, spine_axis);		//Finds the point on the spine where a perpendicular line can be drawn to the part joint
 			var refPoint = [
-				anchorJoint[0] + spine_axis[0]*scalar,
-				anchorJoint[1] + spine_axis[1]*scalar,
-				anchorJoint[2] + spine_axis[2]*scalar
+				spine_axis[0]*scalar,
+				spine_axis[1]*scalar,
+				spine_axis[2]*scalar
 			];
 			var side_vector = mocom.angleData.getDirection(refPoint, partJoint);				//Direction between spine and part joint
 			var side_axis = mocom.angleData.normalize(side_vector);
