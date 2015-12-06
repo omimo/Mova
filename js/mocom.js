@@ -745,17 +745,6 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 				else return false;
 			});
 		});
-
-		// * TakeAPosition[
-		// * 	jointArray1[{x:0, y:0, z:0},{},{},...],     "Root" joint (center shoulder or center hip
-		// * 	jointArray2[{x:0, y:0, z:0},{},{},...],		Spine joint
-		// * 	jointArray3[{x:0, y:0, z:0},{},{},...],		"Connecting" joint/body part joint 1 (joint that connects body part to core, right/left shoulder or hip
-		// * 	jointArray4[{x:0, y:0, z:0},{},{},...],		Body part joint 2 (elbow or knee)
-		// * 	jointArray5[{x:0, y:0, z:0},{},{},...],		Body part joint 3 (wrist or ankle)
-		// * 	jointArray6[{x:0, y:0, z:0},{},{},...]		Body part joint 4 (hand or foot)
-		// var currentFrameA = takeAPosition;
-		// var currentFrameB = takeBPosition;
-
 		/**
 		takeAPos and takeBPos format:
 		takeAPos = [
@@ -770,19 +759,16 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		// map out the perspectives of A and B
 		var currentFrameP1A = currentFrameA.map(function(d,i) {
 			return {
-				x : d[0][0][0]+20,
+				x : -1*d[0][0][0]+20,
 				y : -1*(d[0][0][1])+20,
 				z : d[0][0][2]
 			};
 		});
 		var currentFrameP1B = currentFrameB.map(function(d) {
 			return {
-				x : d[0][0][0]+20,
+				x : -1*d[0][0][0]+20,
 				y : -1*(d[0][0][1])+20,
 				z : d[0][0][2]
-				// x : d.x + 20,
-				// y : -1 * d.y + 70,
-				// z : d.z
 			};
 		});
 		var currentFrameP2A = currentFrameA.map(function(d) {
@@ -797,9 +783,6 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 				x : d[0][1][0]+20,
 				y : -1*d[0][1][1]+20,
 				z : d[0][1][2]
-				// x : 1 * d.z + 170,
-				// y : -1 * d.y + 70,
-				// z : d.x +20
 			};
 		});
 
@@ -855,15 +838,15 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 			jointNewPos[4] = [];
 			jointNewPos[5] = [];
 			for (var i = 0; i < jointPositions[0].length; i++){	//Loops through all the frames as given by the length of one of the joint arrays in the input array
-				var anchorJoint = [0,0,0];					//Anchor joint for new coordinate system
+				var anchorJoint = mocom.angleData.getDirection(jointPositions[0][i], jointPositions[0][i]);					//Anchor joint for new coordinate system
 				var spineJoint = mocom.angleData.getDirection(jointPositions[0][i], jointPositions[1][i]);			//Translates the other coordinate joints according to anchorJoint
 				var partJoint = mocom.angleData.getDirection(jointPositions[0][i], jointPositions[2][i]);
 				var spine_axis = mocom.angleData.findAxis_spine(spineJoint, anchorJoint);		//Defines the axis of the new coordinate systems, these are unit vectors
-				var side_axis = mocom.angleData.findAxis_width(partJoint, spine_axis);
+				var side_axis = mocom.angleData.findAxis_width(anchorJoint, partJoint, spine_axis);
 				var depth_axis = mocom.angleData.findAxis_depth(spine_axis, side_axis);
 				jointNewPos[0][i] = [anchorJoint, anchorJoint];
-				jointNewPos[1][i] = [[0, mocom.angleData.project(spineJoint, depth_axis)[1],0] , [0,mocom.angleData.project(spineJoint, side_axis)[1],0]];
-				jointNewPos[2][i] = [[mocom.angleData.project(partJoint, depth_axis)[0],0,0], [0,0,0]];
+				jointNewPos[1][i] = [mocom.angleData.project(spineJoint, depth_axis), mocom.angleData.project(spineJoint, side_axis)];
+				jointNewPos[2][i] = [mocom.angleData.project(partJoint, depth_axis), mocom.angleData.project(partJoint, side_axis)];
 				jointNewPos[3][i] = [mocom.angleData.project(mocom.angleData.getDirection(jointPositions[0][i],jointPositions[3][i]), depth_axis), mocom.angleData.project(mocom.angleData.getDirection(jointPositions[0][i], jointPositions[3][i]), side_axis)];
 				jointNewPos[4][i] = [mocom.angleData.project(mocom.angleData.getDirection(jointPositions[0][i],jointPositions[4][i]), depth_axis), mocom.angleData.project(mocom.angleData.getDirection(jointPositions[0][i],jointPositions[4][i]), side_axis)];
 				jointNewPos[5][i] = [mocom.angleData.project(mocom.angleData.getDirection(jointPositions[0][i],jointPositions[5][i]), depth_axis), mocom.angleData.project(mocom.angleData.getDirection(jointPositions[0][i],jointPositions[5][i]), side_axis)];
@@ -888,18 +871,19 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		},
 
 		findAxis_spine : function(spineJoint, anchorJoint) {
-			var spine_axis = mocom.angleData.normalize(spineJoint);				//Normalizing the vector by dividing the components by its length
+			var spine_vector = mocom.angleData.getDirection(anchorJoint, spineJoint);
+			var spine_axis = mocom.angleData.normalize(spine_vector);				//Normalizing the vector by dividing the components by its length
 			return spine_axis;
 		},
 		
 	/* Function findAxis_width : Returns a unit vector in the direction parallel to shoulder or hip line.
 	Input joints are spine and the joint connecting the extremity to the core of the skeleton. */
-		findAxis_width : function(partJoint, spine_axis) {
-			var scalar = mocom.angleData.dotproduct(partJoint, spine_axis);		//Finds the point on the spine where a perpendicular line can be drawn to the part joint
+		findAxis_width : function(anchorJoint, partJoint, spine_axis) {
+			var scalar = mocom.angleData.dotproduct(mocom.angleData.getDirection(anchorJoint, partJoint), spine_axis);		//Finds the point on the spine where a perpendicular line can be drawn to the part joint
 			var refPoint = [
-				spine_axis[0]*scalar,
-				spine_axis[1]*scalar,
-				spine_axis[2]*scalar
+				anchorJoint[0] + spine_axis[0]*scalar,
+				anchorJoint[1] + spine_axis[1]*scalar,
+				anchorJoint[2] + spine_axis[2]*scalar
 			];
 			var side_vector = mocom.angleData.getDirection(refPoint, partJoint);				//Direction between spine and part joint
 			var side_axis = mocom.angleData.normalize(side_vector);
@@ -931,9 +915,9 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 			var node2_front = node2[0];
 			var node2_side = node2[1];
 			var v = mocom.angleData.getDirection(node1_front, node2_front);							//Vector of limb in front perspective
-			var alpha = (Math.atan2(mocom.angleData.dotproduct(v, relativeAxis), mocom.angleData.dotproduct(v, viewAxis2))) * 2 * Math.PI;
+			var alpha = (Math.atan2(mocom.angleData.dotproduct(v, relativeAxis), mocom.angleData.dotproduct(v, viewAxis1))) * 2 * Math.PI;
 			v = mocom.angleData.getDirection(node1_side, node2_side);								//Changes the vector of limb to use second perspective
-			var beta = (Math.atan2(mocom.angleData.dotproduct(v, relativeAxis), mocom.angleData.dotproduct(v, viewAxis1))) * 2 * Math.PI;
+			var beta = (Math.atan2(mocom.angleData.dotproduct(v, relativeAxis), mocom.angleData.dotproduct(v, viewAxis2))) * 2 * Math.PI;
 			return { alpha, beta };
 		},
 		
