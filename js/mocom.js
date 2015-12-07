@@ -283,7 +283,6 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 				.attr("x1", d3.mouse(this)[0])
 				.attr("x2", d3.mouse(this)[0])
 			focusFrame = Math.round(xScaleFocus.invert(d3.mouse(this)[0]));
-			console.log(focusFrame);
 			mocom.createInstView(focusFrame);
 		};
 		function mouseout(){
@@ -449,16 +448,16 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		});
 		var firstFrameP2DiffA = firstFrameA.map(function(d) {
 			return {
-				x : (-1*d[0][1][0])*1 + 20,
+				x : (d[0][1][2])*1 + 20,
 				y : (-1*(d[0][1][1]))*1 + 15,
-				z : d[0][1][2]
+				z : d[0][1][0]
 			};
 		});
 		var firstFrameP2DiffB = firstFrameB.map(function(d) {
 			return {
-				x : (-1*d[0][1][0])*1 + 20,
+				x : (d[0][1][2])*1 + 20,
 				y : (-1*(d[0][1][1]))*1 + 15,
-				z : d[0][1][2]
+				z : d[0][1][0]
 			};
 		});
 		var lastFrameP1DiffA = lastFrameA.map(function(d,i) {
@@ -477,16 +476,16 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		});
 		var lastFrameP2DiffA = lastFrameA.map(function(d) {
 			return {
-				x : (-1*d[0][1][0]) * 1 + 20,
+				x : (d[0][1][2]) * 1 + 20,
 				y : (-1*(d[0][1][1])) * 1 + 15,
-				z : d[0][1][2]
+				z : d[0][1][0]
 			};
 		});
 		var lastFrameP2DiffB = lastFrameB.map(function(d) {
 			return {
-				x : (-1*d[0][1][0]) * 1 + 20,
+				x : (d[0][1][2]) * 1 + 20,
 				y : (-1*(d[0][1][1])) * 1 + 15,
-				z : d[0][1][2]
+				z : d[0][1][0]
 			};
 		});
 
@@ -864,28 +863,28 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		var currentFrameP1A = currentFrameA.map(function(d,i) {
 			return {
 				x : -2*d[0][0][0]+40,
-				y : -2*(d[0][0][1])+20,
+				y : -2*(d[0][0][1])+10,
 				z : d[0][0][2]
 			};
 		});
 		var currentFrameP1B = currentFrameB.map(function(d) {
 			return {
 				x : -2*d[0][0][0]+40,
-				y : -2*(d[0][0][1])+20,
+				y : -2*(d[0][0][1])+10,
 				z : d[0][0][2]
 			};
 		});
 		var currentFrameP2A = currentFrameA.map(function(d) {
 			return {
 				x : 2*d[0][1][2]+40,
-				y : -2*d[0][1][1]+20,
+				y : -2*d[0][1][1]+10,
 				z : d[0][1][0]
 			};
 		});
 		var currentFrameP2B = currentFrameB.map(function(d) {
 			return {
 				x : 2*d[0][1][2]+40,
-				y : -2*d[0][1][1]+20,
+				y : -2*d[0][1][1]+10,
 				z : d[0][1][0]
 			};
 		});
@@ -907,16 +906,16 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		});
 		var currentFrameP2DiffA = currentFrameA.map(function(d) {
 			return {
-				x : (-1*d[0][1][0]) * 4 + 80,
+				x : (d[0][1][2]) * 4 + 80,
 				y : (-1*d[0][1][1]) * 4 + 50,
-				z : d[0][1][2]
+				z : d[0][1][0]
 			};
 		});
 		var currentFrameP2DiffB = currentFrameB.map(function(d) {
 			return {
-				x : (-1*d[0][1][0]) * 4 + 80,
+				x : (d[0][1][2]) * 4 + 80,
 				y : (-1*d[0][1][1]) * 4 + 50,
-				z : d[0][1][2]
+				z : d[0][1][0]
 			};
 		});
 
