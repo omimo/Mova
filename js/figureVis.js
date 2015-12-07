@@ -53,18 +53,17 @@ drawFiguresCanvas: function (parent,track, highlightJ, frameSkip, pad) {
 				return rootOffset; //we need this to align the figures with features
 	},
 
-// Omid: create a function like this and modify
-// we may have to create a conectivityMatrix by our own or do filter
-drawSkelPartial: function (svg, currentFrame, index, highlightJ, mocap, neededJoints) {
+// currentFrame: [joint{x,y,z}, joint{x,y,x}, ...]
+// connectivity: [[jointIndex, jointIndex],[jointIndex, jointIndex], ...]
+// classname: for styling (color)
+drawSkelPartial: function (svg, currentFrame, index, highlightJ, mocap, conectivity, classname) {
 	//bones
 	svg.selectAll("line.f" + index)
-	.data(
-		[[0, 1], [1, 2], [0, 2], [2, 3], [3, 4], [4, 5]]	
-	)
+	.data(conectivity)
 	.enter()
 	.append("line")
-	.attr("stroke", "grey")
-	.attr("stroke-width",1)
+	.classed("bone", true)
+	.classed(classname, true)
 	.attr("x1",0).attr("x2",0)
 	//.transition().duration(1000).ease("elastic")
 	.attr("x1", function(d, j) {
@@ -88,22 +87,22 @@ drawSkelPartial: function (svg, currentFrame, index, highlightJ, mocap, neededJo
 	.attr("class", function(d,i) {
 		return "figJoint figJointId"+i;
 	})
+	.classed("joint", true)
+	.classed(classname, true)
+	.classed("highlighted", (i == highlightJ))
 	.attr("cx", function(d) {
 		return d.x;
-	}).attr("cy", function(d) {
+	})
+	.attr("cy", function(d) {
 		return d.y;
-	}).attr("r", function(d, i) {
+	})
+	.attr("r", function(d, i) {
 		if (i == highlightJ)
 			return 2;
 		else if (i == movan.skelHeadJoint )
 			return 4;
 		else
 			return 2;
-	}).attr("fill", function(d, i) {
-		if (i == highlightJ)
-			return '#555555';
-		else
-			return '#555555';
 	});
 
 
