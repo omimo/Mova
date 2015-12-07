@@ -408,6 +408,105 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 													return color(i);
 													});
 
+		// get first/last frame data
+		var firstFrameA = mocom.takeAPos.map(function(d){
+			return d.filter(function(d,i){
+				if(i==0) return true;
+				else return false;
+			});
+		});
+		var firstFrameB = mocom.takeBPos.map(function(d){
+			return d.filter(function(d,i){
+				if(i==0) return true;
+				else return false;
+			});
+		});
+		var lastFrameA = mocom.takeAPos.map(function(d){
+			return d.filter(function(d,i){
+				if(i==dataP1[0].length-1) return true;
+				else return false;
+			});
+		});
+		var lastFrameB = mocom.takeBPos.map(function(d){
+			return d.filter(function(d,i){
+				if(i==dataP1[0].length-1) return true;
+				else return false;
+			});
+		});
+		// get frame data for display
+		var firstFrameP1DiffA = firstFrameA.map(function(d,i) {
+			return {
+				x : (-1*d[0][0][0])*1 + 20,
+				y : (-1*(d[0][0][1]))*1 + 15,
+				z : d[0][0][2]
+			};
+		});
+		var firstFrameP1DiffB = firstFrameB.map(function(d) {
+			return {
+				x : (-1*d[0][0][0])*1 + 20,
+				y : (-1*(d[0][0][1]))*1 + 15,
+				z : d[0][0][2]
+			};
+		});
+		var firstFrameP2DiffA = firstFrameA.map(function(d) {
+			return {
+				x : (-1*d[0][1][0])*1 + 20,
+				y : (-1*(d[0][1][1]))*1 + 15,
+				z : d[0][1][2]
+			};
+		});
+		var firstFrameP2DiffB = firstFrameB.map(function(d) {
+			return {
+				x : (-1*d[0][1][0])*1 + 20,
+				y : (-1*(d[0][1][1]))*1 + 15,
+				z : d[0][1][2]
+			};
+		});
+		var lastFrameP1DiffA = lastFrameA.map(function(d,i) {
+			return {
+				x : (-1*d[0][0][0]) * 1 + 20,
+				y : (-1*(d[0][0][1])) * 1 + 15,
+				z : d[0][0][2]
+			};
+		});
+		var lastFrameP1DiffB = lastFrameB.map(function(d) {
+			return {
+				x : (-1*d[0][0][0]) * 1 + 20,
+				y : (-1*(d[0][0][1])) * 1 + 15,
+				z : d[0][0][2]
+			};
+		});
+		var lastFrameP2DiffA = lastFrameA.map(function(d) {
+			return {
+				x : (-1*d[0][1][0]) * 1 + 20,
+				y : (-1*(d[0][1][1])) * 1 + 15,
+				z : d[0][1][2]
+			};
+		});
+		var lastFrameP2DiffB = lastFrameB.map(function(d) {
+			return {
+				x : (-1*d[0][1][0]) * 1 + 20,
+				y : (-1*(d[0][1][1])) * 1 + 15,
+				z : d[0][1][2]
+			};
+		});
+
+		// get container to put skeleton
+		var firstFrameP1Diff = d3.select("#visOverviewP1 .visOverviewFrame:first-child").append("svg").attr("height",50);
+		var lastFrameP1Diff = d3.select("#visOverviewP1 .visOverviewFrame:last-child").append("svg").attr("height",50);
+		var firstFrameP2Diff = d3.select("#visOverviewP2 .visOverviewFrame:first-child").append("svg").attr("height",50);
+		var lastFrameP2Diff = d3.select("#visOverviewP2 .visOverviewFrame:last-child").append("svg").attr("height",50);
+
+		// draw the skeletons
+		var bodypartConnectivity = [[0, 1], [1, 2], [0, 2], [2, 3], [3, 4], [4, 5]];
+		figureSketch.drawSkelPartial(firstFrameP1Diff, firstFrameP1DiffA, 0, 0, movan.dataTracks[0].content, bodypartConnectivity, "A");
+		figureSketch.drawSkelPartial(firstFrameP1Diff, firstFrameP1DiffB, 0, 0, movan.dataTracks[1].content, bodypartConnectivity, "B");
+		figureSketch.drawSkelPartial(lastFrameP1Diff, lastFrameP1DiffA, 0, 0, movan.dataTracks[0].content, bodypartConnectivity, "A");
+		figureSketch.drawSkelPartial(lastFrameP1Diff, lastFrameP1DiffB, 0, 0, movan.dataTracks[1].content, bodypartConnectivity, "B");
+		figureSketch.drawSkelPartial(firstFrameP2Diff, firstFrameP2DiffA, 0, 0, movan.dataTracks[0].content, bodypartConnectivity, "A");
+		figureSketch.drawSkelPartial(firstFrameP2Diff, firstFrameP2DiffB, 0, 0, movan.dataTracks[1].content, bodypartConnectivity, "B");
+		figureSketch.drawSkelPartial(lastFrameP2Diff, lastFrameP2DiffA, 0, 0, movan.dataTracks[0].content, bodypartConnectivity, "A");
+		figureSketch.drawSkelPartial(lastFrameP2Diff, lastFrameP2DiffB, 0, 0, movan.dataTracks[1].content, bodypartConnectivity, "B");
 	},
 
 	createMultiples : function(startFrame, endFrame){											

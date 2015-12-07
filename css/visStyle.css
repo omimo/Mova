@@ -147,6 +147,11 @@
 .visOverviewFrame:last-child {
 	left: 1165px;
 }
+.visOverviewFrame svg{
+	position: absolute;
+	left: 0;
+	top: 0;
+}
 .visOverviewChart {
 	width: 1100px;
 	height: 70px;
@@ -265,3 +270,5 @@
 .joint.B{
 	fill: rgba(0, 177, 230, 0.8);
 }
+.bone.shared{}
+.joing.shared{}
