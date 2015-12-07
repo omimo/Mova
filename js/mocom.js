@@ -864,29 +864,29 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		// single views
 		var currentFrameP1A = currentFrameA.map(function(d,i) {
 			return {
-				x : -1*d[0][0][0]+30,
-				y : -1*(d[0][0][1])+20,
+				x : (-1*d[0][0][0]) * 2 + 40,
+				y : (-1*d[0][0][1]) * 2 + 20,
 				z : d[0][0][2]
 			};
 		});
 		var currentFrameP1B = currentFrameB.map(function(d) {
 			return {
-				x : -1*d[0][0][0]+30,
-				y : -1*(d[0][0][1])+20,
+				x : (-1*d[0][0][0]) * 2 + 40,
+				y : (-1*d[0][0][1]) * 2 + 20,
 				z : d[0][0][2]
 			};
 		});
 		var currentFrameP2A = currentFrameA.map(function(d) {
 			return {
-				x : d[0][1][0]+30,
-				y : -1*d[0][1][1]+20,
+				x : (d[0][1][0]) * 2 + 40,
+				y : (-1*d[0][1][1]) * 2 + 20,
 				z : d[0][1][2]
 			};
 		});
 		var currentFrameP2B = currentFrameB.map(function(d) {
 			return {
-				x : d[0][1][0]+30,
-				y : -1*d[0][1][1]+20,
+				x : (d[0][1][0]) * 2 + 40,
+				y : (-1*d[0][1][1]) * 2 + 20,
 				z : d[0][1][2]
 			};
 		});
@@ -895,28 +895,28 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		var currentFrameP1DiffA = currentFrameA.map(function(d,i) {
 			return {
 				x : (-1*d[0][0][0]) * 4 + 80,
-				y : (-1*(d[0][0][1])) * 4 + 50,
+				y : (-1*d[0][0][1]) * 4 + 50,
 				z : d[0][0][2]
 			};
 		});
 		var currentFrameP1DiffB = currentFrameB.map(function(d) {
 			return {
 				x : (-1*d[0][0][0]) * 4 + 80,
-				y : (-1*(d[0][0][1])) * 4 + 50,
+				y : (-1*d[0][0][1]) * 4 + 50,
 				z : d[0][0][2]
 			};
 		});
 		var currentFrameP2DiffA = currentFrameA.map(function(d) {
 			return {
 				x : (-1*d[0][1][0]) * 4 + 80,
-				y : (-1*(d[0][1][1])) * 4 + 50,
+				y : (-1*d[0][1][1]) * 4 + 50,
 				z : d[0][1][2]
 			};
 		});
 		var currentFrameP2DiffB = currentFrameB.map(function(d) {
 			return {
 				x : (-1*d[0][1][0]) * 4 + 80,
-				y : (-1*(d[0][1][1])) * 4 + 50,
+				y : (-1*d[0][1][1]) * 4 + 50,
 				z : d[0][1][2]
 			};
 		});
