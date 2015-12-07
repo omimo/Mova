@@ -183,10 +183,10 @@
 	stroke-width:2px;
 }
 .lineA{
-	stroke: rgba(255, 168, 38, 0.77);
+	stroke: rgba(255, 168, 38, 0.7);
 }
 .lineB{
-	stroke: rgba(3, 181, 234, 0.77)
+	stroke: rgba(3, 181, 234, 0.7)
 }
 .multipleSVG{
 	width: 300px;
@@ -245,4 +245,23 @@
 .brusher .extent{
 	fill-opacity: .125;
 	shape-rendering: crispEdges;
+}
+.bone{
+	stroke-width: 1px;
+	stroke: grey;
+}
+.joint{
+	fill: #555;
+}
+.bone.A{	
+	stroke: rgba(255, 168, 38, 0.7);
+}
+.bone.B{
+	stroke: rgba(3, 181, 234, 0.7)
+}
+.joint.A{
+	fill: rgba(255, 153, 1, 0.7);
+}
+.joint.B{
+	fill: rgba(0, 177, 230, 0.8);
 }

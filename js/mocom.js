@@ -407,6 +407,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 									.style("fill", function (d, i) {
 													return color(i);
 													});
+
 	},
 
 	createMultiples : function(startFrame, endFrame){											
@@ -833,17 +834,37 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		var visInstFrameP2Diff = d3.select("#visInstFrameP2 .visInstFrameDiff").append("svg").attr("height",200);
 		
 		// match the data to svg - draw em all
-		//drawSkelPartial(svg, currentFrameA, index, highlightJ, mocap, jointfilter)
+		//drawSkelPartial(svg, currentFrameA, index, highlightJ, mocap, bodypartConnectivity, classname)
+		// currentFrame: [joint{x,y,z}, joint{x,y,x}, ...]
+		// connectivity: [[jointIndex, jointIndex],[jointIndex, jointIndex], ...]
+		// classname: for styling (color)
+		var bodypartConnectivity = [[0, 1], [1, 2], [0, 2], [2, 3], [3, 4], [4, 5]];
+		var filterCoodP1A = currentFrameP1DiffA.filter( function(d,i){return (i===0||i===1||i===2)} );
+		var filterCoodP1B = currentFrameP1DiffB.filter( function(d,i){return (i===0||i===1||i===2)} );
+		var filterCoodP2A = currentFrameP2DiffA.filter( function(d,i){return (i===0||i===1||i===2)} );
+		var filterCoodP2B = currentFrameP2DiffB.filter( function(d,i){return (i===0||i===1||i===2)} );
+		var filterLimbP1A = currentFrameP1DiffA.filter( function(d,i){return (i===2||i===3||i===4||i===5)} );
+		var filterLimbP1B = currentFrameP1DiffB.filter( function(d,i){return (i===2||i===3||i===4||i===5)} );
+		var filterLimbP2A = currentFrameP2DiffA.filter( function(d,i){return (i===2||i===3||i===4||i===5)} );
+		var filterLimbP2B = currentFrameP2DiffB.filter( function(d,i){return (i===2||i===3||i===4||i===5)} );
+		var coordpartConnectivity = [[0, 1], [1, 2], [2, 0]];
+		var limbConnectivity = [[0, 1], [1, 2], [2, 3]];
 		// single views
-		figureSketch.drawSkelPartial(visInstFrameP1A, currentFrameP1A, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
-		figureSketch.drawSkelPartial(visInstFrameP1B, currentFrameP1B, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
-		figureSketch.drawSkelPartial(visInstFrameP2A, currentFrameP2A, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
-		figureSketch.drawSkelPartial(visInstFrameP2B, currentFrameP2B, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
+		figureSketch.drawSkelPartial(visInstFrameP1A, currentFrameP1A, 0, 0, movan.dataTracks[0].content, bodypartConnectivity, "A");
+		figureSketch.drawSkelPartial(visInstFrameP1B, currentFrameP1B, 0, 0, movan.dataTracks[0].content, bodypartConnectivity, "B");
+		figureSketch.drawSkelPartial(visInstFrameP2A, currentFrameP2A, 0, 0, movan.dataTracks[0].content, bodypartConnectivity, "A");
+		figureSketch.drawSkelPartial(visInstFrameP2B, currentFrameP2B, 0, 0, movan.dataTracks[0].content, bodypartConnectivity, "B");
 		// diff views
-		figureSketch.drawSkelPartial(visInstFrameP1Diff, currentFrameP1DiffA, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
-		figureSketch.drawSkelPartial(visInstFrameP1Diff, currentFrameP1DiffB, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
-		figureSketch.drawSkelPartial(visInstFrameP2Diff, currentFrameP2DiffA, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
-		figureSketch.drawSkelPartial(visInstFrameP2Diff, currentFrameP2DiffB, 0, 0, movan.dataTracks[0].content, mocom.neededJoint);
+		// coord
+		figureSketch.drawSkelPartial(visInstFrameP1Diff, filterCoodP1A, 0, 0, movan.dataTracks[0].content, coordpartConnectivity, "shared");
+		figureSketch.drawSkelPartial(visInstFrameP1Diff, filterCoodP1B, 0, 0, movan.dataTracks[0].content, coordpartConnectivity, "shared");
+		figureSketch.drawSkelPartial(visInstFrameP2Diff, filterCoodP2A, 0, 0, movan.dataTracks[0].content, coordpartConnectivity, "shared");
+		figureSketch.drawSkelPartial(visInstFrameP2Diff, filterCoodP2B, 0, 0, movan.dataTracks[0].content, coordpartConnectivity, "shared");
+		// limb
+		figureSketch.drawSkelPartial(visInstFrameP1Diff, filterLimbP1A, 0, 0, movan.dataTracks[0].content, limbConnectivity, "A");
+		figureSketch.drawSkelPartial(visInstFrameP1Diff, filterLimbP1B, 0, 0, movan.dataTracks[0].content, limbConnectivity, "B");
+		figureSketch.drawSkelPartial(visInstFrameP2Diff, filterLimbP2A, 0, 0, movan.dataTracks[0].content, limbConnectivity, "A");
+		figureSketch.drawSkelPartial(visInstFrameP2Diff, filterLimbP2B, 0, 0, movan.dataTracks[0].content, limbConnectivity, "B");
 	},
 
 	angleData : {
