@@ -89,7 +89,7 @@ drawSkelPartial: function (svg, currentFrame, index, highlightJ, mocap, conectiv
 	})
 	.classed("joint", true)
 	.classed(classname, true)
-	.classed("highlighted", (i == highlightJ))
+	.classed("highlighted", function(d,i){if(i == highlightJ) return true})
 	.attr("cx", function(d) {
 		return d.x;
 	})
@@ -104,8 +104,6 @@ drawSkelPartial: function (svg, currentFrame, index, highlightJ, mocap, conectiv
 		else
 			return 2;
 	});
-
-
 },
 
 drawSkel: function (svg, currentFrame, index, highlightJ, mocap) {

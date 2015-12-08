@@ -231,33 +231,26 @@
 		</div>
 
 		<div id="visCont">
+			<div id="visLabels">
+				<div class="visLabel" id="visLabelInstframe">Instant Frames</div>
+				<div class="visLabel" id="visLabelAngle">Angle</div>
+				<div class="visLabel" id="visLabelAspeed">Angular Speed</div>
+				<div class="visLabel" id="visLabelAaccel">Angular Acceleration</div>
+				<div class="visLabel" id="visLabelBackview">Back View</div>
+				<div class="visLabel" id="visLabelSideview">Side View</div>
+				<div class="visLabel" id="visLabelOverview"> Difference Overview: Overall angular difference of perspectives</div>
+			</div>
 			<div id="visDetailedView">
 				<div id="visInstFrame">
 					<div id="visInstFrameP1">
-						<p>Instant frames</p>
-						<p>Front view</p>
-						<div class="visInstFrameA">
-							Take A
-						</div>
-						<div class="visInstFrameB">
-							Take B
-						</div>
-						<div class="visInstFrameDiff">
-							Diff
-						</div>
+						<div class="visInstFrameA"><span>A</span></div>
+						<div class="visInstFrameB"><span>B</span></div>
+						<div class="visInstFrameDiff"></div>
 					</div>
 					<div id="visInstFrameP2">
-						<p>Instant frames</p>
-						<p>Side view</p>
-						<div class="visInstFrameA">
-							Take A
-						</div>
-						<div class="visInstFrameB">
-							Take B
-						</div>
-						<div class="visInstFrameDiff">
-							Diff
-						</div>
+						<div class="visInstFrameA"><span>A</span></div>
+						<div class="visInstFrameB"><span>B</span></div>
+						<div class="visInstFrameDiff"></div>
 					</div>
 				</div>
 				<div id="visMultiples">
@@ -443,7 +436,6 @@
 						<option data-bodypart="1">Right Arm</option>
 						<option data-bodypart="2">Left Leg</option>
 						<option data-bodypart="3">Right Leg</option>
-						<option data-bodypart="4">Center</option>
 					</select>
 
 					<button onclick="mocom.prepareMocom()" type="button"class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Compare</span></button>
