@@ -92,6 +92,15 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		var duration = document.getElementById("duration").value/1000;
 		var bodypart = parseInt($("#bodypart").find(":selected").attr("data-bodypart"));
 
+		// fill in visTitleWrapper
+		$("#visTitleFileA").find("em").text(urlA);
+		$("#visTitleFileB").find("em").text(urlB);
+		$("#visTitleFileA").find("span").eq(0).text(starttimeA);
+		$("#visTitleFileB").find("span").eq(0).text(starttimeB);
+		$("#visTitleFileA").find("span").eq(1).text(starttimeA + duration*1000);
+		$("#visTitleFileB").find("span").eq(1).text(starttimeB + duration*1000);
+		$("#visTitleBodypart").find("span").text($("#bodypart").find(":selected").text());
+
 		var takeAPosition = [];
 		var takeBPosition = [];
 		switch( parseInt($("#bodypart").find(":selected").attr("data-bodypart")) ){
@@ -311,7 +320,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 			}
 		}
 		//NNED TO ADD FUNCTION TO CHECK WHICH TAKE OVER WHICH TO DETERMINE COLOR
-		var color = d3.scale.category20c();
+		var color = ["#31a354", "#74c476", "#a1d99b"];
 				
 		//Find the x-scale based on number of frames
 		var xScale = d3.scale.linear()
@@ -397,7 +406,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 												return area(d);
 												})
 									.style("fill", function (d, i) {
-												return color(i);
+												return color[i];
 												});
 		overviewP2.selectAll(".stream")
 							.data(streams2)
@@ -408,7 +417,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 												return area(d);
 												})
 									.style("fill", function (d, i) {
-													return color(i);
+													return color[i];
 													});
 
 		// get first/last frame data

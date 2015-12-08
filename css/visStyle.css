@@ -11,6 +11,49 @@
 	display: none;
 }
 
+/* vis title wrapper */
+#visTitleWrapper{
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+#visTitleWrapper h1{
+	padding-left: 15px;
+}
+
+/* vis content wrapper */
+#visContentWrapper{
+	width: 10px;
+	height: 1px;
+	position: absolute;
+	top: 70px;
+	left: 0;
+}
+
+#visInfo{
+	width: 600px;
+	position: absolute;
+	left: 400px;
+	top: 0;
+}
+#visTitleBodypart{
+	position: absolute;
+	top: 10px;
+	left: 0px;
+}
+#visTitleFileA{
+	position: absolute;
+	top: 25px;
+	left: 0px;
+}
+#visTitleFileB{
+	position: absolute;
+	top: 40px;
+	left: 0px;
+}
+
+/* vis label */
 #visLabels{
 	position: absolute;
 	top: 0;
@@ -18,7 +61,6 @@
 	width: 100%;
 	height: 100%;
 }
-
 .visLabel{
 	color: #999;
 	background: #eee;
@@ -26,16 +68,13 @@
 	position: absolute;
 	padding: 1px 0;
 }
-
 #visLabelInstframe, #visLabelAngle, #visLabelAspeed, #visLabelAaccel{
-	top: 268px;
-}
-	
+	top: 218px;
+}	
 #visLabelInstframe{
     width: 252px;
     left: 45px;
 }
-
 #visLabelAngle, #visLabelAspeed, #visLabelAaccel{
     width: 300px;
 }
@@ -48,7 +87,6 @@
 #visLabelAaccel{
 	left: 948px;
 }
-
 #visLabelBackview, #visLabelSideview{
 	background: grey;
 	color: #fff;
@@ -59,23 +97,24 @@
     transform: rotate(270deg);
 }
 #visLabelBackview{
-    top: 147px;
+    top: 97px;
 }
 #visLabelSideview{
-    top: 388px;
+    top: 338px;
 }
-
 #visLabelOverview{
 	width: 1240px;
 	background: none;
-	color: #333;
-	top: 675px;
-	left: 15px;
+	color: #999;
+	top: 625px;
+	left: 25px;
 }
 
+/* detailed view */
+/* instFrame */
 #visDetailedView {
 	position: absolute;
-	top: 50px;
+	top: 0px;
 	left: 45px;
 }
 #visInstFrame {	
@@ -120,6 +159,35 @@
 	left: 90px;
 	border: 1px solid #ccc;
 }
+.visInstFrameDiff .bone{
+	stroke-width: 2px;
+}
+.visInstFrameDiff .joint{
+	r: 5px;
+}
+.joint{
+	fill: #555;
+}
+.bone.A{	
+	stroke: rgba(255, 168, 38, 0.7);
+}
+.bone.B{
+	stroke: rgba(3, 181, 234, 0.7)
+}
+.joint.A{
+	fill: rgba(255, 153, 1, 0.7);
+}
+.joint.B{
+	fill: rgba(0, 177, 230, 0.8);
+}
+.joint.highlighted{
+	stroke: black;
+	stroke-width: 2px;
+}
+.bone.shared{}
+.joing.shared{}
+
+/* multiples */
 #visMultiples {
 	position: absolute;
 	top: 0px;
@@ -141,14 +209,6 @@
 	top: 240px;
 	left: 0px;
 	/*border: 1px solid #ccc;*/
-}
-#visCont .closewindow{
-	position: relative;
-	width: 30px;
-	height: 30px;
-	top: 10px;
-	left: 10px;
-	cursor: pointer;
 }
 .multiplesColumn {
 	position: absolute;
@@ -175,70 +235,6 @@
 }
 #accelerationCharts{
 	left: 640px;
-}
-#visOverview {
-	width: 1200px;
-	height: 180px;
-	position: absolute;
-	top: 530px;
-	left: 15px;
-}
-#visOverviewP1 {
-	position: absolute;
-	top: 0px;
-	left: 0px;
-}
-#visOverviewP2 {
-	position: absolute;
-	top: 70px;
-	left: 0px;
-}
-.visOverviewFrame {
-	width: 40px;
-	height: 50px;
-	position: absolute;
-	top: 10px;
-	left: 0px;
-	/*border: 1px solid #ccc;*/
-}
-.visOverviewFrame:last-child {
-	left: 1165px;
-}
-.visOverviewFrame svg{
-	position: absolute;
-	left: 0;
-	top: 0;
-}
-.visOverviewChart {
-	width: 1100px;
-	height: 70px;
-	position: absolute;
-	top: 0px;
-	left: 55px;
-	background: #eee;
-}
-.loaderWrap{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: #fff;
-}
-.loader {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	width: 150px;
-	height: 150px;
-}
-.overviewAxis {
-	display: none;
-}
-.stream{
-	stroke: rgba(255,255,255,0.3);
-	stroke-width: 1px;
 }
 .lineA, .lineB{
 	fill: none;
@@ -296,22 +292,6 @@
 	stroke-opacity: .75;
 }
 
-.brusherWrap{
-	position: absolute;
-	left: 60px;
-}
-
-.brusher{
-}
-
-.brusher .extent{
-	fill-opacity: .125;
-	shape-rendering: crispEdges;
-}
-.bone{
-	stroke-width: 1px;
-	stroke: grey;
-}
 .visInstFrameDiff .bone{
 	stroke-width: 2px;
 }
@@ -337,5 +317,102 @@
 	stroke: black;
 	stroke-width: 2px;
 }
+.bone{
+	stroke-width: 1px;
+	stroke: grey;
+}
 .bone.shared{}
 .joing.shared{}
+
+/* vis overview */
+/* brusher */
+.brusherWrap{
+	position: absolute;
+	left: 60px;
+}
+
+.brusher{
+}
+
+.brusher .extent{
+	fill-opacity: .125;
+	shape-rendering: crispEdges;
+}
+/* overview streamgraph */
+#visOverview {
+	width: 1200px;
+	height: 180px;
+	position: absolute;
+	top: 480px;
+	left: 25px;
+}
+#visOverviewP1 {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+#visOverviewP2 {
+	position: absolute;
+	top: 70px;
+	left: 0px;
+}
+.visOverviewFrame {
+	width: 40px;
+	height: 50px;
+	position: absolute;
+	top: 10px;
+	left: 0px;
+	overflow: hidden;
+	/*border: 1px solid #ccc;*/
+}
+.visOverviewFrame:last-child {
+	left: 1165px;
+}
+.visOverviewFrame svg{
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+.visOverviewChart {
+	width: 1100px;
+	height: 70px;
+	position: absolute;
+	top: 0px;
+	left: 55px;
+	background: #eee;
+}
+.overviewAxis {
+	display: none;
+}
+.stream{
+	stroke: rgba(255,255,255,0.3);
+	stroke-width: 1px;
+}
+
+/* gui components */
+
+.loaderWrap{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #fff;
+}
+.loader {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 150px;
+	height: 150px;
+}
+
+#visCont .closewindow{
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+}

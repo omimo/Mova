@@ -231,81 +231,91 @@
 		</div>
 
 		<div id="visCont">
-			<div id="visLabels">
-				<div class="visLabel" id="visLabelInstframe">Instant Frames</div>
-				<div class="visLabel" id="visLabelAngle">Angle</div>
-				<div class="visLabel" id="visLabelAspeed">Angular Speed</div>
-				<div class="visLabel" id="visLabelAaccel">Angular Acceleration</div>
-				<div class="visLabel" id="visLabelBackview">Back View</div>
-				<div class="visLabel" id="visLabelSideview">Side View</div>
-				<div class="visLabel" id="visLabelOverview"> Difference Overview: Overall angular difference of perspectives</div>
-			</div>
-			<div id="visDetailedView">
-				<div id="visInstFrame">
-					<div id="visInstFrameP1">
-						<div class="visInstFrameA"><span>A</span></div>
-						<div class="visInstFrameB"><span>B</span></div>
-						<div class="visInstFrameDiff"></div>
-					</div>
-					<div id="visInstFrameP2">
-						<div class="visInstFrameA"><span>A</span></div>
-						<div class="visInstFrameB"><span>B</span></div>
-						<div class="visInstFrameDiff"></div>
-					</div>
-				</div>
-				<div id="visMultiples">
-					<div id="visMultiplesP1">
-						<div class="multiplesColumn" id="angleCharts">
-							<div class="smallMultiple"></div>
-							<div class="smallMultiple"></div>
-							<div class="smallMultiple"></div>
-						</div>
-						<div class="multiplesColumn" id="speedCharts">
-							<div class="smallMultiple"></div>
-							<div class="smallMultiple"></div>
-							<div class="smallMultiple"></div>
-						</div>
-						<div class="multiplesColumn" id="accelerationCharts">
-							<div class="smallMultiple"></div>
-							<div class="smallMultiple"></div>
-							<div class="smallMultiple"></div>
-						</div>
-					</div>
-					<div id="visMultiplesP2">
-						<div class="multiplesColumn" id="angleCharts">
-							<div class="smallMultiple"></div>
-							<div class="smallMultiple"></div>
-							<div class="smallMultiple"></div>
-						</div>
-						<div class="multiplesColumn" id="speedCharts">
-							<div class="smallMultiple"></div>
-							<div class="smallMultiple"></div>
-							<div class="smallMultiple"></div>
-						</div>
-						<div class="multiplesColumn" id="accelerationCharts">
-							<div class="smallMultiple"></div>
-							<div class="smallMultiple"></div>
-							<div class="smallMultiple"></div>
-						</div>
-					</div>
+			<div id="visTitleWrapper">
+				<h1>Mocom: Movement Comparison</h1>
+				<div id="visInfo">
+					<div id="visTitleBodypart">Bodypart: <span></span></div>
+					<div id="visTitleFileA">A: "<em></em>", from <span></span> ms to <span></span> ms</div>
+					<div id="visTitleFileB">B: "<em></em>", from <span></span> ms to <span></span> ms</div>
 				</div>
 			</div>
-			<div id="visOverview">
-				<div id="visOverviewP1">
-					<div class="visOverviewFrame"></div>
-					<div class="visOverviewChart" id="visOverviewChartP1"></div>
-					<div class="visOverviewFrame"></div>
+			<div id="visContentWrapper">
+				<div id="visLabels">
+					<div class="visLabel" id="visLabelInstframe">Instant Frames</div>
+					<div class="visLabel" id="visLabelAngle">Angle</div>
+					<div class="visLabel" id="visLabelAspeed">Angular Speed</div>
+					<div class="visLabel" id="visLabelAaccel">Angular Acceleration</div>
+					<div class="visLabel" id="visLabelBackview">Back View</div>
+					<div class="visLabel" id="visLabelSideview">Side View</div>
+					<div class="visLabel" id="visLabelOverview"> Difference Overview: Overall angular difference of perspectives</div>
 				</div>
-				<div id="visOverviewP2">
-					<div class="visOverviewFrame"></div>
-					<div class="visOverviewChart" id="visOverviewChartP2"></div>
-					<div class="visOverviewFrame"></div>
+				<div id="visDetailedView">
+					<div id="visInstFrame">
+						<div id="visInstFrameP1">
+							<div class="visInstFrameA"><span>A</span></div>
+							<div class="visInstFrameB"><span>B</span></div>
+							<div class="visInstFrameDiff"></div>
+						</div>
+						<div id="visInstFrameP2">
+							<div class="visInstFrameA"><span>A</span></div>
+							<div class="visInstFrameB"><span>B</span></div>
+							<div class="visInstFrameDiff"></div>
+						</div>
+					</div>
+					<div id="visMultiples">
+						<div id="visMultiplesP1">
+							<div class="multiplesColumn" id="angleCharts">
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+							</div>
+							<div class="multiplesColumn" id="speedCharts">
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+							</div>
+							<div class="multiplesColumn" id="accelerationCharts">
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+							</div>
+						</div>
+						<div id="visMultiplesP2">
+							<div class="multiplesColumn" id="angleCharts">
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+							</div>
+							<div class="multiplesColumn" id="speedCharts">
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+							</div>
+							<div class="multiplesColumn" id="accelerationCharts">
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="visOverview">
+					<div id="visOverviewP1">
+						<div class="visOverviewFrame"></div>
+						<div class="visOverviewChart" id="visOverviewChartP1"></div>
+						<div class="visOverviewFrame"></div>
+					</div>
+					<div id="visOverviewP2">
+						<div class="visOverviewFrame"></div>
+						<div class="visOverviewChart" id="visOverviewChartP2"></div>
+						<div class="visOverviewFrame"></div>
+					</div>
 				</div>
 			</div>
 			<div class="loaderWrap" style="display:none"><img class="loader" src="../img/loader.gif"></div>
 			<img class="closewindow" src="../img/close.svg" onclick="mocom.closewindow()">
 		</div>
-	
+
 		<div id="sidebar">
 			<ul class="tooboxTitle">
 				<li class="toolboxTitleText">
