@@ -95,10 +95,10 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		// fill in visTitleWrapper
 		$("#visTitleFileA").find("em").text(urlA);
 		$("#visTitleFileB").find("em").text(urlB);
-		$("#visTitleFileA").find("span").eq(0).text(starttimeA);
-		$("#visTitleFileB").find("span").eq(0).text(starttimeB);
-		$("#visTitleFileA").find("span").eq(1).text(starttimeA + duration*1000);
-		$("#visTitleFileB").find("span").eq(1).text(starttimeB + duration*1000);
+		$("#visTitleFileA").find("span").eq(0).text(starttimeA * 1000);
+		$("#visTitleFileB").find("span").eq(0).text(starttimeB * 1000);
+		$("#visTitleFileA").find("span").eq(1).text(starttimeA * 1000 + duration*1000);
+		$("#visTitleFileB").find("span").eq(1).text(starttimeB * 1000 + duration*1000);
 		$("#visTitleBodypart").find("span").text($("#bodypart").find(":selected").text());
 
 		var takeAPosition = [];
