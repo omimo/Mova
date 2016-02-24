@@ -80,7 +80,7 @@ joint5[frame0[[x,y,z],[x,y,z]], frame1[[x,y,z],[x,y,z]]......]
 		// show loader
 		$("#visCont .loaderWrap").remove();
 		$("#visCont")
-		.append('<div class="loaderWrap"><img class="loader" src="../img/loader.gif"></div>')
+		.append('<div class="loaderWrap"><img class="loader" src="img/loader.gif"></div>')
 		.css("display", "block");
 		var takeLoadCnt = 0;
 
