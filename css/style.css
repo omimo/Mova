@@ -1,19 +1,19 @@
-body {
-	font-size: 80%;
-	overflow: hidden;
+    body {
+    font-size: 80%;
+    overflow: hidden;
 }
 
-.selected-hierarchy{
-	font-weight: bold;
-	font-size: 120%;
+.selected-hierarchy {
+    font-weight: bold;
+    font-size: 120%;
 }
 
-#divider-btn-open{
-	cursor: pointer;
+#divider-btn-open {
+    cursor: pointer;
 }
 
-.search-result{
-	background: yellow;
+.search-result {
+    background: yellow;
 }
 
 .video-js {
@@ -22,334 +22,493 @@ body {
     height: auto !important;
 }
 
+
 /*This rule removes the error div for incompatible videos to ensure that the tabs are still active */
-.vjs-error-display, .vjs-control-bar {
-	display: none !important;
+
+.vjs-error-display,
+.vjs-control-bar {
+    display: none !important;
 }
 
 div.bar {
-	display: inline-block;
-	width: 20px;
-	height: 75px; /* We'll override this later */
-	background-color: teal;
-	margin-right: 2px;
+    display: inline-block;
+    width: 20px;
+    height: 75px;
+    /* We'll override this later */
+    background-color: teal;
+    margin-right: 2px;
 }
 
 div.over2 {
-	position: absolute;
-	width: 20px;
-	height: 75px; /* We'll override this later */
-	background-color: teal;
-	margin-right: 2px;
-	opacity: 0.6;
-	filter: alpha(opacity=60);
+    position: absolute;
+    width: 20px;
+    height: 75px;
+    /* We'll override this later */
+    background-color: teal;
+    margin-right: 2px;
+    opacity: 0.6;
+    filter: alpha(opacity=60);
 }
 
 .featBox {
-	pointer-events: all;
+    pointer-events: all;
 }
 
 #canCont {
-	width: 99%;
-	overflow-x: hidden;
-	overflow-y: hidden;
-	border: 0px solid;
-	padding-left: 10px;
-	padding-right: 10px;
-	padding-bottom: 20px;
-	float: left;
-	height: 520px;
+    width: 99%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    border: 0px solid;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 20px;
+    float: left;
+    height: 520px;
 }
 
 #sidebar {
-	width: 250px;
-	border: 1px solid;
-	float: right;
-	position: absolute;
-	background-color: white;
-	top: 120px;
-	right: 300px;
-	padding: 0.05em;
+    width: 250px;
+    border: 1px solid;
+    float: right;
+    position: absolute;
+    background-color: white;
+    top: 120px;
+    right: 300px;
+    padding: 0.05em;
 }
 
 .sidetab {
-	margin-top: 5px;
-	padding: 1px;
-	padding-left: 15px !important;
-	overflow-x:hidden  !important;
+    margin-top: 5px;
+    padding: 1px;
+    padding-left: 15px !important;
+    overflow-x: hidden !important;
 }
 
 .sidetabtitle {
-	margin-bottom: 10px;
-	margin-top: 10px;
-	font-style: oblique;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    font-style: oblique;
 }
 
 #legends {
-	width: 260px;
-	text-align: center;
-	background-color: white;
-	padding: 7px;
-	float: right;
-	overflow-x:hidden;
-	overflow-y:auto;
-
-	border-bottom-color: rgb(170, 170, 170);
-	border-bottom-left-radius: 4px;
-	border-bottom-right-radius: 4px;
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
-	border-image-outset: 0px;
-	border-image-repeat: stretch;
-	border-image-slice: 100%;
-	border-image-source: none;
-	border-image-width: 1;
-	border-left-color: rgb(170, 170, 170);
-	border-left-style: solid;
-	border-left-width: 1px;
-	border-right-color: rgb(170, 170, 170);
-	border-right-style: solid;
-	border-right-width: 1px;
-	border-top-color: rgb(170, 170, 170);
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-	border-top-style: solid;
-	border-top-width: 1px;
+    display: none;
+    width: 260px;
+    width: 0px;
+    text-align: center;
+    background-color: white;
+    padding: 7px;
+    float: right;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-bottom-color: rgb(170, 170, 170);
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-image-outset: 0px;
+    border-image-repeat: stretch;
+    border-image-slice: 100%;
+    border-image-source: none;
+    border-image-width: 1;
+    border-left-color: rgb(170, 170, 170);
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-color: rgb(170, 170, 170);
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-color: rgb(170, 170, 170);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-top-style: solid;
+    border-top-width: 1px;
 }
 
 .legitem2 {
-	width: 100%;
-	position: relative;
-	height: 20px;
-	margin-bottom: 10px;
+    width: 100%;
+    position: relative;
+    height: 20px;
+    margin-bottom: 10px;
 }
 
 #figure {
-	overflow-x: scroll;
-	padding-left: 0px;
-	height: 200px;
+    overflow-x: scroll;
+    padding-left: 0px;
+    height: 200px;
 }
 
 #anim {
-	padding-left: 0px;
-	height: 200px;
+    padding-left: 0px;
+    height: 200px;
 }
 
 #featureList {
-	overflow-x: auto;
-	overflow-y: auto;
-	padding-bottom: 0px;
+    overflow-x: auto;
+    overflow-y: auto;
+    padding-bottom: 0px;
 }
 
 #lefttabs {
-	padding-bottom: 10px;
-	float: left;
+    padding-bottom: 10px;
+    float: left;
 }
 
 #righttabs {
-	padding-bottom: 10px;
-	float: left;
-	margin-left: 0px;
+    padding-bottom: 10px;
+    float: left;
+    margin-left: 0px;
 }
 
 #divider {
-	width: 8px;
-	cursor: pointer; cursor: hand;
-	background-color: #f6f6f6;
-	float: left;
-	padding-bottom: 10px;
+    width: 8px;
+    cursor: pointer;
+    cursor: hand;
+    background-color: #f6f6f6;
+    float: left;
+    padding-bottom: 10px;
 }
 
 #annotation-area {
-	padding-bottom: 10px;
-	padding-top: 10px;
-	float: left;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    float: left;
 }
 
-#svg-container-div{
-	overflow: scroll;
+#svg-container-div {
+    overflow: scroll;
 }
 
 #features {
-	overflow-x: hidden;
-	padding-bottom:0.5em;
+    overflow-x: hidden;
+    padding-bottom: 0.5em;
 }
 
 #mp4 {
-	float: left;
+    float: left;
 }
 
 .ui-accordion .ui-accordion-content {
-	padding: 1em 0.5em;
-	border-top: 0;
-	overflow: auto;
+    padding: 1em 0.5em;
+    border-top: 0;
+    overflow: auto;
 }
 
 #sideAcaccordion {
-	padding: 0px;
-	background: none;
+    padding: 0px;
+    background: none;
 }
 
 .tooboxTitle {
-	padding-left2: 1.2em !important;
-	cursor: pointer;
-	display2: inline-block;
-	float: none;
-	top: 0px;
-	margin: 0em;
-	background: transparent;
-	border-width: 0px 0px 1px 0px;
-	-moz-border-radius: 0px;
-	-webkit-border-radius: 0px;
-	border-radius: 0px;
+    padding-left2: 1.2em !important;
+    cursor: pointer;
+    display2: inline-block;
+    float: none;
+    top: 0px;
+    margin: 0em;
+    background: transparent;
+    border-width: 0px 0px 1px 0px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
 }
+
 .toolboxTitleText {
-	width: 100%;
-	height: 2.35em;
-	text-align: center;
-	background-color: blue;
-	cursor: move;
+    width: 100%;
+    height: 2.35em;
+    text-align: center;
+    background-color: blue;
+    cursor: move;
 }
 
 #sidebar .ui-tabs-nav {
-	background: transparent;
-	border-width: 0px 0px 1px 0px;
-	-moz-border-radius: 0px;
-	-webkit-border-radius: 0px;
-	border-radius: 0px;
+    background: transparent;
+    border-width: 0px 0px 1px 0px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
 }
+
 #sidebar .ui-tabs-panel {
-	margin: 0em 0.2em 0.2em 0.2em;
+    margin: 0em 0.2em 0.2em 0.2em;
 }
 
 .ui-tabs .ui-tabs-nav li a img {
-	float: left;
-	margin-right: 5px;
-	margin-top: 5px;
+    float: left;
+    margin-right: 5px;
+    margin-top: 5px;
 }
 
-
 .slider {
-	 background-color: #8e8d8d !important;
+    background-color: #8e8d8d !important;
 }
 
 .ui-slider-handle2 {
-        position: absolute;
-        z-index: 2;
-        width: 25px;
-        height: 25px;
-        cursor: pointer;
-        background2: url('../images/handle.png') no-repeat 50% 50%;
-        background-color: #8e8d8d !important;
-        background-image: none !important;
-        font-weight: bold;
-        color: #1C94C4;
-        outline: none;
-        top: -7px;
-        margin-left: -12px;
-    }
+    position: absolute;
+    z-index: 2;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    background2: url('../images/handle.png') no-repeat 50% 50%;
+    background-color: #8e8d8d !important;
+    background-image: none !important;
+    font-weight: bold;
+    color: #1C94C4;
+    outline: none;
+    top: -7px;
+    margin-left: -12px;
+}
 
 #jointChooser {
-	background-color: white;
-	border: 1px solid black;
-	padding-top:5px;
-	padding-bottom:5px;
-	box-shadow: 0px 0px 10px -6px
+    background-color: white;
+    border: 1px solid black;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    box-shadow: 0px 0px 10px -6px
 }
 
 #jointDropdown {
-height:30px;width: 200px;border: 1px solid rgb(221, 221, 221);
-background: none repeat scroll 0% 0% rgb(248, 248, 248);
-cursor: pointer;
-border-radius: 2px;
+    height: 30px;
+    width: 200px;
+    border: 1px solid rgb(221, 221, 221);
+    background: none repeat scroll 0% 0% rgb(248, 248, 248);
+    cursor: pointer;
+    border-radius: 2px;
 }
 
 #jointLabel {
-display: block;
-white-space: nowrap;
-overflow: hidden;
-margin: 0px 30px 0px 0px;
-padding: 6px;
-font-size: 12px;
-line-height: 1.5;
-color: rgb(68, 68, 68);
-float: left;
-
-/*padding-left:1em;margin-top:0.5em;font-size: 0.9em;float:left"*/
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 0px 30px 0px 0px;
+    padding: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: rgb(68, 68, 68);
+    float: left;
+    /*padding-left:1em;margin-top:0.5em;font-size: 0.9em;float:left"*/
 }
 
 #jointDropDownArrow {
-	position: relative;
-right: 10px;
-top: 0px;
-height: 30px;
-float:right;
-color: rgb(187, 187, 187);
-text-align: center;
-font: 18px/30px sans-serif}
-
-.ui-slider { height: 7px; background: #FFF; position: relative; border: 1px solid #DDD; box-shadow: inset 0 1px 3px 0 #EEE; -webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px; margin: 5px 0; }
-.ui-slider .ui-slider-handle { width: 14px; height: 14px; margin: -5px 0 0 -7px; box-shadow: 1px 1px 2px 0px #DDD; background: #FFF; border: 1px solid #CCC; display: block; -webkit-border-radius: 50%; -moz-border-radius: 50%; border-radius: 50%; cursor: default; position: absolute; z-index: 2; }
-.ui-slider-handle {top: -0.1em !important; cursor:pointer !important;}
-.ui-slider-horizontal {height:0.6em !important; cursor:pointer !important;}
-
-text.annotation-label{
-	font-size: 12px;
-	font-weight: bold;
+    position: relative;
+    right: 10px;
+    top: 0px;
+    height: 30px;
+    float: right;
+    color: rgb(187, 187, 187);
+    text-align: center;
+    font: 18px/30px sans-serif
 }
 
+.ui-slider {
+    height: 7px;
+    background: #FFF;
+    position: relative;
+    border: 1px solid #DDD;
+    box-shadow: inset 0 1px 3px 0 #EEE;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+.ui-slider .ui-slider-handle {
+    width: 14px;
+    height: 14px;
+    margin: -5px 0 0 -7px;
+    box-shadow: 1px 1px 2px 0px #DDD;
+    background: #FFF;
+    border: 1px solid #CCC;
+    display: block;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    cursor: default;
+    position: absolute;
+    z-index: 2;
+}
+
+.ui-slider-handle {
+    top: -0.1em !important;
+    cursor: pointer !important;
+}
+
+.ui-slider-horizontal {
+    height: 0.6em !important;
+    cursor: pointer !important;
+}
+
+text.annotation-label {
+    font-size: 12px;
+    font-weight: bold;
+}
 
 .removeFeatButton {
-	cursor:pointer !important;
-	position: absolute;
-	margin-top:5px;
+    cursor: pointer !important;
+    position: absolute;
+    margin-top: 5px;
 }
 
-
 .handle {
-	cursor: pointer; cursor: hand;
+    cursor: pointer;
+    cursor: hand;
 }
 
 #divider-btn-open {
-	display: none;
+    display: none;
 }
 
-.jqx-slider-right .jqx-icon-arrow-right, .jqx-slider-right .jqx-icon-arrow-right-selected, .jqx-slider-right .jqx-icon-arrow-right-hover {
-	background-image: url('../styles/images/my_minus.png');
+.jqx-slider-right .jqx-icon-arrow-right,
+.jqx-slider-right .jqx-icon-arrow-right-selected,
+.jqx-slider-right .jqx-icon-arrow-right-hover {
+    background-image: url('../styles/images/my_minus.png');
 }
 
-.jqx-slider-left .jqx-icon-arrow-left, .jqx-slider-left .jqx-icon-arrow-left-selected, .jqx-slider-left .jqx-icon-arrow-left-hover {
-	background-image: url('../styles/images/my_plus.png');
+.jqx-slider-left .jqx-icon-arrow-left,
+.jqx-slider-left .jqx-icon-arrow-left-selected,
+.jqx-slider-left .jqx-icon-arrow-left-hover {
+    background-image: url('../styles/images/my_plus.png');
 }
+
 
 /*video {
   width: 100%    !important;
   height: auto   !important;
 }*/
 
+
 /*======================================================================
 	Selectric
 ======================================================================*/
-.selectricWrapper { margin: 0 0 10px; width: 200px; cursor: pointer; z-index: 10}
-.selectricDisabled { filter: alpha(opacity=50); opacity: 0.5; cursor: default; -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-.selectricOpen { z-index: 9999; }
-.selectricHideSelect { position: relative; overflow: hidden; }
-.selectricHideSelect select { position: absolute; left: -100%; }
-.selectric { border: 1px solid #DDD; background: #F8F8F8; position: relative; border-radius: 2px; }
-.selectricOpen .selectric { border-color: #CCC; background: #F0F0F0; z-index: 9999; }
-.selectric .label { display: block; white-space: nowrap; overflow: hidden; margin: 0 30px 0 0; padding: 6px; font-size: 12px; line-height: 1.5; color: #444; }
-.selectric .button { position: absolute; right: 0; top: 0; height: 30px; width: 30px; color: #BBB; text-align: center; font: normal 18px/30px sans-serif; }
-.selectricHover .selectric { border-color: #CCC; }
-.selectricHover .selectric .button { color: #888; }
-.selectricTempShow { position: absolute !important; visibility: hidden !important; display: block !important; }
+
+.selectricWrapper {
+    margin: 0 0 10px;
+    width: 200px;
+    cursor: pointer;
+    z-index: 10
+}
+
+.selectricDisabled {
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+    cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.selectricOpen {
+    z-index: 9999;
+}
+
+.selectricHideSelect {
+    position: relative;
+    overflow: hidden;
+}
+
+.selectricHideSelect select {
+    position: absolute;
+    left: -100%;
+}
+
+.selectric {
+    border: 1px solid #DDD;
+    background: #F8F8F8;
+    position: relative;
+    border-radius: 2px;
+}
+
+.selectricOpen .selectric {
+    border-color: #CCC;
+    background: #F0F0F0;
+    z-index: 9999;
+}
+
+.selectric .label {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 0 30px 0 0;
+    padding: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #444;
+}
+
+.selectric .button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 30px;
+    width: 30px;
+    color: #BBB;
+    text-align: center;
+    font: normal 18px/30px sans-serif;
+}
+
+.selectricHover .selectric {
+    border-color: #CCC;
+}
+
+.selectricHover .selectric .button {
+    color: #888;
+}
+
+.selectricTempShow {
+    position: absolute !important;
+    visibility: hidden !important;
+    display: block !important;
+}
+
 
 /* Items box */
-.selectricItems ul,
-.selectricItems li { list-style: none; padding: 0; margin: 0; min-height: 20px; line-height: 20px; font-size: 12px; }
-.selectricItems { width:198px !important;display: none; position: absolute; overflow: auto; top: 100%; left: 0; background: #F9F9F9; border: 1px solid #CCC; z-index: 9998; box-shadow: 0 0 10px -6px; }
-.selectricOpen .selectricItems { display: inline; }
-.selectricItems li { padding: 5px; cursor: pointer; display: block; border-bottom: 1px solid #EEE; color: #666; border-top: 1px solid #FFF; }
-.selectricItems li.selected { background: #EFEFEF; color: #444; border-top-color: #E0E0E0; }
-.selectricItems li:hover { background: #F0F0F0; color: #444; }
 
-i { cursor: pointer
+.selectricItems ul,
+.selectricItems li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    min-height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+}
+
+.selectricItems {
+    width: 198px !important;
+    display: none;
+    position: absolute;
+    overflow: auto;
+    top: 100%;
+    left: 0;
+    background: #F9F9F9;
+    border: 1px solid #CCC;
+    z-index: 9998;
+    box-shadow: 0 0 10px -6px;
+}
+
+.selectricOpen .selectricItems {
+    display: inline;
+}
+
+.selectricItems li {
+    padding: 5px;
+    cursor: pointer;
+    display: block;
+    border-bottom: 1px solid #EEE;
+    color: #666;
+    border-top: 1px solid #FFF;
+}
+
+.selectricItems li.selected {
+    background: #EFEFEF;
+    color: #444;
+    border-top-color: #E0E0E0;
+}
+
+.selectricItems li:hover {
+    background: #F0F0F0;
+    color: #444;
+}
+
+i {
+    cursor: pointer

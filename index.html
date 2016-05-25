@@ -378,6 +378,145 @@
         //this is an array of all the resources
         remoteResourceMapByType = {};
 
+        // 
+
+        var GLs = [];
+        var characters = [];
+
+        function set_the_scene2(GL) {
+            lights = [];
+            lights[0] = new THREE.PointLight(0xffffff, 1, 0);
+            lights[1] = new THREE.PointLight(0xffffff, 1, 0);
+            lights[2] = new THREE.PointLight(0xffffff, 1, 0);
+            lights[0].position.set(0, 100, 0);
+            lights[1].position.set(100, 100, 100);
+            lights[2].position.set(-100, 100, -100);
+
+            GL.scene.add(lights[0]);
+			GL.scene.add(lights[1]);
+			GL.scene.add(lights[2]);
+
+
+
+            // Grid
+            var size = 4000,
+                step = 20;
+
+            var geometry = new THREE.PlaneGeometry(size * 2, size * 2);
+            var material = new THREE.MeshPhongMaterial({
+                color: 0x444444,
+                emissive: 0x000000,
+                specular: 0x111111,
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.9
+            });
+
+            var plane = new THREE.Mesh(geometry, material);
+            plane.position.set(0, 0, 0);
+            plane.rotation.set(math.pi / 2, 0, 0);
+            GL.scene.add(plane);
+
+            var geometry = new THREE.Geometry();
+            var material = new THREE.LineBasicMaterial({
+                color: 0x555555,
+                linewidth: 1.2
+            });
+            for (var i = -size; i <= size; i += step) {
+                geometry.vertices.push(new THREE.Vector3(-size, -0.04, i));
+                geometry.vertices.push(new THREE.Vector3(size, -0.04, i));
+                geometry.vertices.push(new THREE.Vector3(i, -0.04, -size));
+                geometry.vertices.push(new THREE.Vector3(i, -0.04, size));
+            }
+
+            var line = new THREE.LineSegments(geometry, material);
+            GL.scene.add(line);
+        }
+
+        function initWebGL(canvasID, ID) {
+            var GL = [];
+            GL.canvas = canvasID;
+            GL.id = ID;
+            console.log($('#' + canvasID).width());
+            GL.scene = new THREE.Scene();
+            GL.camera = new THREE.PerspectiveCamera(30, $('#webglcanvas1').width() / $('#webglcanvas1').height(), 1, 500);
+            GL.camera.position.set(0, 80, 0);
+            GL.camera.position.z = 300;
+            GL.scene.add(GL.camera);
+
+            set_the_scene2(GL);
+
+            GL.renderer = new THREE.WebGLRenderer({
+                antialias: true
+            });
+            GL.renderer.setSize($('#webglcanvas1').width(), $('#webglcanvas1').height());
+            GL.renderer.gammaInput = true;
+            GL.renderer.gammaOutput = true;
+            GL.renderer.setPixelRatio(window.devicePixelRatio);
+            GL.renderer.setClearColor(0xdddddd, 1);
+
+            console.log(GL.renderer.size);
+            document.getElementById(canvasID).appendChild(GL.renderer.domElement);
+
+            GL.camera.aspect = $('#webglcanvas1').width() / $('#webglcanvas1').height();
+            GL.camera.updateProjectionMatrix();
+
+            GL.renderer.setSize($('#webglcanvas1').width(), $('#webglcanvas1').height());
+
+            GL.controls = new THREE.OrbitControls(GL.camera, GL.renderer.domElement);
+
+            GLs.push(GL);
+            return GL;
+        }
+
+        function loadWebGL(asset_url) {
+            var tabId = asset_url.substring(asset_url.lastIndexOf("/") + 1, asset_url.lastIndexOf("?"));
+            //add the nav pill for tab
+            $("<li><a href='#" + tabId + "'>" + tabId + "</a></li>").appendTo("#lefttabs ul")
+                //add the tab
+            $("<div id='" + tabId + "' width='100%'><div id='webglcanvas" + 1 + "' style='width:600px;height: 300px;'></div></div>").appendTo("#left-tabs-container");
+            $("#lefttabs").tabs("refresh");
+
+            GL = initWebGL("webglcanvas1", tabId);
+
+            console.log(asset_url);
+
+            c1 = new BVHCharacter(tabId, jointmaterial2, bonematerial2, makeJointGeometry_Sphere1, makeBoneGeometry_Cylinder3);
+            c1.setOriginPosition(0, 0, 0);
+            c1.loadFromURL(asset_url, function() {
+                GL.scene.add(c1.skeleton);
+            });
+
+            characters.push(c1);
+
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            characters.forEach(function(c) {
+                if (1 && c.ready) {
+                    if (c.playing) {
+                        c.animIndex = c.animOffset + Math.floor((Date.now() - c.animStartTimeRef) / c.frameTime / 1000);
+
+                        if (c.animIndex >= c.frameCount) {
+                            c.animOffset = 0;
+                            c.animStartTimeRef = Date.now();
+                            c.animIndex = 0;
+                        }
+                        c.animFrame(c.animIndex);
+                    }
+                }
+            });
+            GLs.forEach(function(GL) {
+                GL.controls.update();
+                GL.renderer.render(GL.scene, GL.camera);
+            });
+        }
+
+
+        // 
 
         $(document).ready(function() {
             /**
@@ -417,13 +556,18 @@
                 });
             }
 
+
+
             var params = parseURLParams(document.URL);
 
             var url;
+
             if (typeof params != 'undefined') {
                 take_id = params["take_id"][0];
                 url = "/takes/" + take_id + ".json";
             }
+
+
 
             if (url != undefined) {
                 apiCall(url, function(data) {
@@ -454,128 +598,9 @@
                         }
                     }
 
-                    var GLs = [];
-                    var characters = [];
-
-                    function set_the_scene2(GL) {
-                        lights[0] = new THREE.PointLight(0xffffff, 1, 0);
-                        lights[0].position.set(0, 100, 0);
-
-                        GL.scene.add(lights[0]);
-
-                        // Grid
-                        var size = 4000,
-                            step = 20;
-
-                        var geometry = new THREE.PlaneGeometry(size * 2, size * 2);
-                        var material = new THREE.MeshPhongMaterial({
-                            color: 0x444444,
-                            emissive: 0x000000,
-                            specular: 0x111111,
-                            side: THREE.DoubleSide,
-                            transparent: true,
-                            opacity: 0.9
-                        });
-
-                        var plane = new THREE.Mesh(geometry, material);
-                        plane.position.set(0, 0, 0);
-                        plane.rotation.set(math.pi / 2, 0, 0);
-                        GL.scene.add(plane);
-
-                        var geometry = new THREE.Geometry();
-                        var material = new THREE.LineBasicMaterial({
-                            color: 0x555555,
-                            linewidth: 1.2
-                        });
-                        for (var i = -size; i <= size; i += step) {
-                            geometry.vertices.push(new THREE.Vector3(-size, -0.04, i));
-                            geometry.vertices.push(new THREE.Vector3(size, -0.04, i));
-                            geometry.vertices.push(new THREE.Vector3(i, -0.04, -size));
-                            geometry.vertices.push(new THREE.Vector3(i, -0.04, size));
-                        }
-
-                        var line = new THREE.LineSegments(geometry, material);
-                        GL.scene.add(line);
-                    }
-
-                    function initWebGL(canvasID, ID) {
-                        var GL = []
-                        GL.canvas = canvasID;
-                        GL.id = ID;
-                        var GL.scene, GL.camera, GL.renderer;
 
 
 
-
-                        GL.scene = new THREE.Scene();
-                        GL.camera = new THREE.PerspectiveCamera(30, document.getElementById(canvasID).width / document.getElementById(canvasID).height, 1, 1000);
-                        GL.camera.position.set(0, 80, 0);
-                        GL.camera.position.z = 400;
-                        GL.scene.add(GL.camera);
-
-                        set_the_scene2(GL);
-
-                        GL.renderer = new THREE.WebGLRenderer({
-                            antialias: true
-                        });
-                        GL.renderer.setSize(document.getElementById(canvasID).width, document.getElementById(canvasID).height);
-                        GL.renderer.gammaInput = true;
-                        GL.renderer.gammaOutput = true;
-                        GL.renderer.setPixelRatio(window.devicePixelRatio);
-                        GL.renderer.setClearColor(0xdddddd, 1);
-
-                        document.getElementById(canvasID).appendChild(GL.renderer.domElement);
-
-                        GL.controls = new THREE.OrbitControls(GL.camera, GL.renderer.domElement);
-
-
-
-                        GLs.push(GL);
-                        return GL;
-                    }
-
-                    function loadWebGL(asset_url) {
-                        var tabId = asset_url.substring(asset_url.lastIndexOf("/") + 1, asset_url.lastIndexOf("?"));
-                        //add the nav pill for tab
-                        $("<li><a href='#" + tabId + "'>" + tabId + "</a></li>").appendTo("#lefttabs ul")
-                            //add the tab
-                        $("<div id='" + tabId + "' width='100%'><div id='webglcanvas" + tabId "+' style='width=100%;height: 200px;'></div></div>").appendTo("#left-tabs-container");
-                        $("#lefttabs").tabs("refresh");
-
-                        GL = initWebGL("webglcanvas" + tabId, tabId);
-
-                        c1 = new BVHCharacter(tabId, jointmaterial5, bonematerial5, makeJointGeometry_Sphere1, makeBoneGeometry_Cylinder3);
-                        c1.loadFromURL(asset_url, function() {
-                            GL.scene.add(c1.skeleton);
-                        });
-
-                        characters.push(c1);
-						
-						animate();
-                    }
-
-                    function animate() {
-                        requestAnimationFrame(animate);
-
-                        characters.forEach(function(c) {
-                            if (1 && c.ready) {
-                                if (c.playing) {
-                                    c.animIndex = c.animOffset + Math.floor((Date.now() - c.animStartTimeRef) / c.frameTime / 1000);
-
-                                    if (c.animIndex >= c.frameCount) {
-                                        c.animOffset = 0;
-                                        c.animStartTimeRef = Date.now();
-                                        c.animIndex = 0;
-                                    }
-                                    c.animFrame(c.animIndex);
-                                }
-                            }
-                        });
-                        for (GL in GLs) {
-							GL.controls.update();
-							GL.renderer.render(GL.scene, GL.camera);
-						}
-                    }
 
                     function showResource(type, resource) {
                         console.log("#showResource " + type + " " + resource)
@@ -589,10 +614,10 @@
                                     // remove this line and uncomment next; commented for dev purpose only
                                     // state.setMaxTime(25000);
 
-
+                                    var u = "http://localhost:5050" + asset_url;
                                     // Add webgl stuff
 
-                                    loadWebGL(asset_url);
+                                    loadWebGL(u);
 
 
                                     // Add Mova sketches
@@ -616,6 +641,8 @@
                                             anim.playAnim = false;
                                         }
                                     });
+
+
 
                                 })
                                 break;
@@ -786,6 +813,7 @@
 
             // TODO need to move this function call to inside the apiCall callback
             $("#annotation-area").width($("#canCont").width() - $("#legends").width() - 25);
+            // $("#annotation-area").width($("#canCont").width() - 25);
             $("#pause-btn").hide();
             $("#link").hide();
             $("#divider-btn-open").hide();
