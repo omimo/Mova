@@ -1,0 +1,33 @@
+{
+  "name": "mova",
+  "version": "1.0.0",
+  "description": "Mova: Movement Analytics Platform",
+  "main": "webpack.config.js",
+  "dependencies": {
+    "d3": "^3.3.9",
+    "webpack": "^1.13.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "gui/test.html",
+    "dev": "webpack-dev-server --devtool source-map --progress --colors --inline --hot",
+    "deploy": "NODE_ENV=production webpack -p"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omimo/Mova.git"
+  },
+  "keywords": [
+    "movement",
+    "analytics",
+    "visualization",
+    "human",
+    "movement"
+  ],
+  "author": "Omid Alemi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/omimo/Mova/issues"
+  },
+  "homepage": "https://github.com/omimo/Mova#readme"
+}

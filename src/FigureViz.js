@@ -1,4 +1,4 @@
-var figureSketch = {
+var FigureViz = {
 
 drawFiguresCanvas: function (parent,track, highlightJ, frameSkip, pad) {
 
@@ -442,3 +442,5 @@ drawSkelInfo: function (parent, currentFrame, skel) {
 }
 
 };
+
+module.exports = FigureViz;

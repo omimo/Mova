@@ -1,4 +1,7 @@
 // By Ankit
+$ = require('jquery');
+math = require('mathjs');
+
 var BVHReader = function () {
 
     this.load = function (url, callback) {
@@ -10,6 +13,7 @@ var BVHReader = function () {
             var connectivityMatrix = dataReturn[3]
             if (callback)
                 callback(new BVHReader.BVH.Skeleton(jointStack[0], jointMap, jointArray, dataReturn[3], dataReturn[4], dataReturn[5], dataReturn[6]),'BVH');
+            console.log('test');
         });
     };
 
@@ -380,3 +384,5 @@ function matrixMultiply(m1, m2) {
     var b = math.matrix(m2);
     return math.multiply(a, b).toArray();
 }
+
+module.exports = BVHReader;
