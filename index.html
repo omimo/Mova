@@ -393,8 +393,8 @@
             lights[2].position.set(-100, 100, -100);
 
             GL.scene.add(lights[0]);
-			GL.scene.add(lights[1]);
-			GL.scene.add(lights[2]);
+            GL.scene.add(lights[1]);
+            GL.scene.add(lights[2]);
 
 
 
@@ -485,6 +485,22 @@
             c1.setOriginPosition(0, 0, 0);
             c1.loadFromURL(asset_url, function() {
                 GL.scene.add(c1.skeleton);
+                c1.playing = false;
+            });
+
+            state.tickListeners.push({
+                tick: function() {
+                    // c1.animIndex = c1.animOffset + state.currentTime / c1.frameTime / 1000;
+
+                    c1.animIndex = Math.floor(state.currentTime / c1.frameTime / 1000);
+                    
+                },
+                play: function() {
+                    c1.playing = true;
+                },
+                pause: function() {
+                    c1.playing = false;
+                }
             });
 
             characters.push(c1);
@@ -498,7 +514,7 @@
             characters.forEach(function(c) {
                 if (1 && c.ready) {
                     if (c.playing) {
-                        c.animIndex = c.animOffset + Math.floor((Date.now() - c.animStartTimeRef) / c.frameTime / 1000);
+                        //c.animIndex = c.animOffset + Math.floor(state.currentTime / c.frameTime / 1000);
 
                         if (c.animIndex >= c.frameCount) {
                             c.animOffset = 0;
