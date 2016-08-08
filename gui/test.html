@@ -9,11 +9,26 @@
         <div id="head">
             Mova
         </div>
-        <div id="main">
+        <div id="c1">
+            
         </div>
+        <div style="height: 100px"></div>
+        <div id="c2">
+            
+        </div>
+
         <script>
-            a = new MovaObject("sds");
-            a.loadTrack('../movs/Slash_x4_0001KAREN.bvh','bvh');
+            a = new MovaObject("Slashy");
+            a.loadTrack('../movs/Slash_x4_0001KAREN.bvh','bvh', function() {
+                a.tracks[0].isMocap = true;
+                a.drawFigureSketch('#c1',a.tracks[0]);
+
+                a.figureSketchConfig.figureScale = 2;
+                a.figureSketchConfig.padding = 10;
+                a.figureSketchConfig.frameSkip = 5;
+                a.drawFigureSketch('#c2',a.tracks[0],400, 1800);
+            });
+            
         </script>
     </body>
 </html>

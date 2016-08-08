@@ -1,14 +1,24 @@
-var FigureViz = {
+var d3 = require('d3');
 
-drawFiguresCanvas: function (parent,track, highlightJ, frameSkip, pad) {
 
+var FigureViz = FigureViz || {};
+
+FigureViz.figureSketchConfig = [];
+FigureViz.track = [];
+
+
+FigureViz.drawFigureSketch = function (container,track, figureSketchConfig, _startIndex, _endIndex) {
+                FigureViz.track = track;
+                FigureViz.figureSketchConfig = figureSketchConfig;
+
+                var parent = d3.select("body").select(container);            
 				var rootOffset = [];
 
-				padding = pad;
-				skips = frameSkip;
+				padding = figureSketchConfig.padding;
+				skips = figureSketchConfig.frameSkip;
 
 				w = (padding)*track.frameCount/skips+300;
-				h = 200;
+				h = figureSketchConfig.figureScale*100;
 
 
 				var svg = parent.append("svg")
@@ -31,33 +41,43 @@ drawFiguresCanvas: function (parent,track, highlightJ, frameSkip, pad) {
 
 				/////////////////////
 				//var firstRootX = track.getPositionsAt(0)[0].x;
-				for ( index = 0; index < track.frameCount; index += skips) {
+
+                var startIndex = 0;
+                var endIndex = track.frameCount;
+
+                if (_startIndex && _endIndex) {
+                    startIndex = _startIndex;
+                    endIndex = _endIndex;
+                }
+
+				for ( index = startIndex; index < endIndex; index += skips) {
 					currentFrame = track.getPositionsAt(index).map(function(d,i) {
+                        index2 = index - startIndex;
 						var xx;
-						if (i==0)
-							 xx = d.x * movan.figureScale + 150  + index/skips * padding;
+						if (i==startIndex)
+							 xx = d.x * figureSketchConfig.figureScale + 150  + index2/skips * padding;
 						else
-							xx = d.x * movan.figureScale + 150  + index/skips * padding;
+							xx = d.x * figureSketchConfig.figureScale + 150  + index2/skips * padding;
 
 						return {
 							x : xx,
-							y : -1 * d.y * movan.figureScale + 180,
-							z : d.z * movan.figureScale
+							y : -1 * d.y * figureSketchConfig.figureScale + h,
+							z : d.z * figureSketchConfig.figureScale
 						};
 					});
 
 					rootOffset[index/skips] = currentFrame[0].x;
 					//Create SVG element
-					figureSketch.drawSkel(svg,currentFrame,index, highlightJ,track);
+					FigureViz.drawSkel(svg,currentFrame,index);
 				}
 				return rootOffset; //we need this to align the figures with features
-	},
+	};
 
 
-drawSkel: function (svg, currentFrame, index, highlightJ,mocap) {
-	//bones
+FigureViz.drawSkel = function (svg, currentFrame, index) {
+    //bones
 	svg.selectAll("line.f" + index)
-	.data(mocap.connectivityMatrix)
+	.data(FigureViz.track.connectivityMatrix)
 	.enter()
 	.append("line")
 	.attr("stroke", "grey")
@@ -92,355 +112,21 @@ drawSkel: function (svg, currentFrame, index, highlightJ,mocap) {
 	}).attr("cy", function(d) {
 		return d.y;
 	}).attr("r", function(d, i) {
-		if (i == highlightJ)
+		if (i == FigureViz.figureSketchConfig.highlightJoint)
 			return 4;
-		else if (i == movan.skelHeadJoint )
+		else if (i == FigureViz.figureSketchConfig.skelHeadJoint )
 			return 4;
 		else
 			return 2;
 	}).attr("fill", function(d, i) {
-		if (i == highlightJ)
+		if (i == FigureViz.figureSketchConfig.highlightJoint)
 			return 'red';
 		else
 			return '#555555';
 	});
 
 
-},
-
-
-drawJointChooserCSV: function (svg, currentFrame, index, highlightJ,skel,clickCallBack) {
-	//bones
-
-
-	svg.selectAll("line.f" + index)
-	.data(skel.connections)
-	.enter()
-	.append("line")
-	.attr("stroke", "black")
-	.attr("x1",0).attr("x2",0)
-	//.transition().duration(1000).ease("elastic")
-	.attr("x1", function(d, j) {
-		return currentFrame[d.a].x;
-	})
-	.attr("x2", function(d, j) {
-		return currentFrame[d.b].x;
-	})
-	.attr("y1", function(d, j) {
-		return currentFrame[d.a].y;
-	})
-	.attr("y2", function(d, j) {
-		return currentFrame[d.b].y;
-	});
-
-
-	//draw joints
-	svg.selectAll("circle.f" + index)
-	.data(currentFrame)
-	.enter()
-	.append("circle")
-	.style("cursor","pointer")
-	.attr("cx", function(d) {
-		return d.x;
-	}).attr("cy", function(d) {
-		return d.y;
-	}).attr("r", function(d, i) {
-		if (i == highlightJ)
-			return 6;
-		else if (i == movan.skelHeadJoint)
-			return 6;
-		else
-			return 5;
-	})
-	.attr("jointID", function(d,i){return i;})
-	.attr("fill", function(d, i) {
-		if (i == highlightJ )
-			return 'red';
-		else
-			return 'black';
-	})
-	.on("mouseover", function (d) {
-		d3.select(this).attr("r",6).attr("fill", "orange");
-
-		d3.select("#jointLabel").text(skel.jointNames[d3.select(this).attr("jointID")]);
-	})
-	.on("mouseout", function (d) {
-		d3.select("#jointLabel").text(skel.jointNames[highlightJ]);
-		r = 2;
-		if (i == highlightJ)
-			r= 6;
-		else if (i == movan.skelHeadJoint)
-			r= 6;
-		else
-			r = 5;
-		d3.select(this).attr("r",r);
-
-		if ( d3.select(this).attr("jointID") == highlightJ)
-			d3.select(this).attr("fill","red");
-		else
-			d3.select(this).attr("fill","black");
-	})
-	.on("click", function(d) {
-		//movan.selectedJoint = d3.select(this).attr("jointID");
-		d3.select("#jointDropdown").attr("selectedJoint", d3.select(this).attr("jointID"));
-		highlightJ = d3.select(this).attr("jointID");
-		//d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select("#jointDropdown").attr("selectedJoint")]);
-		//d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select(this).attr("jointID")]);
-
-
-		clickCallBack();
-	})
-	;
-
-
-},
-
-drawJointChooser: function (svg, currentFrame, mocap, highlightJ, clickCallBack) {
-	index = 0;
-
-	//bones
-	svg.selectAll("line.f" + index)
-	.data(mocap.connectivityMatrix)
-	.enter()
-	.append("line")
-	.attr("stroke", "black")
-	.attr("x1",0).attr("x2",0)
-	//.transition().duration(1000).ease("elastic")
-	.attr("x1", function(d, j) {
-		return currentFrame[d[0].jointIndex].x;
-	})
-	.attr("x2", function(d, j) {
-		return currentFrame[d[1].jointIndex].x;
-	})
-	.attr("y1", function(d, j) {
-		return currentFrame[d[0].jointIndex].y;
-	})
-	.attr("y2", function(d, j) {
-		return currentFrame[d[1].jointIndex].y;
-	});
-
-
-	//draw joints
-	svg.selectAll("circle.f" + index)
-	.data(currentFrame)
-	.enter()
-	.append("circle")
-	.style("cursor","pointer")
-	.attr("cx", function(d) {
-		return d.x;
-	}).attr("cy", function(d) {
-		return d.y;
-	}).attr("r", function(d, i) {
-		if (i == highlightJ)
-			return 6;
-		else if (i == movan.skelHeadJoint)
-			return 6;
-		else
-			return 5;
-	})
-	.attr("jointID", function(d,i){return i;})
-	.attr("fill", function(d, i) {
-		if (i == highlightJ )
-			return 'red';
-		else
-			return 'black';
-	})
-	.on("mouseover", function (d) {
-		d3.select(this).attr("r",6).attr("fill", "orange");
-
-		d3.select("#jointLabel").text(track.jointArray[d3.select(this).attr("jointID")].title);
-	})
-	.on("mouseout", function (d) {
-		d3.select("#jointLabel").text(track.jointArray[highlightJ].title);
-		r = 2;
-		if (i == highlightJ)
-			r= 6;
-		else if (i == movan.skelHeadJoint)
-			r= 6;
-		else
-			r = 5;
-		d3.select(this).attr("r",r);
-
-		if ( d3.select(this).attr("jointID") == highlightJ)
-			d3.select(this).attr("fill","red");
-		else
-			d3.select(this).attr("fill","black");
-	})
-	.on("click", function(d) {
-		//movan.selectedJoint = d3.select(this).attr("jointID");
-		d3.select("#jointDropdown").attr("selectedJoint", d3.select(this).attr("jointID"));
-		highlightJ = d3.select(this).attr("jointID");
-		//d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select("#jointDropdown").attr("selectedJoint")]);
-		//d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select(this).attr("jointID")]);
-
-
-		clickCallBack(mocap);
-	})
-	;
-
-
-},
-
-drawJointChooserbvhtest: function (svg, currentFrame, mocap, clickCallBack) {
-	//console.log(currentFrame);
-
-	highlightJ = 1;
-
-	//bones
-	svg.selectAll("line.f" + index)
-	.data(connectivityMatrix)
-	.enter()
-	.append("line")
-	.attr("stroke", "black")
-	.attr("x1",0).attr("x2",0)
-	//.transition().duration(1000).ease("elastic")
-	.attr("x1", function(d, j) {
-		return currentFrame[d.a].x;
-	})
-	.attr("x2", function(d, j) {
-		return currentFrame[d.b].x;
-	})
-	.attr("y1", function(d, j) {
-		return currentFrame[d.a].y;
-	})
-	.attr("y2", function(d, j) {
-		return currentFrame[d.b].y;
-	});
-
-
-	//draw joints
-	svg.selectAll("circle.f")
-	.data(currentFrame)
-	.enter()
-	.append("circle")
-	.style("cursor","pointer")
-	.attr("cx", function(d) {
-		return d.x;
-	}).attr("cy", function(d) {
-		return d.y;
-	}).attr("r", function(d, i) {
-		if (i == highlightJ)
-			return 6;
-		else if (i == movan.skelHeadJoint)
-			return 6;
-		else
-			return 5;
-	})
-	.attr("jointID", function(d,i){return i;})
-	.attr("fill", function(d, i) {
-		if (i == highlightJ )
-			return 'red';
-		else
-			return 'black';
-	})
-	.on("mouseover", function (d) {
-		d3.select(this).attr("r",6).attr("fill", "orange");
-
-		//d3.select("#jointLabel").text(skel.jointNames[d3.select(this).attr("jointID")]);
-	})
-	.on("mouseout", function (d) {
-		d3.select("#jointLabel").text(skel.jointNames[highlightJ]);
-		r = 2;
-		if (i == highlightJ)
-			r= 6;
-		else if (i == movan.skelHeadJoint)
-			r= 6;
-		else
-			r = 5;
-		d3.select(this).attr("r",r);
-
-		if ( d3.select(this).attr("jointID") == highlightJ)
-			d3.select(this).attr("fill","red");
-		else
-			d3.select(this).attr("fill","black");
-	})
-	.on("click", function(d) {
-		//movan.selectedJoint = d3.select(this).attr("jointID");
-		d3.select("#jointDropdown").attr("selectedJoint", d3.select(this).attr("jointID"));
-		highlightJ = d3.select(this).attr("jointID");
-		//d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select("#jointDropdown").attr("selectedJoint")]);
-		//d3.select("#jointLabel").text(movan.gskel.jointNames[d3.select(this).attr("jointID")]);
-
-
-		clickCallBack();
-	})
-	;
-
-
-},
-
-
-drawSkelInfo: function (parent, currentFrame, skel) {
-
-	var svg = parent.append("svg").attr("width", 250).attr("height", 200);
-
-	console.log(currentFrame);
-	var currentFrame2 = currentFrame.map(function(d) {
-		return {
-			x : d.x * movan.figureScale + 100,
-			y : -1 * d.y * movan.figureScale + 90 + 75,
-			z : d.z * movan.figureScale
-		};
-	});
-
-	currentFrame = currentFrame2;
-	//joints
-	svg.selectAll("circle")
-	.data(currentFrame)
-	.enter()
-	.append("circle")
-	//.transition()
-	.attr("cx", function(d) {
-		return d.x;
-	}).attr("cy", function(d) {
-		return d.y;
-	})
-	.attr("r", function(d, i) {
-					if (i == movan.skelHeadJoint)
-						return 8;
-					else
-						return 5;
-	})
-	.attr("fill", 'black');
-
-	svg.selectAll("text")
-	.data(currentFrame)
-	.enter()
-	.append("text")
-	.text(function (d,i) {
-		return "";//skel.jointNames[i];
-	})
-	.attr("x", function(d) {
-		return d.x;
-	})
-	.attr("y", function (d) {
-		return d.y;
-	});
-
-	//bones
-	svg.selectAll("line")
-	.data(movan.gskel.connections)
-	.enter()
-	.append("line")
-	//.transition()
-	.attr("stroke", "black")
-	.attr("stroke-width",6)
-	.attr("x1", function(d, j) {
-		return currentFrame[d.a].x;
-	})
-	.attr("x2", function(d, j) {
-		return currentFrame[d.b].x;
-	})
-	.attr("y1", function(d, j) {
-		return currentFrame[d.a].y;
-	})
-	.attr("y2", function(d, j) {
-		return currentFrame[d.b].y;
-	});
-
-
-}
-
 };
+
 
 module.exports = FigureViz;
