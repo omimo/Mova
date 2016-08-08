@@ -12,8 +12,7 @@ var BVHReader = function () {
             var jointArray = dataReturn[2];
             var connectivityMatrix = dataReturn[3]
             if (callback)
-                callback(new BVHReader.BVH.Skeleton(jointStack[0], jointMap, jointArray, dataReturn[3], dataReturn[4], dataReturn[5], dataReturn[6]),'BVH');
-            console.log('test');
+                callback(new BVHReader.BVH.Skeleton(jointStack[0], jointMap, jointArray, dataReturn[3], dataReturn[4], dataReturn[5], dataReturn[6]),'BVH');            
         });
     };
 

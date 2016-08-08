@@ -55,9 +55,9 @@ FigureViz.drawFigureSketch = function (container,track, figureSketchConfig, _sta
                         index2 = index - startIndex;
 						var xx;
 						if (i==startIndex)
-							 xx = d.x * figureSketchConfig.figureScale + 150  + index2/skips * padding;
+							 xx = d.x * figureSketchConfig.figureScale + 40 * figureSketchConfig.figureScale + index2/skips * padding;
 						else
-							xx = d.x * figureSketchConfig.figureScale + 150  + index2/skips * padding;
+							xx = d.x * figureSketchConfig.figureScale + 40 * figureSketchConfig.figureScale + index2/skips * padding;
 
 						return {
 							x : xx,
@@ -73,6 +73,69 @@ FigureViz.drawFigureSketch = function (container,track, figureSketchConfig, _sta
 				return rootOffset; //we need this to align the figures with features
 	};
 
+
+FigureViz.drawFigure = function (container,track, figureSketchConfig, index) {
+                FigureViz.track = track;
+                FigureViz.figureSketchConfig = figureSketchConfig;
+
+                var parent = d3.select("body").select(container);            
+				var rootOffset = [];
+
+				padding = figureSketchConfig.padding;
+				skips = figureSketchConfig.frameSkip;
+
+                if (figureSketchConfig.width)
+                    w = figureSketchConfig.width;
+                else
+				    w = figureSketchConfig.figureScale*50;
+                
+                if (figureSketchConfig.height)
+                    h = figureSketchConfig.height;
+                else
+				    h = figureSketchConfig.figureScale*100;
+
+
+				var svg = parent.append("svg")
+					.attr("width", w)
+					.attr("height", h)
+					.attr("overflow","scroll")
+					.style("display","inline-block");
+
+
+
+				var borderPath = svg.append("rect")
+				.attr("x", 0)
+				.attr("y", 0)
+				.attr("height", h)
+				.attr("width", w)
+				.style("stroke", "black")
+				.style("fill", "none")
+				.style("stroke-width", 0);
+
+
+				/////////////////////
+				//var firstRootX = track.getPositionsAt(0)[0].x;
+
+                var startIndex = 0;
+                var endIndex = track.frameCount;
+
+
+            
+                currentFrame = track.getPositionsAt(index).map(function(d,i) {
+                    index2 = index - startIndex;
+                    return {
+                        x : d.x * figureSketchConfig.figureScale + 40 * figureSketchConfig.figureScale ,
+                        y : -1 * d.y * figureSketchConfig.figureScale + h,
+                        z : d.z * figureSketchConfig.figureScale
+                    };
+                });
+
+                rootOffset[0] = currentFrame[0].x;
+                //Create SVG element
+                FigureViz.drawSkel(svg,currentFrame,index);
+				
+				return rootOffset; //we need this to align the figures with features
+	};
 
 FigureViz.drawSkel = function (svg, currentFrame, index) {
     //bones

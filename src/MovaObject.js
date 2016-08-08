@@ -35,22 +35,21 @@ MovaObject = function (title) {
             console.log("ERROR - "+ self.title + ": " + m.toString());
     };
 
-    this.loadTrack = function (url,type , callback) {                 
+    this.loadTrack = function (url,format , callback) {                 
          // Create the Track object
          var track = {
              url: url,
-             type: type,
+             format: format,
              isMocap: false
          } ;
-
-         if (type in ['bvh','c3d']) 
+         
+         if (format in {'bvh':1,'c3d':1}) 
             track.isMocap = true;
 
          self.log("Loading the track ...");
          // The Parsers.trackReaders will call the proper function
-         parser = new Parsers.trackReaders[type](title);
+         parser = new Parsers.trackReaders[format](title);
          parser.load(url, function(data) {
-             console.log(data);
              track.data = data;
              self.log("Done!");
              if (callback)
@@ -65,6 +64,17 @@ MovaObject = function (title) {
             self.figureSketchConfig.container = container;
 
             FigureViz.drawFigureSketch(container,track.data,self.figureSketchConfig, s, e);                        
+        } else {
+            self.err("The track does not contain mocap data.");
+        }
+        
+    };
+
+    this.drawFigure = function (container, track, i) {
+        if (track.isMocap){
+            self.figureSketchConfig.container = container;
+
+            FigureViz.drawFigure(container,track.data,self.figureSketchConfig, i);                        
         } else {
             self.err("The track does not contain mocap data.");
         }

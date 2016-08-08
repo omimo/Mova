@@ -4,6 +4,16 @@
             Testing Mova
         </title>
         <script src="../dist/Mova.js"></script>
+        <style>
+            #c1 svg line {
+                stroke: navy;
+                stroke-width: 3;
+            }
+
+            #c1 svg circle {
+                stroke: green;
+            }
+        </style>
     </head>
     <body>
         <div id="head">
@@ -12,23 +22,64 @@
         <div id="c1">
             
         </div>
-        <div style="height: 100px"></div>
+        <div style="height: 10px"></div>
         <div id="c2">
+            
+        </div>
+        <div style="height: 10px"></div>
+        <div id="c3" style="margin-left: 20px;">
+            
+        </div>
+
+        <div id="c4" style="margin-left: 20px;">
             
         </div>
 
         <script>
             a = new MovaObject("Slashy");
             a.loadTrack('../movs/Slash_x4_0001KAREN.bvh','bvh', function() {
-                a.tracks[0].isMocap = true;
+                // a.tracks[0].isMocap = true;
                 a.drawFigureSketch('#c1',a.tracks[0]);
 
-                a.figureSketchConfig.figureScale = 2;
+                a.figureSketchConfig.figureScale = 1;
                 a.figureSketchConfig.padding = 10;
                 a.figureSketchConfig.frameSkip = 5;
-                a.drawFigureSketch('#c2',a.tracks[0],400, 1800);
+                a.drawFigureSketch('#c2',a.tracks[0],500, 1000);
+                
+                var startTimeI = Date.now();
+
+                window.setInterval(function() {
+                    document.getElementById('c3').innerHTML = "";
+                    frame = 400+ math.floor((Date.now() - startTimeI)/1000 / a.tracks[0].data.frameTime);                    
+                    if (frame>1200){
+                        startTimeI=Date.now();
+                        frame = 400;
+                    }
+                    a.drawFigure('#c3',a.tracks[0],frame);
+                    
+                }, a.tracks[0].data.frameTime * 1000);
             });
             
+            b = new MovaObject("Walker");
+            b.loadTrack('../movs/MS2_8Walk_M_nopos.bvh','bvh', function() {              
+                b.figureSketchConfig.figureScale = 2;
+                b.figureSketchConfig.width = 400;
+                b.figureSketchConfig.height = 200;
+
+                var startTimeJ = Date.now();
+
+                window.setInterval(function() {
+                    document.getElementById('c4').innerHTML = "";
+                    frame = math.floor((Date.now() - startTimeJ)/1000 / b.tracks[0].data.frameTime);                    
+                    if (frame>b.tracks[0].data.frameCount-1){
+                        startTimeJ=Date.now();
+                        frame = 0;
+                    }
+                    b.drawFigure('#c4',b.tracks[0],frame);                    
+                    
+                }, b.tracks[0].data.frameTime * 1000);
+            });
+
         </script>
     </body>
 </html>

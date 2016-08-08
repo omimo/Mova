@@ -9,7 +9,7 @@ var plugins =  [
 minimize && plugins.push(new webpack.optimize.UglifyJsPlugin());
 
 module.exports = {
-    entry: {Mova: "./src/Mova.js"},
+    entry: {Mova: ["./src/Mova.js"]},
     devtool: "source-map",
     output: {
         path: __dirname+"/dist/",
