@@ -50,14 +50,39 @@
 
                 window.setInterval(function() {
                     document.getElementById('c3').innerHTML = "";
-                    frame = 400+ math.floor((Date.now() - startTimeI)/1000 / a.tracks[0].data.frameTime);                    
+                    frame = 500+ math.floor((Date.now() - startTimeI)/1000 / a.tracks[0].data.frameTime);                    
                     if (frame>1200){
                         startTimeI=Date.now();
-                        frame = 400;
+                        frame = 500;
                     }
                     a.drawFigure('#c3',a.tracks[0],frame);
                     
                 }, a.tracks[0].data.frameTime * 1000);
+
+                cm = a.tracks[0].data.connectivityMatrix;
+                cm2 = [];
+                for (i=0;i<cm.length;i++){
+                    cm2[i] = [];
+                    cm2[i][0] = cm[i][0].jointIndex;
+                    cm2[i][1] = cm[i][1].jointIndex;
+                }
+                var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(cm2));
+                var dlAnchorElem = document.getElementById('downloadAnchorElem');
+                dlAnchorElem.setAttribute("href",     dataStr     );
+                dlAnchorElem.setAttribute("download", "ConnectivityMatrix.json");
+                //dlAnchorElem.click();
+
+                move = [];
+                for (i=500;i<1200;i++){
+                    move[i-500] = a.tracks[0].data.getPositionsAt(i);
+                }
+
+                var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(move));
+                var dlAnchorElem = document.getElementById('downloadAnchorElem');
+                dlAnchorElem.setAttribute("href",     dataStr     );
+                dlAnchorElem.setAttribute("download", "Slash.json");
+                // dlAnchorElem.click();
+
             });
             
             b = new MovaObject("Walker");
@@ -80,6 +105,10 @@
                 }, b.tracks[0].data.frameTime * 1000);
             });
 
+
+            
+
         </script>
+        <a id="downloadAnchorElem" style="display:none"></a>
     </body>
 </html>

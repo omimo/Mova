@@ -65235,8 +65235,17 @@
 					padding = figureSketchConfig.padding;
 					skips = figureSketchConfig.frameSkip;
 	
-					w = (padding)*track.frameCount/skips+300;
-					h = figureSketchConfig.figureScale*100;
+					console.log("h : "+ figureSketchConfig.height);
+	
+	                if (figureSketchConfig.width)
+	                    w = figureSketchConfig.width;
+	                else
+					    w = (padding)*track.frameCount/skips+300;
+									
+	                if (figureSketchConfig.height)
+	                    h = figureSketchConfig.height;
+	                else
+					    h = figureSketchConfig.figureScale*100;
 	
 	
 					var svg = parent.append("svg")
@@ -65306,7 +65315,7 @@
 	                    w = figureSketchConfig.width;
 	                else
 					    w = figureSketchConfig.figureScale*50;
-	                
+									
 	                if (figureSketchConfig.height)
 	                    h = figureSketchConfig.height;
 	                else
