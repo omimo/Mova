@@ -53,8 +53,60 @@ drawFiguresCanvas: function (parent,track, highlightJ, frameSkip, pad) {
 				return rootOffset; //we need this to align the figures with features
 	},
 
+// currentFrame: [joint{x,y,z}, joint{x,y,x}, ...]
+// connectivity: [[jointIndex, jointIndex],[jointIndex, jointIndex], ...]
+// classname: for styling (color)
+drawSkelPartial: function (svg, currentFrame, index, highlightJ, mocap, conectivity, classname) {
+	//bones
+	svg.selectAll("line.f" + index)
+	.data(conectivity)
+	.enter()
+	.append("line")
+	.classed("bone", true)
+	.classed(classname, true)
+	.attr("x1",0).attr("x2",0)
+	//.transition().duration(1000).ease("elastic")
+	.attr("x1", function(d, j) {
+		return currentFrame[d[0]].x;
+	})
+	.attr("x2", function(d, j) {
+		return currentFrame[d[1]].x;
+	})
+	.attr("y1", function(d, j) {
+		return currentFrame[d[0]].y;
+	})
+	.attr("y2", function(d, j) {
+		return currentFrame[d[1]].y;
+	});
 
-drawSkel: function (svg, currentFrame, index, highlightJ,mocap) {
+	//draw joints
+	svg.selectAll("circle.f" + index)
+	.data(currentFrame)
+	.enter()
+	.append("circle")
+	.attr("class", function(d,i) {
+		return "figJoint figJointId"+i;
+	})
+	.classed("joint", true)
+	.classed(classname, true)
+	.classed("highlighted", function(d,i){if(i == highlightJ) return true})
+	.attr("cx", function(d) {
+		return d.x;
+	})
+	.attr("cy", function(d) {
+		return d.y;
+	})
+	.attr("r", function(d, i) {
+		if (i == highlightJ)
+			return 2;
+		else if (i == movan.skelHeadJoint )
+			return 4;
+		else
+			return 2;
+	});
+},
+
+drawSkel: function (svg, currentFrame, index, highlightJ, mocap) {
 	//bones
 	svg.selectAll("line.f" + index)
 	.data(mocap.connectivityMatrix)

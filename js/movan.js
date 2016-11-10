@@ -5,7 +5,6 @@ var movan = {
 			dataTracks : [], // this only keeps the loaded tracks
 	 		 allTracks : [],  // this keeps all the tracks that exist in a take
 
-
 			 //gframes : [],
 			 //gskel : [],
 			 grootOffset : [],
@@ -217,8 +216,25 @@ var movan = {
 				// console.log(movan.dataTracks[thisTrackIndex].content.getPositionsAt(0)[4]);
 				// console.log(movan.dataTracks[thisTrackIndex].content.getPositionsAt(0)[28]);
 				// console.log(movan.dataTracks[thisTrackIndex].content.getPositionsAt(0)[29]);
+				
+				state.tickListeners.push({
+										tick: function(){
+											var track = movan.dataTracks[movan.dataTracks.length - 1].content;
+											var newFrame = math.floor((state.currentTime/1000) / track.frameTime);
+
+											anim.animIndex = newFrame;
+											anim.drawFigure();
+										},
+										play: function(){
+											anim.playAnim = true;
+										},
+										pause: function(){
+											anim.playAnim = false;
+										}
+									});
 			},
 
+			// Omid~
 			drawJointChooser: function (mocap) {
 
 				frame = mocap.getPositionsAt(0);

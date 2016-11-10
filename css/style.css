@@ -59,7 +59,10 @@ div.over2 {
 	padding-bottom: 20px;
 	float: left;
 	height: 520px;
+	position: relative;
 }
+
+
 
 #sidebar {
 	width: 250px;

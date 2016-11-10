@@ -10,6 +10,7 @@
 		<link rel="stylesheet" type="text/css" href="jq/css/jquery-ui-slider-pips.css">
 		<link rel="stylesheet" type="text/css" href="styles/jqx.base.css">
 		<link href="css/style.css" rel="stylesheet"/>
+		<link href="css/visStyle.css" rel="stylesheet"/>
 
 		<script type="text/javascript" src="lib/d3.v3.min.js"></script>
 		<script type="text/javascript" src="lib/math.min.js"></script>
@@ -45,6 +46,8 @@
 
 		<script type="text/javascript" src="js/body.js"></script>
 
+		<script type="text/javascript" src="js/mocom.js"></script>
+
 		<script>
 			(function(i, s, o, g, r, a, m) {
 				i['GoogleAnalyticsObject'] = r;
@@ -60,7 +63,6 @@
 
 			ga('create', 'UA-46098170-1', 'sfu.ca');
 			ga('send', 'pageview');
-
 		</script>
 
 
@@ -122,6 +124,22 @@
 		    font-family: sans-serif;
 		    font-size: 11px;
 		}
+
+		#comparison select{
+			margin: 10px;
+			margin-left: 0;
+			display: block;
+		}
+
+		#comparison .takeStartTime{
+			width: 60px;
+		}
+
+		#comparison button{
+			display: block;
+			margin-top: 20px;
+		}
+
 		</style>
 	</head>
 	<body>
@@ -130,7 +148,6 @@
 			<h1 style="float: left;">Mova: Movement Analytics Platform</h1>
 			<h4 style="float: right;">Version 0.7  |   <a href="Mova_Intro.mov" target="_blank">Video Intro</a></h4>
 		</div>
-
 		<div id="canCont">
 			<div id="lefttabs">
 				<ul>
@@ -213,6 +230,98 @@
 			</div>
 		</div>
 
+		<div id="visCont">
+			<div id="visTitleWrapper">
+				<h1>MoComp: Movement Comparison</h1>
+				<div id="visInfo">
+					<div id="visTitleBodypart">Bodypart: <span></span></div>
+					<div id="visTitleFileA">A: "<em></em>", from <span></span> ms to <span></span> ms</div>
+					<div id="visTitleFileB">B: "<em></em>", from <span></span> ms to <span></span> ms</div>
+				</div>
+			</div>
+			<div id="visContentWrapper">
+				<div id="visLabels">
+					<div class="visLabel" id="visLabelInstframe">Instant Frames</div>
+					<div class="visLabel" id="visLabelAngle">Angle</div>
+					<div class="visLabel" id="visLabelAspeed">Angular Speed</div>
+					<div class="visLabel" id="visLabelAaccel">Angular Acceleration</div>
+					<div class="visLabel" id="visLabelBackview">Back View</div>
+					<div class="visLabel" id="visLabelSideview">Side View</div>
+					<div class="visLabel" id="visLabelOverview"> Difference Overview: Overall angular difference of perspectives. (Drug to brush)</div>
+				</div>
+				<div id="visDetailedView">
+					<div id="visInstFrame">
+						<div id="visInstFrameP1">
+							<div class="visInstFrameA"><span>A</span></div>
+							<div class="visInstFrameB"><span>B</span></div>
+							<div class="visInstFrameDiff"></div>
+						</div>
+						<div id="visInstFrameP2">
+							<div class="visInstFrameA"><span>A</span></div>
+							<div class="visInstFrameB"><span>B</span></div>
+							<div class="visInstFrameDiff"></div>
+						</div>
+					</div>
+					<div id="visMultiples">
+						<div id="visMultiplesP1">
+							<div class="multiplesColumn" id="angleCharts">
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+							</div>
+							<div class="multiplesColumn" id="speedCharts">
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+							</div>
+							<div class="multiplesColumn" id="accelerationCharts">
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+							</div>
+						</div>
+						<div id="visMultiplesP2">
+							<div class="multiplesColumn" id="angleCharts">
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+							</div>
+							<div class="multiplesColumn" id="speedCharts">
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+							</div>
+							<div class="multiplesColumn" id="accelerationCharts">
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+								<div class="smallMultiple"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="visOverview">
+					<div id="visOverviewP1">
+						<div class="visOverviewFrame"></div>
+						<div class="visOverviewChart" id="visOverviewChartP1"></div>
+						<div class="visOverviewFrame"></div>
+					</div>
+					<div id="visOverviewP2">
+						<div class="visOverviewFrame"></div>
+						<div class="visOverviewChart" id="visOverviewChartP2"></div>
+						<div class="visOverviewFrame"></div>
+					</div>
+				</div>
+			</div>
+			<div class="loaderWrap" style="display:none"><img class="loader" src="img/loader.gif"></div>
+			<img class="closewindow" src="img/close.svg" onclick="mocom.closewindow()">
+<!-- 			<img class="help" src="../img/help.svg">
+			<div id="visHelp">
+				<div class="visHelpBlock"><div class="visHelpTitle">Instant Frames</div><div class="visHelpExplain"></div></div>
+				<div class="visHelpBlock"><div class="visHelpTitle">Detailed View</div><div class="visHelpExplain"></div></div>
+				<div class="visHelpBlock"><div class="visHelpTitle">Overiew</div><div class="visHelpExplain"></div></div>
+			</div> -->
+		</div>
+
 		<div id="sidebar">
 			<ul class="tooboxTitle">
 				<li class="toolboxTitleText">
@@ -238,10 +347,12 @@
 					</div>
 					<select name="drop1" id="fileSelect" size="4" multiple="multiple"
 					onchange="movan.loadNew()" style="border:2px solid #ccc; width:200px; height: 120px; overflow-y: auto;">
-					 <option value="movs/MS2_8Walk_M_nopos.bvh" selected="selected">MS2_8Walk_M_nopos.bvh</option>
+						<option value="movs/AV_8Walk_HVHA_Rep1.bvh">AV_8Walk_HVHA_Rep1.bvh</option>
+						<option value="movs/AV_8Walk_HVHA_Rep2.bvh">AV_8Walk_HVHA_Rep2.bvh</option>
+						<option value="movs/MS2_8Walk_M_nopos.bvh" selected="selected">MS2_8Walk_M_nopos.bvh</option>
 						<option value="movs/Slash_x4_0001KAREN.bvh">Slash_x4_0001KAREN.bvh</option>
 						<option value="movs/MS2_8Walk_M.bvh">MS2_8Walk_M.bvh</option>
-						<option value="Dab1.csv">Dab1.bvh</option>
+						<option value="movs/Dab1.csv">Dab1.bvh</option>
 						<option value="Flick1.csv">Flick1.bvh</option>
 						<option value="Slash4.csv">Slash4.bvh</option>
 						<option value="Glide3.csv">Glide3.bvh</option>
@@ -272,7 +383,9 @@
 						Select a feature:
 					</div>
 
-					<select id="featDropdown"></select>
+					<div class="selectricWrapper selectricOpen">
+					</div>
+					<select id="featDropdown"><option id="chkFeat0" value="0">Speed</option><option id="chkFeat1" value="1">Acceleration</option><option id="chkFeat2" value="2">Jerk</option><option id="chkFeat3" value="3">Joint Over Hips</option><option id="chkFeat4" value="4">Direct Segments</option><option id="chkFeat5" value="5">Space (EXP)</option><option id="chkFeat6" value="6">Weight (EXP)</option><option id="chkFeat7" value="7">Time (EXP)</option><option id="chkFeat8" value="8">Flow (EXP)</option><option id="chkFeat9" value="9">Sample Annotation</option></select>
 
 					<button type="button" id="btnAddFeat">
 						Add
@@ -301,6 +414,41 @@
 						Save as SVG
 					</button>
 				</div>
+
+				<h2>Movement Comparison</h2>
+				<div id="comparison" class="sidetab">
+					<div class="sidetabtitle">Take A</div>
+					<select id="sltURLA">
+						<option value="movs/AV_8Walk_HVHA_Rep3.bvh">AV_8Walk_HVHA_Rep3.bvh</option>
+						<option value="movs/AV_8Walk_HVHA_Rep2.bvh">AV_8Walk_HVHA_Rep2.bvh</option>
+					</select>
+					<input class="takeStartTime" id="takeStartTimeA" type="text" value="0">
+					<label>ms</label>
+
+					<div class="sidetabtitle">Take B</div>
+					<select id="sltURLB">
+						<option value="movs/AV_8Walk_HVHA_Rep2.bvh">AV_8Walk_HVHA_Rep2.bvh</option>
+						<option value="movs/AV_8Walk_HVHA_Rep3.bvh">AV_8Walk_HVHA_Rep3.bvh</option>
+					</select>	
+
+					<input class="takeStartTime" id="takeStartTimeB" type="text" value="0">
+					<label>ms</label>
+
+					<div class="sidetabtitle">Duration</div>
+					<input type="text" id="duration" value="2000">
+					<label>ms</label>
+
+					<div class="sidetabtitle" >Body Part</div>
+					<select id="bodypart">
+						<option data-bodypart="0">Left Arm</option>
+						<option data-bodypart="1">Right Arm</option>
+						<option data-bodypart="2">Left Leg</option>
+						<option data-bodypart="3">Right Leg</option>
+					</select>
+
+					<button onclick="mocom.prepareMocom()" type="button"class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Compare</span></button>
+
+				</div>
 			</div>
 		</div>
 
@@ -326,7 +474,7 @@
 			});
 		</script>
 		<div id="footer" style="clear:both;text-align:center;padding-top:20px;">
-			<small>(C) Omid Alemi - Fall 2013</small>
+			<small>(C) Omid Alemi - Fall 2013 - Fall 2015</small>
 		</div>
 
 			<script>
@@ -378,6 +526,11 @@
 
 
 				$(document).ready(function() {
+
+				// open the toolbox and show the MoComp tab
+				$("#ui-id-3").trigger("click");
+				$("#ui-accordion-sideAcaccordion-header-3").trigger("click");
+
 				/**
 				 * Source : http://stackoverflow.com/questions/814613/how-to-read-get-data-from-a-url-using-javascript
 				 */
