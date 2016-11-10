@@ -12,7 +12,7 @@ Online demo: [http://www.sfu.ca/~oalemi/movan/](http://www.sfu.ca/~oalemi/movan/
 For any questions, feedback, and bug reports, please use the [Github Issues](https://github.com/omimo/Mova/issues).
 
 ## Credits
-Created by [Omid Alemi](http://omid.al)
+Created by [Omid Alemi](https://omid.al/projects/)
 
 BVH parser and annotation extension by [Ankit Gupta](https://github.com/gupta-ankit)
 
